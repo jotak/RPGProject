@@ -12,7 +12,7 @@
 // -----------------------------------------------------------------
 // Name : guiEditBox
 // -----------------------------------------------------------------
-guiEditBox::guiEditBox() : guiComponent(), m_TextColor(1.0f, 1.0f, 1.0f, 1.0f)
+guiEditBox::guiEditBox() : m_TextColor(1.0f, 1.0f, 1.0f, 1.0f)
 {
     m_pStencilGeometry = NULL;
     m_pTextGeometry = NULL;
