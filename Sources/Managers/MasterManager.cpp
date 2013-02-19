@@ -15,6 +15,7 @@
 // High level (managers)
 #include "InterfaceManager.h"
 #include "DebugManager.h"
+#include "WorldManager.h"
 
 // -----------------------------------------------------------------
 // Name : MasterManager
@@ -35,6 +36,7 @@ MasterManager::MasterManager()
     // Managers
 	_interface;
 	_debug;
+	_world;
 
     // Other modules
 	_params;
@@ -50,6 +52,7 @@ MasterManager::~MasterManager()
 {
     delete i18n;
     delete _params;
+    delete _world;
     delete _interface;
     delete _input;
     delete _font;
@@ -79,6 +82,8 @@ void MasterManager::init()
     _debug->registerTextures();
 	DEBUG_MSG(2, "_interface->init");
     _interface->init();
+	DEBUG_MSG(2, "_world->init");
+    _world->init();
 	DEBUG_MSG(2, "_display->setReady");
     _display->setReady();
 
@@ -96,6 +101,7 @@ void MasterManager::update(double delta)
 	_debug->update(delta);
 	DEBUG_MSG(3, "_interface->update");
 	_interface->update(delta);
+	_world->update(delta);
     _display->saveWinPos();
 }
 
@@ -112,6 +118,8 @@ void MasterManager::display()
         _display->beginDisplay();
     	DEBUG_MSG(3, "_display->begin2D");
         _display->begin2D();
+    	DEBUG_MSG(3, "_world->display");
+    	_world->display();
     	DEBUG_MSG(3, "_interface->display");
     	_interface->display();
     	DEBUG_MSG(3, "_debug->display");
