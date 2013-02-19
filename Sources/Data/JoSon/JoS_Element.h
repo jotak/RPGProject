@@ -5,10 +5,6 @@
 #include <cstring>
 #include <iostream>
 
-#define JOSON_TYPE_LEAF		1
-#define JOSON_TYPE_LIST		2
-#define JOSON_TYPE_MAP		3
-
 class JoS_Element
 {
 public:
@@ -16,7 +12,6 @@ public:
 	JoS_Element() {};
     virtual ~JoS_Element() {};
 
-    virtual int getType() = 0;
     virtual std::string toString() = 0;
     virtual int toInt() = 0;
     virtual double toDouble() = 0;

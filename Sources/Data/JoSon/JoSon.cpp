@@ -106,7 +106,9 @@ JoS_Map * JoSon::readMap(std::stringstream * stream)
 
 		JoS_Element * value = readAny(stream);
 		if (value != NULL) {
-			map->put(key, value);
+			if (!map->put(key, value)) {
+				delete value;
+			}
 		} else {
 			delete map;
 			return NULL;
