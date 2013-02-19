@@ -4,6 +4,8 @@
 #include <stdlib.h>
 #include <stdarg.h>
 #include <dirent.h>
+#include <X11/Xlib.h>
+#include <X11/extensions/xf86vmode.h>
 
 errno_t fopen_s(FILE ** pFile, const char * sFilename, const char * sMode)
 {
@@ -51,81 +53,31 @@ char * getStringFromClipboard(char * sBuffer, int iBufSize)
     return sBuffer;
 }
 
-int getAvailableDisplayModes(CoordsScreen * pResolution, int * pBpp, int iMaxEntries)
+bool getAvailableDisplayModes(list<DisplayMode> * lstDisplayModes)
 {
-	// TODO: get real data
-    int i = 0;
-    if (i <= iMaxEntries){
-        pResolution[i].x = 800;
-        pResolution[i].y = 600;
-        pBpp[i] = 16;
-        i++;
-    } else {
-        return i;
-    }
+	Display * display;
+	XF86VidModeModeInfo ** modes;
+	int nbModes;
 
-    if (i <= iMaxEntries) {
-        pResolution[i].x = 800;
-        pResolution[i].y = 600;
-        pBpp[i] = 32;
-        i++;
-    } else {
-        return i;
-    }
-
-    if (i <= iMaxEntries) {
-        pResolution[i].x = 1024;
-        pResolution[i].y = 768;
-        pBpp[i] = 16;
-        i++;
-    } else {
-        return i;
-    }
-
-    if (i <= iMaxEntries) {
-        pResolution[i].x = 1024;
-        pResolution[i].y = 768;
-        pBpp[i] = 32;
-        i++;
-    } else {
-        return i;
-    }
-
-    if (i <= iMaxEntries) {
-        pResolution[i].x = 1152;
-        pResolution[i].y = 864;
-        pBpp[i] = 32;
-        i++;
-    } else {
-        return i;
-    }
-
-    if (i <= iMaxEntries) {
-        pResolution[i].x = 1280;
-        pResolution[i].y = 768;
-        pBpp[i] = 32;
-        i++;
-    } else {
-        return i;
-    }
-
-    if (i <= iMaxEntries) {
-        pResolution[i].x = 1280;
-        pResolution[i].y = 960;
-        pBpp[i] = 32;
-        i++;
-    } else {
-        return i;
-    }
-
-    if (i <= iMaxEntries) {
-        pResolution[i].x = 1280;
-        pResolution[i].y = 1024;
-        pBpp[i] = 32;
-        i++;
-    }
-
-    return i;
+	display = XOpenDisplay(0);
+	int screen = DefaultScreen(display);
+	int bpp = XDefaultDepth(display, screen);
+	XF86VidModeGetAllModeLines(display, screen, &nbModes, &modes);
+	for (int i = 0; i < nbModes; i++) {
+		// Check it's not already added
+		bool skip = false;
+		for (list<DisplayMode>::iterator it = lstDisplayModes->begin(); it != lstDisplayModes->end(); ++it) {
+			if (it->iWidth == modes[i]->hdisplay && it->iHeight == modes[i]->vdisplay) {
+				skip = true;
+				break;
+			}
+		}
+		if (!skip) {
+			lstDisplayModes->push_back(DisplayMode(modes[i]->hdisplay, modes[i]->vdisplay, bpp));
+		}
+	}
+	XFree(modes);
+	return true;
 }
 
 #endif
