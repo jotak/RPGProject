@@ -10,7 +10,6 @@ public:
 	JoS_Leaf() {};
     ~JoS_Leaf() {};
 
-    int getType() { return JOSON_TYPE_LEAF; };
     void set(std::string leaf) { this->leaf = leaf; };
     JoS_Element * get() { return this; };
     JoS_Element * get(int idx) { return this; };

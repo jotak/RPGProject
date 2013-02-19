@@ -21,8 +21,15 @@ public:
     	m_map.clear();
     };
 
-    int getType() { return JOSON_TYPE_MAP; };
-    void put(std::string key, JoS_Element * value) { m_map[key] = value; };
+    bool put(std::string key, JoS_Element * value) {
+    	jos_map::iterator it = m_map.find(key);
+    	if (it != m_map.end()) {
+    		return false;
+    	} else {
+    		m_map[key] = value;
+    		return true;
+    	}
+    };
     JoS_Element * get() { return this; };
     JoS_Element * get(int idx) { return this; };
     JoS_Element * get(std::string key) { return m_map[key]; };
