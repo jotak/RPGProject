@@ -36,6 +36,7 @@ typedef tr1::unordered_map<char, char> ch_hash;
 #include "paths.h"
 #include "Coords.h"
 #include "Color.h"
+#include "DisplayMode.h"
 
 extern void chop(char * str);
 extern void add_long_to_wstr(long iVal, int precision, char * sDst, int * iDst);
@@ -52,6 +53,6 @@ extern int getSkills(char ** sSkillsList, unsigned int iListSize, int iSkillName
 extern int getProfiles(char ** sProfilesList, unsigned int iListSize, int iProfileNameSize);
 extern int getSavedGames(char ** sSavesList, unsigned int iListSize, int iSavesNameSize);
 extern int getMaps(char ** sMapsList, unsigned int iListSize, int iMapNameSize);
-extern int getAvailableDisplayModes(CoordsScreen * pResolution, int * pBpp, int iMaxEntries);
+extern bool getAvailableDisplayModes(list<DisplayMode>*);
 
 #endif
