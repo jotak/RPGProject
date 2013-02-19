@@ -11,7 +11,6 @@
 #include "../Managers/DebugManager.h"
 #include "../Display/TextureEngine.h"
 #include "../Data/Parameters.h"
-#include "../Interface/ExampleDlg.h"
 
 InterfaceManager * InterfaceManager::m_pInstance = NULL;
 
@@ -74,9 +73,6 @@ void InterfaceManager::initMenu()
     m_pTooltip->getDocument()->setEnabled(true);
     m_pTooltip->setVisible(false);
     m_pFrameList.push_back(m_pTooltip);
-
-    // Dialogs
-    m_pFrameList.push_back((new ExampleDlg())->getFrame());
 }
 
 // -----------------------------------------------------------------
