@@ -45,6 +45,7 @@ public:
     // Inherited functions
     virtual u32 getType() { return guiComponent::getType(); };
     virtual bool onKeyDown(unsigned char c);
+    virtual bool onSpecialKeyDown(int key) { return false; };
     virtual void displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docColor);
 
     // Input functions
