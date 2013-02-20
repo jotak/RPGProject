@@ -7,6 +7,9 @@ public:
 	GameObject() {};
     virtual ~GameObject() {};
 
+    virtual void update(double delta) {};
+    virtual void display() {};
+
     int getX() { return x; };
     int getY() { return y; };
     void setX(int x) { this->x = x; };

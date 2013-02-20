@@ -17,6 +17,9 @@
 #include "DebugManager.h"
 #include "WorldManager.h"
 
+// Other
+#include "../World/WorldBuilderTest.h"
+
 // -----------------------------------------------------------------
 // Name : MasterManager
 // -----------------------------------------------------------------
@@ -83,7 +86,7 @@ void MasterManager::init()
 	DEBUG_MSG(2, "_interface->init");
     _interface->init();
 	DEBUG_MSG(2, "_world->init");
-    _world->init();
+    _world->init(new WorldBuilderTest());
 	DEBUG_MSG(2, "_display->setReady");
     _display->setReady();
 
@@ -101,6 +104,7 @@ void MasterManager::update(double delta)
 	_debug->update(delta);
 	DEBUG_MSG(3, "_interface->update");
 	_interface->update(delta);
+	DEBUG_MSG(3, "_world->update");
 	_world->update(delta);
     _display->saveWinPos();
 }

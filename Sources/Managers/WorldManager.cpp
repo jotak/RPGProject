@@ -4,8 +4,6 @@
 // -----------------------------------------------------------------
 #include "WorldManager.h"
 
-#include "../World/MovingObject.h"
-
 WorldManager * WorldManager::m_pInstance = NULL;
 
 // -----------------------------------------------------------------
@@ -13,17 +11,6 @@ WorldManager * WorldManager::m_pInstance = NULL;
 // -----------------------------------------------------------------
 WorldManager::WorldManager()
 {
-	for (int i = 0; i < 64; i++) {
-		m_Tiles.push_back(Tile(i%8, i/8));
-	}
-	MovingObject * pObj = new MovingObject();
-	pObj->setX(2);
-	pObj->setY(2);
-	m_pGameObjects.push_back(pObj);
-	pObj = new MovingObject();
-	pObj->setX(3);
-	pObj->setY(3);
-	m_pGameObjects.push_back(pObj);
 }
 
 // -----------------------------------------------------------------
@@ -37,8 +24,10 @@ WorldManager::~WorldManager()
 // -----------------------------------------------------------------
 // Name : init
 // -----------------------------------------------------------------
-void WorldManager::init()
+void WorldManager::init(WorldBuilder * pBuilder)
 {
+	pBuilder->build(&m_Tiles, &m_pGameObjects);
+	delete pBuilder;
 }
 
 // -----------------------------------------------------------------
@@ -46,6 +35,9 @@ void WorldManager::init()
 // -----------------------------------------------------------------
 void WorldManager::update(double delta)
 {
+	for (list<GameObject*>::iterator it = m_pGameObjects.begin(); it != m_pGameObjects.end(); ++it) {
+		(*it)->update(delta);
+	}
 }
 
 // -----------------------------------------------------------------
@@ -53,4 +45,10 @@ void WorldManager::update(double delta)
 // -----------------------------------------------------------------
 void WorldManager::display()
 {
+	for (vector<Tile>::iterator it = m_Tiles.begin(); it != m_Tiles.end(); ++it) {
+		it->display();
+	}
+	for (list<GameObject*>::iterator it = m_pGameObjects.begin(); it != m_pGameObjects.end(); ++it) {
+		(*it)->display();
+	}
 }

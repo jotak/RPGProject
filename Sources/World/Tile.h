@@ -4,8 +4,10 @@
 class Tile
 {
 public:
-    Tile(int x, int y) { this->x = x; this->y = y; };
-    ~Tile() {};
+    Tile(int x, int y);
+    ~Tile();
+
+    void display();
 
     int getX() { return x; };
     int getY() { return y; };

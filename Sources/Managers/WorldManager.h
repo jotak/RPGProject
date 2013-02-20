@@ -1,9 +1,7 @@
 #ifndef _WORLD_MANAGER_H
 #define _WORLD_MANAGER_H
 
-#include "../Utils/utils.h"
-#include "../World/Tile.h"
-#include "../World/GameObject.h"
+#include "../World/WorldBuilder.h"
 
 class WorldManager
 {
@@ -16,7 +14,7 @@ public:
     };
 
     // Init / Update / Display
-    void init();
+    void init(WorldBuilder * pBuilder);
     void update(double delta);
     void display();
 
