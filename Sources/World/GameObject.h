@@ -16,7 +16,7 @@ public:
     Geometry * getGeometry() { return m_pGeometry; };
     void setGeometry(Geometry * pGeo) { m_pGeometry = pGeo; };
 
-private:
+protected:
     Coords3D m_pos;
     Geometry * m_pGeometry;
 };

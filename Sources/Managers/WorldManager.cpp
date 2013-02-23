@@ -11,6 +11,7 @@ WorldManager * WorldManager::m_pInstance = NULL;
 // -----------------------------------------------------------------
 WorldManager::WorldManager()
 {
+	m_pActiveCharacter = NULL;
 }
 
 // -----------------------------------------------------------------

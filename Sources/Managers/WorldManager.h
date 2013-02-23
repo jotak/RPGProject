@@ -2,6 +2,7 @@
 #define _WORLD_MANAGER_H
 
 #include "../World/WorldBuilder.h"
+#include "../World/Character.h"
 
 class WorldManager
 {
@@ -18,12 +19,16 @@ public:
     void update(double delta);
     void display();
 
+    Character * getActiveCharacter() { return m_pActiveCharacter; };
+    void setActiveCharacter(Character * c) { m_pActiveCharacter = c; };
+
 private:
     WorldManager();
     static WorldManager * m_pInstance;
 
     Terrain m_Terrain;
     list<GameObject*> m_pGameObjects;
+    Character * m_pActiveCharacter;
 };
 
 // Helper alias
