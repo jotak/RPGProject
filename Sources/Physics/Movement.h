@@ -1,6 +1,8 @@
 #ifndef _MOVEMENT_H
 #define _MOVEMENT_H
 
+#include "../Utils/utils.h"
+
 enum MoveState {
 	Inactive = 0,
 	InProgress,
@@ -14,6 +16,7 @@ public:
     virtual ~Movement() {};
 
     virtual Coords3D apply(double delta, Coords3D position) = 0;
+    MoveState getState() { return m_State; };
 
 protected:
     MoveState m_State;

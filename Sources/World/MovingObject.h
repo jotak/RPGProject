@@ -3,20 +3,26 @@
 
 #include "GameObject.h"
 #include "Collidable.h"
+#include "../Physics/Movement.h"
 
 class MovingObject : public GameObject
 {
 public:
-	MovingObject() {};
-    virtual ~MovingObject() {};
+	MovingObject();
+    virtual ~MovingObject();
+
+    virtual void update(double delta);
 
     int getRadius() { return radius; };
     void setRadius(int radius) { this->radius = radius; };
 
     virtual void collide(Collidable * pCollidable) {};
+    void addMovement(Movement * pMvt) { m_Movements.push_back(pMvt); };
+    void setMovement(Movement * pMvt) { FREEVEC(m_Movements); m_Movements.push_back(pMvt); };
 
 private:
     int radius;
+    list<Movement*> m_Movements;
 };
 
 #endif

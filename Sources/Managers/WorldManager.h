@@ -3,8 +3,9 @@
 
 #include "../World/WorldBuilder.h"
 #include "../World/Character.h"
+#include "../Input/EventListener.h"
 
-class WorldManager
+class WorldManager : public EventListener
 {
 public:
     ~WorldManager();
@@ -18,6 +19,10 @@ public:
     void init(WorldBuilder * pBuilder);
     void update(double delta);
     void display();
+
+    // Input functions
+    bool onCatchButtonEvent(ButtonAction * pEvent);
+    bool onCursorMoveEvent(int xPxl, int yPxl);
 
     Character * getActiveCharacter() { return m_pActiveCharacter; };
     void setActiveCharacter(Character * c) { m_pActiveCharacter = c; };

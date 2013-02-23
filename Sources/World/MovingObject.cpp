@@ -1,28 +1,34 @@
 // -----------------------------------------------------------------
-// CHARACTER
+// MOVING OBJECT
 // -----------------------------------------------------------------
-#include "Character.h"
-#include "../Physics/MovesHelper.h"
+#include "MovingObject.h"
 
 // -----------------------------------------------------------------
-// Name : Character
+// Name : MovingObject
 // -----------------------------------------------------------------
-Character::Character(double speed)
-{
-	setSpeed(speed);
-}
-
-// -----------------------------------------------------------------
-// Name : ~Character
-// -----------------------------------------------------------------
-Character::~Character()
+MovingObject::MovingObject()
 {
 }
 
 // -----------------------------------------------------------------
-// Name : setMoveTarget
+// Name : ~MovingObject
 // -----------------------------------------------------------------
-void Character::setMoveTarget(Coords3D pos)
+MovingObject::~MovingObject()
 {
-	setMovement(MovesHelper::newConstantMove(pos - m_pos, speed));
+	FREEVEC(m_Movements);
+}
+
+// -----------------------------------------------------------------
+// Name : update
+// -----------------------------------------------------------------
+void MovingObject::update(double delta)
+{
+	GameObject::update(delta);
+	for (list<Movement*>::iterator it = m_Movements.begin(); it != m_Movements.end(); ++it) {
+		m_pos = (*it)->apply(delta, m_pos);
+		if ((*it)->getState() == Finished) {
+			delete *it;
+			it = m_Movements.erase(it);
+		}
+	}
 }

@@ -3,13 +3,14 @@
 // Gere le monde
 // -----------------------------------------------------------------
 #include "WorldManager.h"
+#include "../Input/InputEngine.h"
 
 WorldManager * WorldManager::m_pInstance = NULL;
 
 // -----------------------------------------------------------------
 // Name : WorldManager
 // -----------------------------------------------------------------
-WorldManager::WorldManager()
+WorldManager::WorldManager() : EventListener(4)
 {
 	m_pActiveCharacter = NULL;
 }
@@ -50,4 +51,31 @@ void WorldManager::display()
 	for (list<GameObject*>::iterator it = m_pGameObjects.begin(); it != m_pGameObjects.end(); ++it) {
 		(*it)->display();
 	}
+}
+
+// -----------------------------------------------------------------
+// Name : onCatchButtonEvent
+//  Called by Input Engine.
+//  Must return true if event is consumed ; false to let the event be catched by other modules
+//  Transfer the message to top frame under mouse
+// -----------------------------------------------------------------
+bool WorldManager::onCatchButtonEvent(ButtonAction * pEvent)
+{
+    if (m_pActiveCharacter != NULL
+    		&& pEvent->eEvent == Event_Down
+    		&& pEvent->eButton == Button1) {
+        Coords3D pos = _display->get3DCoords(CoordsScreen(pEvent->xPos, pEvent->yPos, BOARDPLANE), DMS_3D);
+        m_pActiveCharacter->setMoveTarget(pos);
+    	return true;
+    }
+
+    return false;
+}
+
+// -----------------------------------------------------------------
+// Name : onCursorMoveEvent
+// -----------------------------------------------------------------
+bool WorldManager::onCursorMoveEvent(int xPxl, int yPxl)
+{
+	return true;
 }

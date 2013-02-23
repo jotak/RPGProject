@@ -1,6 +1,8 @@
 #ifndef _MOVES_HELPER_H
 #define _MOVES_HELPER_H
 
+#include "Movement.h"
+
 class MovesHelper
 {
 public:

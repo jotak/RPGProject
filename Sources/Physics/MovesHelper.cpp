@@ -3,7 +3,10 @@
 // -----------------------------------------------------------------
 #include "MovesHelper.h"
 #include "FunctionalMove.h"
-#include "../Utils/utils.h"
+//#include "../Utils/utils.h"
+#include<functional>
+#include<vector>
+#include<iostream>
 
 // -----------------------------------------------------------------
 // Name : newConstantMove
@@ -11,7 +14,8 @@
 // -----------------------------------------------------------------
 Movement * MovesHelper::newConstantMove(Coords3D vector, double fSpeed)
 {
-	return new FunctionalMove(vector, fSpeed, [](double in) -> double { return in; });
+	double(*func)(double) = [](double in) -> double { return in; };
+	return new FunctionalMove(vector, fSpeed, func);
 }
 
 // -----------------------------------------------------------------
@@ -20,7 +24,8 @@ Movement * MovesHelper::newConstantMove(Coords3D vector, double fSpeed)
 // -----------------------------------------------------------------
 Movement * MovesHelper::newDecelMove(Coords3D vector, double fFullSpeed)
 {
-	return new FunctionalMove(vector, fFullSpeed, [](double in) -> double { return cos(PI * in / 2.0f); });
+	double(*func)(double) = [](double in) -> double { return cos(PI * in / 2.0f); };
+	return new FunctionalMove(vector, fFullSpeed, func);
 }
 
 // -----------------------------------------------------------------
@@ -29,7 +34,8 @@ Movement * MovesHelper::newDecelMove(Coords3D vector, double fFullSpeed)
 // -----------------------------------------------------------------
 Movement * MovesHelper::newAccelMove(Coords3D vector, double fFullSpeed)
 {
-	return new FunctionalMove(vector, fFullSpeed, [](double in) -> double { return sin(PI * in / 2.0f); });
+	double(*func)(double) = [](double in) -> double { return sin(PI * in / 2.0f); };
+	return new FunctionalMove(vector, fFullSpeed, func);
 }
 
 // -----------------------------------------------------------------
@@ -38,6 +44,7 @@ Movement * MovesHelper::newAccelMove(Coords3D vector, double fFullSpeed)
 // -----------------------------------------------------------------
 Movement * MovesHelper::newAccelDecelMove(Coords3D vector, double fFullSpeed)
 {
-	return new FunctionalMove(vector, fFullSpeed, [](double in) -> double { return sin(PI * in); });
+	double(*func)(double) = [](double in) -> double { return sin(PI * in); };
+	return new FunctionalMove(vector, fFullSpeed, func);
 }
 
