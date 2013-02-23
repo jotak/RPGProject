@@ -212,9 +212,8 @@ guiButton * guiComboBox::addString(string sText, string sId)
 
     // Find lowest existing button in list
     int yPxl = 0;
-    list<guiComponent*> lstComponents = m_pList->getDocument()->getComponents();
-    for (list<guiComponent*>::iterator it = lstComponents.begin(); it != lstComponents.end(); ++it) {
-        yPxl += (*it)->getHeight();
+	for (guiComponent* &pCpnt : m_pList->getDocument()->getComponents()) {
+        yPxl += pCpnt->getHeight();
     }
 
     // Update new button info and add to document
@@ -258,11 +257,10 @@ guiButton * guiComboBox::getItem(string sId)
 guiButton * guiComboBox::getItem(u16 uId)
 {
 	u16 counter = 0;
-	list<guiComponent*> lst = m_pList->getDocument()->getComponents();
-	for (list<guiComponent*>::iterator it = lst.begin(); it != lst.end(); ++it) {
+	for (guiComponent* &pCpnt : m_pList->getDocument()->getComponents()) {
 		if (counter == uId) {
-			if ((*it)->getType() & GOTYPE_BUTTON) {
-				return (guiButton*) *it;
+			if (pCpnt->getType() & GOTYPE_BUTTON) {
+				return (guiButton*) pCpnt;
 			} else {
 				return NULL;
 			}

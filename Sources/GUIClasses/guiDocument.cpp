@@ -59,8 +59,8 @@ void guiDocument::update(double delta)
     if (!m_bEnabled) {
         return;
     }
-    for (list<guiComponent*>::iterator it = m_pComponentsList.begin(); it != m_pComponentsList.end(); ++it) {
-        (*it)->update(delta);
+	for (guiComponent* &pCpnt : m_pComponentsList) {
+		pCpnt->update(delta);
     }
 }
 
@@ -74,8 +74,8 @@ void guiDocument::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color d
     m_pGeometry->display(coords, &docColor);
 
     // Display components
-    for (list<guiComponent*>::iterator it = m_pComponentsList.begin(); it != m_pComponentsList.end(); ++it) {
-    	(*it)->displayAt(m_iXPxl + iXOffset, m_iYPxl + iYOffset, cpntColor, docColor);
+	for (guiComponent* &pCpnt : m_pComponentsList) {
+		pCpnt->displayAt(m_iXPxl + iXOffset, m_iYPxl + iYOffset, cpntColor, docColor);
     }
     m_bContentChanged = false;
 }
@@ -177,9 +177,9 @@ void guiDocument::setTitleId(string sTitleId)
 // -----------------------------------------------------------------
 guiComponent * guiDocument::getComponent(string cpntId)
 {
-    for (list<guiComponent*>::iterator it = m_pComponentsList.begin(); it != m_pComponentsList.end(); ++it) {
-    	if (cpntId == (*it)->getId()) {
-    		return *it;
+	for (guiComponent* &pCpnt : m_pComponentsList) {
+    	if (cpntId == pCpnt->getId()) {
+    		return pCpnt;
     	}
     }
     return NULL;
