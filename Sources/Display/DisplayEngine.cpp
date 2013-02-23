@@ -107,8 +107,8 @@ void DisplayEngine::initGlutWindow()
     	_debug->notifyErrorMessage("Warning: extension GL_ARB_fragment_shader not supported.");
     }
 
-    for (list<Geometry*>::iterator it = m_pRegisteredGeometries.begin(); it != m_pRegisteredGeometries.end(); ++it) {
-        (*it)->reload();
+	for (Geometry* &pGeo : m_pRegisteredGeometries) {
+        pGeo->reload();
     }
 
     _tex->reloadAllTextures();

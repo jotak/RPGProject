@@ -26,8 +26,8 @@ guiTabbedFrame::~guiTabbedFrame()
 {
     m_pDoc = NULL;   // it's going to be deleted below
     // We need to explicitly delete all guiDocuments as they won't be deleted from guiTabbedFrame_Document destructor
-    for (list<guiTabbedFrame_Document*>::iterator it = m_pDocumentsList.begin(); it != m_pDocumentsList.end(); ++it) {
-        delete (*it)->m_pDoc;
+	for (guiTabbedFrame_Document* &pDoc : m_pDocumentsList) {
+        delete pDoc->m_pDoc;
     }
     // Now we can delete the list
     FREEVEC(m_pDocumentsList);
@@ -79,8 +79,7 @@ void guiTabbedFrame::computeGeometry()
     int boxWidth = (m_iWidth - 2 * m_iXPanelDecal) / size;
     int i = 0;
     int iTexBase;
-    for (list<guiTabbedFrame_Document*>::iterator it = m_pDocumentsList.begin(); it != m_pDocumentsList.end(); ++it) {
-    	guiTabbedFrame_Document * pDoc = *it;
+	for (guiTabbedFrame_Document* &pDoc : m_pDocumentsList) {
         if (pDoc->m_pDoc == m_pDoc)
         {
             ystart = 0;
@@ -126,9 +125,9 @@ void guiTabbedFrame::update(double delta)
     guiFrame::update(delta);
 
     // Update other documents
-    for (list<guiTabbedFrame_Document*>::iterator it = m_pDocumentsList.begin(); it != m_pDocumentsList.end(); ++it) {
-        if ((*it)->m_pDoc != m_pDoc) {
-        	(*it)->m_pDoc->update(delta);
+	for (guiTabbedFrame_Document* &pDoc : m_pDocumentsList) {
+        if (pDoc->m_pDoc != m_pDoc) {
+        	pDoc->m_pDoc->update(delta);
         }
     }
 }
@@ -165,20 +164,20 @@ void guiTabbedFrame::displayAt(int iXOffset, int iYOffset, Color cpntColor, Colo
         m_pTabsGeometry->display(coords, cpntColor);
         int boxWidth = (m_iWidth - 2 * m_iXPanelDecal) / size;
         int i = 0;
-        for (list<guiTabbedFrame_Document*>::iterator it = m_pDocumentsList.begin(); it != m_pDocumentsList.end(); ++it) {
-            if ((*it)->m_pDoc == m_pDoc) {
-            	(*it)->m_pLabel->setDiffuseColor(Color(0.0f, 0.0f, 0.0f));
+    	for (guiTabbedFrame_Document* &pDoc : m_pDocumentsList) {
+            if (pDoc->m_pDoc == m_pDoc) {
+            	pDoc->m_pLabel->setDiffuseColor(Color(0.0f, 0.0f, 0.0f));
             } else {
-                if ((*it)->m_pDoc->didContentChange()) {
-                	(*it)->m_pLabel->setDiffuseColor(Color(0.2f, 0.2f, 1.0f));
+                if (pDoc->m_pDoc->didContentChange()) {
+                	pDoc->m_pLabel->setDiffuseColor(Color(0.2f, 0.2f, 1.0f));
                 } else {
-                	(*it)->m_pLabel->setDiffuseColor(Color(0.5f, 0.5f, 0.5f));
+                	pDoc->m_pLabel->setDiffuseColor(Color(0.5f, 0.5f, 0.5f));
                 }
             }
 
-            int xPxl = m_iXPxl + m_iXPanelDecal + i * boxWidth + (boxWidth - (*it)->m_pLabel->getWidth()) / 2;
-            int yPxl = m_iYPxl + 3 + (m_pTexList[0]->getHeight() - (*it)->m_pLabel->getHeight()) / 2;
-            (*it)->m_pLabel->displayAt(iXOffset + xPxl, iYOffset + yPxl, cpntColor, docColor);
+            int xPxl = m_iXPxl + m_iXPanelDecal + i * boxWidth + (boxWidth - pDoc->m_pLabel->getWidth()) / 2;
+            int yPxl = m_iYPxl + 3 + (m_pTexList[0]->getHeight() - pDoc->m_pLabel->getHeight()) / 2;
+            pDoc->m_pLabel->displayAt(iXOffset + xPxl, iYOffset + yPxl, cpntColor, docColor);
             i++;
         }
     }

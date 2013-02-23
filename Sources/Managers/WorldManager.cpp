@@ -37,8 +37,8 @@ void WorldManager::init(WorldBuilder * pBuilder)
 // -----------------------------------------------------------------
 void WorldManager::update(double delta)
 {
-	for (list<GameObject*>::iterator it = m_pGameObjects.begin(); it != m_pGameObjects.end(); ++it) {
-		(*it)->update(delta);
+	for (GameObject* &obj : m_pGameObjects) {
+		obj->update(delta);
 	}
 }
 
@@ -48,8 +48,8 @@ void WorldManager::update(double delta)
 void WorldManager::display()
 {
 	m_Terrain.display();
-	for (list<GameObject*>::iterator it = m_pGameObjects.begin(); it != m_pGameObjects.end(); ++it) {
-		(*it)->display();
+	for (GameObject* &obj : m_pGameObjects) {
+		obj->display();
 	}
 }
 

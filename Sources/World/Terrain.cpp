@@ -24,7 +24,7 @@ Terrain::~Terrain()
 // -----------------------------------------------------------------
 void Terrain::display()
 {
-	for (list<Geometry*>::iterator it = m_pGeometries.begin(); it != m_pGeometries.end(); ++it) {
-		(*it)->display(Coords3D(0, 0, BOARDPLANE), Color::white);
+	for (Geometry* &pGeo : m_pGeometries) {
+		pGeo->display(Coords3D(0, 0, BOARDPLANE), Color::white);
 	}
 }

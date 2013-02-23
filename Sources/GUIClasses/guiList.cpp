@@ -152,8 +152,8 @@ guiObject * guiList::onButtonEvent(ButtonAction * pEvent)
         if (pObj == NULL)
         {
             // Deselect all
-    		for (list<guiComponent*>::iterator it = getDocument()->getComponents().begin(); it != getDocument()->getComponents().end(); ++it) {
-                ((guiListLabel*)*it)->setSelected(false);
+    		for (guiComponent* &pCpnt : getDocument()->getComponents()) {
+                ((guiListLabel*)pCpnt)->setSelected(false);
             }
             m_pLastSelectedLabel = NULL;
             updateSelectionGeometry();
@@ -186,8 +186,8 @@ bool guiList::onButtonEvent(ButtonAction * pEvent, guiComponent * pCpnt)
         {
             if (!pClickedLabel->isSelected())
             {
-        		for (list<guiComponent*>::iterator it = getDocument()->getComponents().begin(); it != getDocument()->getComponents().end(); ++it) {
-                    ((guiListLabel*)*it)->setSelected(*it == pClickedLabel);
+        		for (guiComponent* &pCpnt : getDocument()->getComponents()) {
+                    ((guiListLabel*)pCpnt)->setSelected(pCpnt == pClickedLabel);
                 }
                 updateSelectionGeometry();
             } else { // We'll do deselection on mouse up to allow dragging
@@ -208,8 +208,8 @@ bool guiList::onButtonEvent(ButtonAction * pEvent, guiComponent * pCpnt)
         if (m_bCatchMouseUp && m_pLastSelectedLabel != NULL)
         {
             // Clear current selection and add label to it
-    		for (list<guiComponent*>::iterator it = getDocument()->getComponents().begin(); it != getDocument()->getComponents().end(); ++it) {
-                ((guiListLabel*)*it)->setSelected(*it == m_pLastSelectedLabel);
+    		for (guiComponent* &pCpnt : getDocument()->getComponents()) {
+                ((guiListLabel*)pCpnt)->setSelected(pCpnt == m_pLastSelectedLabel);
             }
             updateSelectionGeometry();
         } else if (!m_bCatchMouseUp) {
@@ -240,14 +240,14 @@ void guiList::shiftSelect(guiListLabel * pClickedLabel)
         if (pClickedLabel != m_pLastSelectedLabel)
         {
             bool bInBlock = false;
-    		for (list<guiComponent*>::iterator it = getDocument()->getComponents().begin(); it != getDocument()->getComponents().end(); ++it) {
-                if (!bInBlock && (*it == pClickedLabel || *it == m_pLastSelectedLabel)) {
+    		for (guiComponent* &pCpnt : getDocument()->getComponents()) {
+                if (!bInBlock && (pCpnt == pClickedLabel || pCpnt == m_pLastSelectedLabel)) {
                     bInBlock = true;
                 } else if (bInBlock) {
-                    if (*it == pClickedLabel || *it == m_pLastSelectedLabel) {
+                    if (pCpnt == pClickedLabel || pCpnt == m_pLastSelectedLabel) {
                         break;
                     }
-                    ((guiListLabel*)*it)->setSelected(bSelect);
+                    ((guiListLabel*)pCpnt)->setSelected(bSelect);
                 }
             }
         }
@@ -280,8 +280,8 @@ bool guiList::onKeyDown(unsigned char c)
         // ctrl+A = select all
         if (c == 1)  // It looks like ascii 1 is "ctrl+a". TODO : Must be tested on different systems!
         {
-    		for (list<guiComponent*>::iterator it = getDocument()->getComponents().begin(); it != getDocument()->getComponents().end(); ++it) {
-                ((guiListLabel*)*it)->setSelected(true);
+    		for (guiComponent* &pCpnt : getDocument()->getComponents()) {
+                ((guiListLabel*)pCpnt)->setSelected(true);
             }
             updateSelectionGeometry();
             return true;
@@ -297,8 +297,8 @@ void guiList::updateSelectionGeometry()
 {
     // First, count number of selected items
     int nSelLabels = 0;
-	for (list<guiComponent*>::iterator it = getDocument()->getComponents().begin(); it != getDocument()->getComponents().end(); ++it) {
-        if (((guiListLabel*)*it)->isSelected()) {
+	for (guiComponent* &pCpnt : getDocument()->getComponents()) {
+        if (((guiListLabel*)pCpnt)->isSelected()) {
         	nSelLabels++;
         }
     }
@@ -316,8 +316,8 @@ void guiList::updateSelectionGeometry()
     // Loop through labels again to build geometry
     QuadData ** pQuads = new QuadData*[nSelLabels];
     int iQuad = 0;
-	for (list<guiComponent*>::iterator it = getDocument()->getComponents().begin(); it != getDocument()->getComponents().end(); ++it) {
-		guiListLabel* pLbl = (guiListLabel*) *it;
+	for (guiComponent* &pCpnt : getDocument()->getComponents()) {
+		guiListLabel* pLbl = (guiListLabel*) pCpnt;
         if (pLbl->isSelected()) {
             pQuads[iQuad++] = new QuadData(0, m_iInnerWidth, pLbl->getYPos(), pLbl->getYPos() + pLbl->getHeight(), texture);
         }

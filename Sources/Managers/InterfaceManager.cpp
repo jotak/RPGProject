@@ -131,14 +131,14 @@ void InterfaceManager::display()
     Color plain(1, 1, 1, 1);
     Color alpha(1, 1, 1, 0.65f);
 
-	for(list<guiFrame*>::iterator it = m_pFrameList.begin(); it != m_pFrameList.end(); ++it) {
-        if (*it != m_pTooltip) {
-            (*it)->displayAt(0, 0, plain, alpha);
+	for (guiFrame* &pFrm : m_pFrameList) {
+        if (pFrm != m_pTooltip) {
+        	pFrm->displayAt(0, 0, plain, alpha);
         }
     }
 
-	for(list<TopDisplayObject*>::iterator it = m_pTopDisplayList.begin(); it != m_pTopDisplayList.end(); ++it) {
-        (*it)->display();
+	for (TopDisplayObject* &pObj : m_pTopDisplayList) {
+		pObj->display();
     }
 
     if (m_pTooltip != NULL) {
@@ -282,9 +282,9 @@ guiComponent * InterfaceManager::getObjectAt(int xPxl, int yPxl, int * xoffset, 
 // -----------------------------------------------------------------
 guiFrame * InterfaceManager::findFrame(string frmId)
 {
-	for(list<guiFrame*>::iterator it = m_pFrameList.begin(); it != m_pFrameList.end(); ++it) {
-        if ((*it)->getId() == frmId) {
-            return *it;
+	for (guiFrame* &pFrm : m_pFrameList) {
+        if (pFrm->getId() == frmId) {
+            return pFrm;
         }
     }
     return NULL;
@@ -295,9 +295,9 @@ guiFrame * InterfaceManager::findFrame(string frmId)
 // -----------------------------------------------------------------
 guiFrame * InterfaceManager::findFrameFromDoc(guiDocument * pDoc)
 {
-	for(list<guiFrame*>::iterator it = m_pFrameList.begin(); it != m_pFrameList.end(); ++it) {
-        if ((*it)->getDocument() == pDoc) {
-            return *it;
+	for (guiFrame* &pFrm : m_pFrameList) {
+        if (pFrm->getDocument() == pDoc) {
+            return pFrm;
         }
     }
     return NULL;
@@ -383,8 +383,7 @@ void InterfaceManager::bringFrameAbove(guiFrame * pFrm)
 // -----------------------------------------------------------------
 void InterfaceManager::setUniqueDialog(guiDocument * pDoc)
 {
-	for (list<guiFrame*>::iterator it = m_pFrameList.begin(); it != m_pFrameList.end(); ++it) {
-		guiFrame * pFrm = *it;
+	for (guiFrame* &pFrm : m_pFrameList) {
         if (pFrm != m_pTooltip) {
             if (pFrm->getDocument() == pDoc) {
                 pFrm->setEnabled(true);
@@ -433,8 +432,7 @@ void InterfaceManager::onResize(int oldw, int oldh)
     float fWCoef = (float) _params->getScreenXSize() / (float) oldw;
     float fHCoef = (float) _params->getScreenYSize() / (float) oldh;
 
-    for(list<guiFrame*>::iterator it = m_pFrameList.begin(); it != m_pFrameList.end(); ++it) {
-		guiFrame * pFrm = *it;
+	for (guiFrame* &pFrm : m_pFrameList) {
         int xc = pFrm->getXPos() + pFrm->getWidth() / 2;
         int yc = pFrm->getYPos() + pFrm->getHeight() / 2;
         pFrm->moveBy((float)xc * (fWCoef - 1), (float)yc * (fHCoef - 1));

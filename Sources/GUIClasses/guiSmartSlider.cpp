@@ -77,8 +77,8 @@ void guiSmartSlider::displayAt(int iXOffset, int iYOffset, Color cpntColor, Colo
 
         // Find all disabled items
         CoordsScreen darkCoords = coords;
-        for (list<guiSliderItem*>::iterator it = m_pItems.begin(); it != m_pItems.end(); ++it) {
-            if (!(*it)->m_bEnabled) {
+    	for (guiSliderItem* &pItem : m_pItems) {
+            if (!pItem->m_bEnabled) {
                 m_pDisabledGeometry->display(darkCoords, cpntColor);
             }
             darkCoords.x += m_iItemSize + m_iSpacing;
@@ -124,18 +124,18 @@ guiObject * guiSmartSlider::onCursorMoveEvent(int xPxl, int yPxl)
 
     m_iSliderPos = xPxl - (m_iTheoricSize * xPxl / m_iWidth);
     m_iSelectorPos = 0;
-    for (list<guiSliderItem*>::iterator it = m_pItems.begin(); it != m_pItems.end(); ++it) {
+	for (guiSliderItem* &pItem : m_pItems) {
         if (xPxl < m_iSelectorPos + m_iItemSize + m_iSliderPos)
         {
-            if (m_pSelectedItem != *it)
+            if (m_pSelectedItem != pItem)
             {
-                m_pSelectedItem = *it;
-                m_pLabel->setText((*it)->getInfo());
+                m_pSelectedItem = pItem;
+                m_pLabel->setText(pItem->getInfo());
                 int textX = (getWidth() - m_pLabel->getWidth()) / 2;
                 int textY = getYPos() + getHeight() - m_pLabel->getHeight();
                 if (!m_pSelectedItem->m_bEnabled)
                 {
-                    m_pDisableReasonLabel->setText((*it)->m_sDisabledReason);
+                    m_pDisableReasonLabel->setText(pItem->m_sDisabledReason);
                     textX -= m_pDisableReasonLabel->getWidth() / 2 - 5;
                     m_pDisableReasonLabel->moveTo(textX + m_pLabel->getWidth() + 10, textY);
                 }
@@ -209,8 +209,8 @@ void guiSmartSlider::loadGeometry()
     	int size = m_pItems.size();
         QuadData ** pQuads = new QuadData*[size];
         int i = 0;
-        for (list<guiSliderItem*>::iterator it = m_pItems.begin(); it != m_pItems.end(); ++it) {
-            pQuads[i] = new QuadData(m_iTheoricSize, m_iTheoricSize + m_iItemSize, 0, m_iItemSize, (*it)->m_pTex);
+    	for (guiSliderItem* &pItem : m_pItems) {
+            pQuads[i] = new QuadData(m_iTheoricSize, m_iTheoricSize + m_iItemSize, 0, m_iItemSize, pItem->m_pTex);
             m_iTheoricSize += m_iItemSize + m_iSpacing;
             i++;
         }

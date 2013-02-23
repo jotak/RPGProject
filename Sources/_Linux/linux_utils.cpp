@@ -66,8 +66,8 @@ bool getAvailableDisplayModes(list<DisplayMode> * lstDisplayModes)
 	for (int i = 0; i < nbModes; i++) {
 		// Check it's not already added
 		bool skip = false;
-		for (list<DisplayMode>::iterator it = lstDisplayModes->begin(); it != lstDisplayModes->end(); ++it) {
-			if (it->iWidth == modes[i]->hdisplay && it->iHeight == modes[i]->vdisplay) {
+		for (DisplayMode &mode : (*lstDisplayModes)) {
+			if (mode.iWidth == modes[i]->hdisplay && mode.iHeight == modes[i]->vdisplay) {
 				skip = true;
 				break;
 			}

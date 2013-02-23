@@ -55,9 +55,9 @@ Geometry::~Geometry()
 void Geometry::update(double delta)
 {
     // Update display mods
-	for (list<GeometryModifier*>::iterator it = m_lstMods.begin(); it != m_lstMods.end(); ++it) {
-        if ((*it)->isActive() && (*it)->isRunning()) {
-        	(*it)->update(delta);
+	for (GeometryModifier* &pMod : m_lstMods) {
+        if (pMod->isActive() && pMod->isRunning()) {
+        	pMod->update(delta);
         }
     }
 }
@@ -67,9 +67,9 @@ void Geometry::update(double delta)
 // -----------------------------------------------------------------
 GeometryModifier * Geometry::getModifier(u16 uModId)
 {
-	for (list<GeometryModifier*>::iterator it = m_lstMods.begin(); it != m_lstMods.end(); ++it) {
-        if ((*it)->getId() == uModId) {
-            return *it;
+	for (GeometryModifier* &pMod : m_lstMods) {
+        if (pMod->getId() == uModId) {
+            return pMod;
         }
     }
     return NULL;
@@ -107,9 +107,9 @@ void Geometry::unbindModifier(u16 uModId, bool bAll, bool bDelete)
 // -----------------------------------------------------------------
 void Geometry::doModTransforms(Color * pColor)
 {
-	for (list<GeometryModifier*>::iterator it = m_lstMods.begin(); it != m_lstMods.end(); ++it) {
-        if ((*it)->isActive()) {
-            (*it)->doTransforms(pColor);
+	for (GeometryModifier* &pMod : m_lstMods) {
+        if (pMod->isActive()) {
+        	pMod->doTransforms(pColor);
         }
     }
 }

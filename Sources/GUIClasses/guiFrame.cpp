@@ -66,9 +66,9 @@ guiObject * guiFrame::clone()
     pObj->init(m_PositionType, m_WidthFit, m_HeightFit, m_iXOffset, m_iYOffset, m_iMaxWidth, m_iMaxHeight, texlist, m_sCpntId, m_iXPxl, m_iYPxl, m_iWidth, m_iHeight);
 
     // Clone effects
-    for (list<guiFrameEffect*>::iterator it = m_pEffects.begin(); it != m_pEffects.end(); ++it) {
-        guiFrameEffect * pClone = (*it)->clone();
-        pClone->setActive((*it)->isActive());
+	for (guiFrameEffect* &pEffect : m_pEffects) {
+        guiFrameEffect * pClone = pEffect->clone();
+        pClone->setActive(pEffect->isActive());
         pObj->addEffect(pClone);
     }
     return pObj;
@@ -169,9 +169,9 @@ void guiFrame::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docC
         return;
     }
 
-    for (list<guiFrameEffect*>::iterator it = m_pEffects.begin(); it != m_pEffects.end(); ++it) {
-        if ((*it)->isActive()) {
-        	(*it)->onBeginDisplay(iXOffset, iYOffset, &cpntColor, &docColor);
+	for (guiFrameEffect* &pEffect : m_pEffects) {
+        if (pEffect->isActive()) {
+        	pEffect->onBeginDisplay(iXOffset, iYOffset, &cpntColor, &docColor);
         }
     }
 
@@ -187,9 +187,9 @@ void guiFrame::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docC
         }
     }
 
-    for (list<guiFrameEffect*>::iterator it = m_pEffects.begin(); it != m_pEffects.end(); ++it) {
-        if ((*it)->isActive()) {
-        	(*it)->onEndDisplay();
+	for (guiFrameEffect* &pEffect : m_pEffects) {
+        if (pEffect->isActive()) {
+        	pEffect->onEndDisplay();
         }
     }
 }
@@ -284,9 +284,9 @@ void guiFrame::removeEffect(u16 uEffectId)
 // -----------------------------------------------------------------
 void guiFrame::activateEffect(u16 uEffectId)
 {
-    for (list<guiFrameEffect*>::iterator it = m_pEffects.begin(); it != m_pEffects.end(); ++it) {
-        if ((*it)->getId() == uEffectId) {
-            (*it)->reset();
+	for (guiFrameEffect* &pEffect : m_pEffects) {
+        if (pEffect->getId() == uEffectId) {
+        	pEffect->reset();
             break;
         }
     }
@@ -404,9 +404,9 @@ void guiFrame::extract()
 void guiFrame::setEnabled(bool bEnabled)
 {
     guiContainer::setEnabled(bEnabled);
-    for (list<guiFrameEffect*>::iterator it = m_pEffects.begin(); it != m_pEffects.end(); ++it) {
-        if (!bEnabled && (*it)->isActive() && (*it)->getOnFinished() == EFFECT_ACTIVATE_ON_FINISHED) {
-        	(*it)->setOnFinished(EFFECT_NOTHING_ON_FINISHED);
+	for (guiFrameEffect* &pEffect : m_pEffects) {
+        if (!bEnabled && pEffect->isActive() && pEffect->getOnFinished() == EFFECT_ACTIVATE_ON_FINISHED) {
+        	pEffect->setOnFinished(EFFECT_NOTHING_ON_FINISHED);
         }
     }
 }
