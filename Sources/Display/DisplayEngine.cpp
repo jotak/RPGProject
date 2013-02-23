@@ -19,11 +19,9 @@ DisplayEngine::DisplayEngine()
     m_bReady = false;
     m_iStencilState = 0;
     m_iWindow = -1;
-    m_iMapWidth = m_iMapHeight = 0;
     m_bAdditive = false;
     m_iStencilDepth = 0;
     m_dScreenRatio = 1;
-    m_bLookAtMode = false;
     m_bIgnoreNextResize = false;
 }
 
@@ -236,11 +234,7 @@ void DisplayEngine::moveCameraTo(Coords3D d3Pos)
 {
     m_f3CamPos = d3Pos;
     glLoadIdentity();
-    if (m_bLookAtMode) {
-        gluLookAt(m_f3CamPos.x, m_f3CamPos.y, -m_f3CamPos.z, 0, 0, -m_f3CamPos.z-BOARDPLANE, 0, 1, 0);
-    } else {
-        glTranslatef(-m_f3CamPos.x, -m_f3CamPos.y, m_f3CamPos.z);
-    }
+    gluLookAt(m_f3CamPos.x, m_f3CamPos.y, -m_f3CamPos.z, m_f3CamPos.x - 0.5f, m_f3CamPos.y - 2.5f, -m_f3CamPos.z-BOARDPLANE, 0, 1, 0);
 }
 
 #define X2X   (2.0f * m_dScreenRatio)
@@ -249,64 +243,12 @@ void DisplayEngine::moveCameraTo(Coords3D d3Pos)
 #define M1Y   (1.0f)
 
 // ------------------------------------------------------------------
-// Name : getMapCoords
-// ------------------------------------------------------------------
-CoordsMap DisplayEngine::getMapCoords(CoordsScreen screenCoords)
-{
-    screenCoords.z = BOARDPLANE;
-    Coords3D coords3D = get3DCoords(screenCoords, DMS_3D);
-    return getMapCoords(coords3D);
-}
-
-// ------------------------------------------------------------------
-// Name : getMapCoords
-// ------------------------------------------------------------------
-CoordsMap DisplayEngine::getMapCoords(Coords3D d3Coords)
-{
-    if (m_iMapWidth == 0 || m_iMapHeight == 0)
-        return CoordsMap();
-    if (d3Coords.x < 0.0f && d3Coords.x != (double)(int)d3Coords.x)
-        d3Coords.x -= 1.0f;
-    if (d3Coords.y < 0.0f && d3Coords.y != (double)(int)d3Coords.y)
-        d3Coords.y -= 1.0f;
-    CoordsMap mapCoords((int)d3Coords.x + m_iMapWidth/2, (int)d3Coords.y + m_iMapHeight/2);
-//  CoordsMap mapCoords((int)d3Coords.x + m_pServerParams->mapXSize/2, m_pServerParams->mapYSize/2 - (int)d3Coords.y);
-    return mapCoords;
-}
-
-// ------------------------------------------------------------------
-// Name : getScreenCoords
-// ------------------------------------------------------------------
-CoordsScreen DisplayEngine::getScreenCoords(CoordsMap mapCoords)
-{
-    // TODO : A REVOIR
-    if (m_iMapWidth == 0 || m_iMapHeight == 0) {
-        return CoordsScreen();
-    }
-    CoordsScreen screenCoords((mapCoords.x * _params->getScreenXSize()) / m_iMapWidth, (mapCoords.y * _params->getScreenYSize()) / m_iMapHeight);
-    return screenCoords;
-}
-
-// ------------------------------------------------------------------
 // Name : getScreenCoords
 // ------------------------------------------------------------------
 CoordsScreen DisplayEngine::getScreenCoords(Coords3D d3Coords, DisplayModeState modeState)
 {
     CoordsScreen screenCoords; // TODO
     return screenCoords;
-}
-
-// ------------------------------------------------------------------
-// Name : get3DCoords
-// ------------------------------------------------------------------
-Coords3D DisplayEngine::get3DCoords(CoordsMap mapCoords, double fZPlane)
-{
-    if (m_iMapWidth == 0 || m_iMapHeight == 0) {
-        return Coords3D();
-    }
-    Coords3D d3Coords((double)(mapCoords.x - m_iMapWidth/2), (double)(mapCoords.y - m_iMapHeight/2), fZPlane);
-//  Coords3D d3Coords((float)(mapCoords.x - m_pServerParams->mapXSize/2), (float)(m_pServerParams->mapYSize/2 - mapCoords.y), fZPlane);
-    return d3Coords;
 }
 
 // ------------------------------------------------------------------
@@ -357,23 +299,6 @@ Coords3D DisplayEngine::get3DDistance(CoordsScreen screenDist, DisplayModeState 
         return d3Coords;
     }
     }
-}
-
-// ------------------------------------------------------------------
-// Name : isZoomToMapPosNeeded
-// ------------------------------------------------------------------
-bool DisplayEngine::isZoomToMapPosNeeded(CoordsMap mapPos)
-{
-    if (m_f3CamPos.z < BOARDPLANE / 2)
-        return true;
-//  if (m_pGameParams->fUserZoom != m_fZoom)
-//    return true;
-
-    //TODO : do it again
-//  float xMargin = absPxlToLogicX(m_pGameParams->screenXSize / 10);
-//  float yMargin = absPxlToLogicY(m_pGameParams->screenYSize / 10);
-//  return (fX < m_fLeft + xMargin) || (fX >= m_fRight + xMargin) || (fY < m_fTop + yMargin) || (fY >= m_fBottom + yMargin);
-    return false;
 }
 
 // ------------------------------------------------------------------
@@ -517,16 +442,6 @@ bool DisplayEngine::setAdditiveMode(bool bAdd)
         m_bAdditive = false;
     }
     return bPrev;
-}
-
-// ------------------------------------------------------------------
-// Name : setLookAtMode
-// ------------------------------------------------------------------
-void DisplayEngine::setLookAtMode(bool bLookAt)
-{
-    m_bLookAtMode = bLookAt;
-    moveCameraTo(m_f3CamPos);
-//  resizeWindow();
 }
 
 // ------------------------------------------------------------------

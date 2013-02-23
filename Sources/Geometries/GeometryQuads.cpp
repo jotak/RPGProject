@@ -58,7 +58,7 @@ GeometryQuads::~GeometryQuads()
 // -----------------------------------------------------------------
 // Name : display
 // -----------------------------------------------------------------
-void GeometryQuads::display(CoordsScreen pos, Color * color)
+void GeometryQuads::display(CoordsScreen pos, Color color)
 {
     if (m_iNbQuads == 0) {
         return;
@@ -71,10 +71,8 @@ void GeometryQuads::display(CoordsScreen pos, Color * color)
 // -----------------------------------------------------------------
 // Name : display
 // -----------------------------------------------------------------
-void GeometryQuads::display(Coords3D pos, Color * color)
+void GeometryQuads::display(Coords3D pos, Color color)
 {
-	assert(color != NULL);
-
     if (m_iNbQuads == 0) {
         return;
     }
@@ -88,13 +86,13 @@ void GeometryQuads::display(Coords3D pos, Color * color)
 
     glPushMatrix();
     glTranslatef(pos.x, pos.y, -pos.z);
-    doModTransforms(color);
+    doModTransforms(&color);
 
     if (m_bShaderEnabled) {
         glUseProgram(m_uShaderProgram);
     }
 
-    glColor4f(color->r, color->g, color->b, color->a);
+    glColor4f(color.r, color.g, color.b, color.a);
     for (int i = 0; i < m_iNbQuads; i++) {
         glBindTexture(GL_TEXTURE_2D, m_pAllQuads[i]->m_pTex->getGlid());
         glDrawArrays(GL_QUADS, 4*i, 4);

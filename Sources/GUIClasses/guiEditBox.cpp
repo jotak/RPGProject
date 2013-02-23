@@ -138,7 +138,7 @@ void guiEditBox::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color do
 
     // display borders and background
     CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset, m_iYPxl + iYOffset, GUIPLANE);
-    m_pGeometry->display(coords, &cpntColor);
+    m_pGeometry->display(coords, cpntColor);
 
     Texture * pTex = ((GeometryQuads*)m_pGeometry)->getTexture(0);
     coords += CoordsScreen(pTex->getWidth(), pTex->getHeight());
@@ -151,20 +151,17 @@ void guiEditBox::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color do
         if (m_pSelectionGeometry != NULL)
         {
             // display selection
-//      color = Color *_MULTIPLY(blendColor, rgb(1-m_TextColor.r, 1-m_TextColor.g, 1-m_TextColor.b));
-        	Color c(0.8,0.8,0.8);
-            m_pSelectionGeometry->display(coords, &c);
+            m_pSelectionGeometry->display(coords, Color(0.8,0.8,0.8));
         }
 
         // draw text
-        Color color = cpntColor * m_TextColor;
-        m_pTextGeometry->display(coords, &color);
+        m_pTextGeometry->display(coords, cpntColor * m_TextColor);
 
         if (m_bHasFocus && m_fBlinkTimer >= 0)
         {
             // Display caret
             coords += _font->getCharacterPosition(m_iCaretPos, m_sText, m_aiAllFonts[(int)m_FontId]);
-            m_pCaretGeometry->display(coords, &cpntColor);
+            m_pCaretGeometry->display(coords, cpntColor);
         }
     }
     m_pStencilGeometry->fillStencil(stencilCoords, false);

@@ -65,10 +65,8 @@ void guiList::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docCo
         CoordsScreen coords(m_iInnerXPxl + iXOffset, m_iInnerYPxl + iYOffset, GUIPLANE);
         m_pStencilGeometry->fillStencil(coords, true);
         int iPreviousState = _display->setStencilState(2);
-        Color color(0.4, 0.4, 0.4, 0.5);
-        color.multiply(&cpntColor);
         CoordsScreen selcoords = coords + CoordsScreen(getDocument()->getXPos(), getDocument()->getYPos());
-        m_pSelectionGeometry->display(selcoords, &color);
+        m_pSelectionGeometry->display(selcoords, cpntColor * Color(0.4, 0.4, 0.4, 0.5));
         m_pStencilGeometry->fillStencil(coords, false);
         _display->setStencilState(iPreviousState);
     }

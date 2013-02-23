@@ -1,27 +1,30 @@
 // -----------------------------------------------------------------
-// TILE
+// TERRAIN
 // -----------------------------------------------------------------
-#include "Tile.h"
+#include "Terrain.h"
+#include "../Display/DisplayEngine.h"
 
 // -----------------------------------------------------------------
-// Name : Tile
+// Name : Terrain
 // -----------------------------------------------------------------
-Tile::Tile(int x, int y)
+Terrain::Terrain()
 {
-	this->x = x;
-	this->y = y;
 }
 
 // -----------------------------------------------------------------
-// Name : ~Tile
+// Name : ~Terrain
 // -----------------------------------------------------------------
-Tile::~Tile()
+Terrain::~Terrain()
 {
+	FREEVEC(m_pGeometries);
 }
 
 // -----------------------------------------------------------------
 // Name : display
 // -----------------------------------------------------------------
-void Tile::display()
+void Terrain::display()
 {
+	for (list<Geometry*>::iterator it = m_pGeometries.begin(); it != m_pGeometries.end(); ++it) {
+		(*it)->display(Coords3D(0, 0, BOARDPLANE), Color::white);
+	}
 }

@@ -73,13 +73,13 @@ void guiSmartSlider::displayAt(int iXOffset, int iYOffset, Color cpntColor, Colo
             cpntColor = cpntColor * 0.3f;
         }
         CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset + m_iSliderPos, m_iYPxl + iYOffset, GUIPLANE);
-        ((GeometryQuads*)m_pGeometry)->display(coords, &cpntColor);
+        ((GeometryQuads*)m_pGeometry)->display(coords, cpntColor);
 
         // Find all disabled items
         CoordsScreen darkCoords = coords;
         for (list<guiSliderItem*>::iterator it = m_pItems.begin(); it != m_pItems.end(); ++it) {
             if (!(*it)->m_bEnabled) {
-                m_pDisabledGeometry->display(darkCoords, &cpntColor);
+                m_pDisabledGeometry->display(darkCoords, cpntColor);
             }
             darkCoords.x += m_iItemSize + m_iSpacing;
         }
@@ -97,7 +97,7 @@ void guiSmartSlider::displayAt(int iXOffset, int iYOffset, Color cpntColor, Colo
             _display->enableBlending();
             cpntColor = cpntColor * Color(1, 1, 1, 0.3f);
             coords.x += m_iSelectorPos;
-            m_pSelectorGeometry->display(coords, &cpntColor);
+            m_pSelectorGeometry->display(coords, cpntColor);
 //      if (!bWasBlending)
 //        getDisplay()->disableBlending();
         }

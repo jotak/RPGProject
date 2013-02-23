@@ -181,9 +181,9 @@ void guiFrame::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docC
         m_iStickX = iXOffset + getXPos() + getWidth() - 16;
         m_iStickY = iYOffset + getYPos();
         if (m_bSticked) {
-            m_pStickedGeo->display(CoordsScreen(m_iStickX, m_iStickY, GUIPLANE), &cpntColor);
+            m_pStickedGeo->display(CoordsScreen(m_iStickX, m_iStickY, GUIPLANE), cpntColor);
         } else {
-            m_pStickGeo->display(CoordsScreen(m_iStickX, m_iStickY, GUIPLANE), &cpntColor);
+            m_pStickGeo->display(CoordsScreen(m_iStickX, m_iStickY, GUIPLANE), cpntColor);
         }
     }
 

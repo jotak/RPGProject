@@ -120,10 +120,14 @@ void MasterManager::display()
 
     	DEBUG_MSG(3, "_display->beginDisplay");
         _display->beginDisplay();
-    	DEBUG_MSG(3, "_display->begin2D");
-        _display->begin2D();
+    	DEBUG_MSG(3, "_display->begin3D");
+        _display->begin3D();
     	DEBUG_MSG(3, "_world->display");
     	_world->display();
+    	DEBUG_MSG(3, "_display->end3D");
+        _display->end3D();
+    	DEBUG_MSG(3, "_display->begin2D");
+        _display->begin2D();
     	DEBUG_MSG(3, "_interface->display");
     	_interface->display();
     	DEBUG_MSG(3, "_debug->display");
@@ -166,10 +170,6 @@ void MasterManager::onKeyboard(int key, int x, int y, bool bSpecialKey)
 	if (bSpecialKey) {
 	    if (key == 1/*F1*/) {
 	        _debug->switchShowFPS();
-	    } else if (key == 2/*F2*/) {
-	    	_display->setLookAtMode(false);
-	    } else if (key == 3 /*F3*/) {
-	        _display->setLookAtMode(true);
 	    } else {
 	    	_input->onSpecialKeyboard(key, x, y);
 	    }

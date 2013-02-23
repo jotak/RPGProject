@@ -71,10 +71,9 @@ void DebugManager::update(double delta)
             CoordsScreen cs = _input->getCurrentCursorPosition();
             cs.z = BOARDPLANE;
             Coords3D c3 = _display->get3DCoords(cs, DMS_3D);
-            CoordsMap cm = _display->getMapCoords(cs);
             Coords3D cam = _display->getCamera();
             char sInfo[512];
-            snprintf(sInfo, 512, "ScreenX=%d ; ScreenY=%d\n3dX=%.1f ; 3dY=%.1f\nMapX=%d ; MapY=%d\nCamX=%.1f ; CamY=%.1f ; CamZ=%.1f\nFPS : %.0f", cs.x, cs.y, c3.x, c3.y, cm.x, cm.y, cam.x, cam.y, cam.z, fFps);
+            snprintf(sInfo, 512, "ScreenX=%d ; ScreenY=%d\n3dX=%.1f ; 3dY=%.1f\nCamX=%.1f ; CamY=%.1f ; CamZ=%.1f\nFPS : %.0f", cs.x, cs.y, c3.x, c3.y, cam.x, cam.y, cam.z, fFps);
             if (m_pFPSGeometry == NULL)
             {
                 m_pFPSGeometry = new GeometryText(sInfo, m_iFontId, VB_Static);
@@ -98,12 +97,12 @@ void DebugManager::display()
     {
         yPxl += 15;
         coords = CoordsScreen(5, yPxl, GUIPLANE);
-        m_pGeometries[i]->display(coords, NULL);
+        m_pGeometries[i]->display(coords, Color::white);
     }
     if (m_bShowFPS && m_pFPSGeometry != NULL)
     {
         coords = CoordsScreen(5, _params->getScreenYSize() - 80, GUIPLANE);
-        m_pFPSGeometry->display(coords, NULL);
+        m_pFPSGeometry->display(coords, Color::white);
     }
 }
 

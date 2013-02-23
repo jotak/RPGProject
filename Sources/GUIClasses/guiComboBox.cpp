@@ -114,7 +114,7 @@ void guiComboBox::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color d
         return;
     }
     CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset, m_iYPxl + iYOffset, GUIPLANE);
-    m_pGeometry->display(coords, &cpntColor);
+    m_pGeometry->display(coords, cpntColor);
     m_pLabel->displayAt(iXOffset, iYOffset, cpntColor, docColor);
 
     if (m_pList->isVisible())

@@ -26,7 +26,7 @@ WorldManager::~WorldManager()
 // -----------------------------------------------------------------
 void WorldManager::init(WorldBuilder * pBuilder)
 {
-	pBuilder->build(&m_Tiles, &m_pGameObjects);
+	pBuilder->build(&m_Terrain, &m_pGameObjects);
 	delete pBuilder;
 }
 
@@ -45,9 +45,7 @@ void WorldManager::update(double delta)
 // -----------------------------------------------------------------
 void WorldManager::display()
 {
-	for (vector<Tile>::iterator it = m_Tiles.begin(); it != m_Tiles.end(); ++it) {
-		it->display();
-	}
+	m_Terrain.display();
 	for (list<GameObject*>::iterator it = m_pGameObjects.begin(); it != m_pGameObjects.end(); ++it) {
 		(*it)->display();
 	}

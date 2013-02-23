@@ -58,8 +58,7 @@ void guiImage::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docC
         return;
     }
     CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset, m_iYPxl + iYOffset, GUIPLANE);
-    Color c = cpntColor * m_DiffuseColor;
-    m_pGeometry->display(coords, &c);
+    m_pGeometry->display(coords, cpntColor * m_DiffuseColor);
 }
 
 // -----------------------------------------------------------------

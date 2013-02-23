@@ -9,7 +9,7 @@ public:
 	WorldBuilderTest();
     ~WorldBuilderTest();
 
-    void build(vector<Tile>*, list<GameObject*>*);
+    void build(Terrain*, list<GameObject*>*);
 };
 
 #endif

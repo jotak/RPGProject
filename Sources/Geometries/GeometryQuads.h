@@ -13,8 +13,8 @@ public:
     GeometryQuads(VBType type);
     virtual ~GeometryQuads();
 
-    void display(CoordsScreen pos, Color * color);
-    void display(Coords3D pos, Color * color);
+    void display(CoordsScreen pos, Color color);
+    void display(Coords3D pos, Color color);
     void modify(int nQuads, QuadData ** pAllQuads);
     void modify(QuadData * pQuad)
     {

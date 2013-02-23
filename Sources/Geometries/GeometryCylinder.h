@@ -11,8 +11,8 @@ public:
     GeometryCylinder(float fDiameter, float fHeight, u16 uSlices, Texture * pTex, VBType type);
     virtual ~GeometryCylinder();
 
-    void display(CoordsScreen pos, Color * color, Color * borderColor);
-    void display(Coords3D pos, Color * color, Color * borderColor);
+    void display(CoordsScreen pos, Color color, Color borderColor);
+    void display(Coords3D pos, Color color, Color borderColor);
     void modify(float fDiameter, float fHeight, u16 uSlices, Texture * pTex);
     Texture * getTexture();
     void setTexture(Texture * pTex);

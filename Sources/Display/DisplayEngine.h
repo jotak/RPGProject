@@ -30,11 +30,6 @@ public:
 
     void init();
     void initGlutWindow();
-    void setMapData(int iWidth, int iHeight)
-    {
-        m_iMapWidth = iWidth;
-        m_iMapHeight = iHeight;
-    };
 
     // Other functions
     void beginDisplay();
@@ -46,18 +41,13 @@ public:
     bool isReady() { return m_bReady; };
     void setReady() { m_bReady = true; };
     void resizeWindow();
-    CoordsMap getMapCoords(CoordsScreen screenCoords);
-    CoordsMap getMapCoords(Coords3D d3Coords);
-    CoordsScreen getScreenCoords(CoordsMap mapCoords);
     CoordsScreen getScreenCoords(Coords3D d3Coords, DisplayModeState modeState);
-    Coords3D get3DCoords(CoordsMap mapCoords, double fZPlane = BOARDPLANE);
     Coords3D get3DCoords(CoordsScreen screenCoords, DisplayModeState modeState);
     Coords3D get3DDistance(CoordsScreen screenDist, DisplayModeState modeState);
     Coords3D getCamera() { return m_f3CamPos; };
     void moveCameraBy(Coords3D d3Delta);
     void moveCameraTo(Coords3D d3Delta);
     void setModeState(DisplayModeState modeState) { m_ModeState = modeState; };
-    bool isZoomToMapPosNeeded(CoordsMap mapPos);
     int setStencilState(int iState);
     void enableBlending();
     void disableBlending();
@@ -68,7 +58,6 @@ public:
     void unregisterGeometry(Geometry * pGeometry);
     void saveWinPos();
     bool setAdditiveMode(bool bAdd);
-    void setLookAtMode(bool bLookAt);
     bool canResize();
 
     // Shaders
@@ -87,10 +76,7 @@ private:
     int m_iWindow;
     list<Geometry*> m_pRegisteredGeometries;
     double m_dScreenRatio;
-    int m_iMapWidth;
-    int m_iMapHeight;
     bool m_bAdditive;
-    bool m_bLookAtMode;
     bool m_bIgnoreNextResize;
 };
 

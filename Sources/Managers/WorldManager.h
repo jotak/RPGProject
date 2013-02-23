@@ -22,7 +22,7 @@ private:
     WorldManager();
     static WorldManager * m_pInstance;
 
-    vector<Tile> m_Tiles;
+    Terrain m_Terrain;
     list<GameObject*> m_pGameObjects;
 };
 

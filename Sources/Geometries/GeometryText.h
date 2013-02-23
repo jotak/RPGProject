@@ -10,8 +10,8 @@ public:
     GeometryText(string sText, int iFontId, float fFontHeight, VBType type);
     virtual ~GeometryText();
 
-    void display(CoordsScreen pos, Color * color);
-    void display(Coords3D pos, Color * color);
+    void display(CoordsScreen pos, Color color);
+    void display(Coords3D pos, Color color);
     void setText(string sText, int iFontId);
     virtual void reload();
 
