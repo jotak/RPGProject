@@ -63,9 +63,8 @@ void guiGauge::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docC
         return;
     }
     CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset, m_iYPxl + iYOffset, GUIPLANE);
-    Color c = m_Color * cpntColor;
-    m_pForegroundGeometry->display(coords, &c); // actually display foreground before background
-    m_pGeometry->display(coords, &cpntColor);
+    m_pForegroundGeometry->display(coords, m_Color * cpntColor); // actually display foreground before background
+    m_pGeometry->display(coords, cpntColor);
 }
 
 // -----------------------------------------------------------------

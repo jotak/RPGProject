@@ -57,9 +57,8 @@ void guiLabel::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color docC
     if (!m_bVisible) {
         return;
     }
-    cpntColor = cpntColor * m_DiffuseColor;
     CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset, m_iYPxl + iYOffset, GUIPLANE);
-    m_pGeometry->display(coords, &cpntColor);
+    m_pGeometry->display(coords, cpntColor * m_DiffuseColor);
 }
 
 // -----------------------------------------------------------------

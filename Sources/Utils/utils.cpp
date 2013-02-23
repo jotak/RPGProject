@@ -3,6 +3,8 @@
 // -----------------------------------------------------------------
 #include "utils.h"
 
+const Color Color::white(1,1,1,1);
+
 void wchop(char * str)
 {
     int len = (int) strlen(str) - 1;

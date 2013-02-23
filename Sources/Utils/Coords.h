@@ -44,21 +44,6 @@ public:
     XYZ_OPDIV(CoordsScreen, int)
     XYZ_DECLAREVAR(int)
 };
-class CoordsMap : public Coords
-{
-public:
-    XY_EMPTY_CONSTRUCTOR(CoordsMap)
-    XY_CONSTRUCTOR(CoordsMap, int)
-    XY_OPDIF(CoordsMap)
-    XY_OPEQ(CoordsMap)
-    XY_OPPLUS(CoordsMap)
-    XY_OPPLUSEQ(CoordsMap)
-    XY_OPMINUS(CoordsMap)
-    XY_OPMINUSEQ(CoordsMap)
-    XY_OPMULT(CoordsMap, int)
-    XY_OPDIV(CoordsMap, int)
-    XY_DECLAREVAR(int)
-};
 class Coords3D : public Coords
 {
 public:

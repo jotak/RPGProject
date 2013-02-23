@@ -37,7 +37,7 @@ GeometryCylinder::~GeometryCylinder()
 // -----------------------------------------------------------------
 // Name : display
 // -----------------------------------------------------------------
-void GeometryCylinder::display(CoordsScreen pos, Color * color, Color * borderColor)
+void GeometryCylinder::display(CoordsScreen pos, Color color, Color borderColor)
 {
     Coords3D d3Coords = _display->getGUI3D(pos);
     display(d3Coords, color, borderColor);
@@ -46,17 +46,15 @@ void GeometryCylinder::display(CoordsScreen pos, Color * color, Color * borderCo
 // -----------------------------------------------------------------
 // Name : display
 // -----------------------------------------------------------------
-void GeometryCylinder::display(Coords3D pos, Color * color, Color * borderColor)
+void GeometryCylinder::display(Coords3D pos, Color color, Color borderColor)
 {
-	assert(color != NULL && borderColor != NULL);
-
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glPushMatrix();
     glTranslatef(pos.x, pos.y, -pos.z);
-    doModTransforms(color);
-    doModTransforms(borderColor);
+    doModTransforms(&color);
+    doModTransforms(&borderColor);
     glTranslatef(m_fDiameter / 2.0f, m_fDiameter / 2.0f, 0);
 
     if (m_bShaderEnabled) {
@@ -65,7 +63,7 @@ void GeometryCylinder::display(Coords3D pos, Color * color, Color * borderColor)
 
     glEnable(GL_TEXTURE_2D);
 
-    glColor4f(borderColor->r, borderColor->g, borderColor->b, borderColor->a);
+    glColor4f(borderColor.r, borderColor.g, borderColor.b, borderColor.a);
     glBindBuffer(GL_ARRAY_BUFFER, m_BordersVboId);
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(2 * sizeof(GLfloat)));
@@ -78,7 +76,7 @@ void GeometryCylinder::display(Coords3D pos, Color * color, Color * borderColor)
     glBindTexture(GL_TEXTURE_2D, m_pTopTex->getGlid());
     glTranslatef(0, 0, m_fHeight);
     glDrawArrays(GL_TRIANGLE_FAN, 0, m_uSlices+2);
-    glColor4f(color->r, color->g, color->b, color->a);
+    glColor4f(color.r, color.g, color.b, color.a);
     glBindTexture(GL_TEXTURE_2D, m_pTex->getGlid());
     glDrawArrays(GL_TRIANGLE_FAN, 0, m_uSlices+2);
 

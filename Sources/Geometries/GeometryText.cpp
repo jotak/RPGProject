@@ -50,7 +50,7 @@ GeometryText::~GeometryText()
 // -----------------------------------------------------------------
 // Name : display
 // -----------------------------------------------------------------
-void GeometryText::display(CoordsScreen position, Color * color)
+void GeometryText::display(CoordsScreen position, Color color)
 {
     Coords3D d3Coords = _display->getGUI3D(position);
     display(d3Coords, color);
@@ -59,17 +59,13 @@ void GeometryText::display(CoordsScreen position, Color * color)
 // -----------------------------------------------------------------
 // Name : display
 // -----------------------------------------------------------------
-void GeometryText::display(Coords3D d3Coords, Color * color)
+void GeometryText::display(Coords3D d3Coords, Color color)
 {
     glEnable(GL_TEXTURE_2D);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(2 * sizeof(GLfloat)));
-    if (color == NULL) {
-        glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-    } else {
-        glColor4f(color->r, color->g, color->b, color->a);
-    }
+    glColor4f(color.r, color.g, color.b, color.a);
     glEnableClientState(GL_VERTEX_ARRAY);
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
     glBindTexture(GL_TEXTURE_2D, _font->getFont(m_iFontId)->getTexture()->getGlid());

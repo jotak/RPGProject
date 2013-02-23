@@ -161,7 +161,7 @@ void guiTabbedFrame::displayAt(int iXOffset, int iYOffset, Color cpntColor, Colo
     else
     {
         CoordsScreen coords = CoordsScreen(iXOffset + m_iXPxl + m_iXPanelDecal, iYOffset + m_iYPxl, GUIPLANE);
-        m_pTabsGeometry->display(coords, &cpntColor);
+        m_pTabsGeometry->display(coords, cpntColor);
         int boxWidth = (m_iWidth - 2 * m_iXPanelDecal) / size;
         int i = 0;
     	for (guiTabbedFrame_Document* &pDoc : m_pDocumentsList) {

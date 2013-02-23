@@ -33,8 +33,8 @@ public:
     virtual void update(double delta);
 
     // Display functions
-    virtual void display(CoordsScreen pos, Color * pColor) {};
-    virtual void display(Coords3D pos, Color * pColor) {};
+    virtual void display(CoordsScreen pos, Color color) {};
+    virtual void display(Coords3D pos, Color color) {};
 
     // Mods functions
     GeometryModifier * getModifier(u16 uModId);

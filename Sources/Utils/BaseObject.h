@@ -75,11 +75,6 @@ public:
         m_Coords.y = c.y;
         m_Coords.z = c.z;
     };
-    CoordsObject(CoordsMap c)
-    {
-        m_Coords.x = c.x;
-        m_Coords.y = c.y;
-    };
 
     Coords3D getCoords3D()
     {
@@ -88,10 +83,6 @@ public:
     CoordsScreen getCoordsScreen()
     {
         return CoordsScreen((int)m_Coords.x, (int)m_Coords.y, m_Coords.z);
-    };
-    CoordsMap getCoordsMap()
-    {
-        return CoordsMap((int)m_Coords.x, (int)m_Coords.y);
     };
 
     Coords3D m_Coords;

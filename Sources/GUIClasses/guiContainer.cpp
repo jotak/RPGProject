@@ -310,14 +310,14 @@ void guiContainer::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color 
         _display->setStencilState(iPreviousState);
     }
     coords = CoordsScreen(m_iXPxl + iXOffset + m_iXOffset, m_iYPxl + iYOffset + m_iYOffset, GUIPLANE);
-    m_pGeometry->display(coords, &docColor);
+    m_pGeometry->display(coords, docColor);
     // Draw scroll buttons
     cpntColor.a *= 0.5f;
     for (int i = 0; i < 4; i++)
     {
         if (m_bShowScrollButtons[i])
         {
-            m_pScrollButtons[i]->display(m_ScrollButtonsCoords[i] + CoordsScreen(iXOffset, iYOffset, 0), &cpntColor);
+            m_pScrollButtons[i]->display(m_ScrollButtonsCoords[i] + CoordsScreen(iXOffset, iYOffset, 0), cpntColor);
         }
     }
 }

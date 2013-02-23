@@ -191,8 +191,7 @@ void guiButton::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color doc
         if (m_pGeometryAttachedImage != NULL)
         {
             CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset, m_iYPxl + iYOffset, GUIPLANE);
-        	Color c = cpntColor * m_DiffuseColor;
-            m_pGeometryAttachedImage->display(coords, &c);
+            m_pGeometryAttachedImage->display(coords, cpntColor * m_DiffuseColor);
         }
         if (bAddMode) {
             _display->setAdditiveMode(bPrevMode);

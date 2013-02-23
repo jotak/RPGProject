@@ -71,7 +71,7 @@ void guiDocument::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color d
 {
     // Display document background
     CoordsScreen coords = CoordsScreen(m_iXPxl + iXOffset, m_iYPxl + iYOffset, GUIPLANE);
-    m_pGeometry->display(coords, &docColor);
+    m_pGeometry->display(coords, docColor);
 
     // Display components
 	for (guiComponent* &pCpnt : m_pComponentsList) {
