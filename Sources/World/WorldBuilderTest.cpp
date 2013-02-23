@@ -3,7 +3,7 @@
 // Construit le monde de test
 // -----------------------------------------------------------------
 #include "WorldBuilderTest.h"
-#include "../World/MovingObject.h"
+#include "../World/Character.h"
 #include "../Display/DisplayEngine.h"
 #include "../Geometries/GeometryQuads.h"
 
@@ -30,13 +30,11 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
     GeometryQuads * pGeometry = new GeometryQuads(&quad, VB_Static);
     pTerrain->addGeometry(pGeometry);
 
-    MovingObject * pObj = new MovingObject();
-	pObj->setX(2);
-	pObj->setY(2);
-	pGameObjects->push_back(pObj);
-	pObj = new MovingObject();
-	pObj->setX(3);
-	pObj->setY(3);
+    Character * pObj = new Character();
+    QuadData quad2(0.0f, 10.0f, 0.0f, 10.0f, string("heroe"));
+    pGeometry = new GeometryQuads(&quad2, VB_Static);
+    pObj->setGeometry(pGeometry);
+    pObj->setPosition(15, 15);
 	pGameObjects->push_back(pObj);
 
 	_display->moveCameraTo(Coords3D(50, 50, 98));

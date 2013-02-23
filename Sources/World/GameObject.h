@@ -1,22 +1,24 @@
 #ifndef _GAME_OBJECT_H
 #define _GAME_OBJECT_H
 
+#include "../Geometries/Geometry.h"
+
 class GameObject
 {
 public:
-	GameObject() {};
-    virtual ~GameObject() {};
+	GameObject();
+    virtual ~GameObject();
 
-    virtual void update(double delta) {};
-    virtual void display() {};
+    virtual void update(double delta);
+    virtual void display();
 
-    int getX() { return x; };
-    int getY() { return y; };
-    void setX(int x) { this->x = x; };
-    void setY(int y) { this->y = y; };
+    void setPosition(double x, double y) { m_pos.x = x; m_pos.y = y; };
+    Geometry * getGeometry() { return m_pGeometry; };
+    void setGeometry(Geometry * pGeo) { m_pGeometry = pGeo; };
 
 private:
-    int x, y;
+    Coords3D m_pos;
+    Geometry * m_pGeometry;
 };
 
 #endif
