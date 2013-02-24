@@ -264,18 +264,20 @@ guiComponent * InterfaceManager::getObjectAt(int xPxl, int yPxl, int * xoffset, 
 {
     // First look at TopDisplayList
 	for (list<TopDisplayObject*>::reverse_iterator it = m_pTopDisplayList.rbegin(); it != m_pTopDisplayList.rend(); ++it) {
-        if ((*it)->pObj->isAt(xPxl - (*it)->iX, yPxl - (*it)->iY)) {
-            *xoffset = (*it)->iX;
-            *yoffset = (*it)->iY;
-            return (*it)->pObj;
+		TopDisplayObject * pTop = (*it);
+        if (pTop->pObj->isAt(xPxl - pTop->iX, yPxl - pTop->iY)) {
+            *xoffset = pTop->iX;
+            *yoffset = pTop->iY;
+            return pTop->pObj;
         }
     }
     // Then, frames
     *xoffset = 0;
     *yoffset = 0;
 	for (list<guiFrame*>::reverse_iterator it = m_pFrameList.rbegin(); it != m_pFrameList.rend(); ++it) {
-        if ((*it) != m_pTooltip && (*it)->isAt(xPxl, yPxl)) {
-            return *it;
+		guiFrame * pFrm = (*it);
+        if (pFrm != m_pTooltip && pFrm->isAt(xPxl, yPxl)) {
+            return pFrm;
         }
     }
     return NULL;

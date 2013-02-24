@@ -79,11 +79,13 @@ void glutIdle()
     // Notes: in case of troubles with CLOCKS_PER_SEC not recognized, try to change indexing order in your IDE to put ctime first
     // Example Eclipse CDT: Window > Preferences > C/C++ > Indexer > Files to index up-front
     // Example Code::Blocks
-    double delta = 1000.0f * (double)(now - g_iLastUpdateTime) / (double)CLOCKS_PER_SEC;
-    g_pMaster->update(delta);
-    glutPostRedisplay();
-    g_iLastUpdateTime = now;
-    g_pMaster->checkRestartGlut(delta);
+    double delta = (double)(now - g_iLastUpdateTime) / (double)CLOCKS_PER_SEC;
+    if (delta > 0) {
+    	g_pMaster->update(delta);
+    	glutPostRedisplay();
+    	g_iLastUpdateTime = now;
+    	g_pMaster->checkRestartGlut(delta);
+    }
 }
 
 void registerGlutCallbacks()

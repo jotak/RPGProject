@@ -79,6 +79,8 @@ void GeometryQuads::display(Coords3D pos, Color * color)
         return;
     }
 
+    pos = pos - m_Offset;
+
     glEnable(GL_TEXTURE_2D);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
     glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(0));
@@ -219,6 +221,18 @@ void GeometryQuads::reload()
     }
     glBufferData(GL_ARRAY_BUFFER, m_iNbQuads * 4 * sizeof(Vertex), vertices, glType);
     delete[] vertices;
+}
+
+// -----------------------------------------------------------------
+// Name : setOffset
+// -----------------------------------------------------------------
+void GeometryQuads::setOffset(CoordsScreen offset2D)
+{
+	// Works only for a single quad
+	if (m_iNbQuads == 1) {
+		m_Offset.x = ((float)offset2D.x / (float)m_pAllQuads[0]->m_pTex->getWidth()) * (m_pAllQuads[0]->m_fXEnd - m_pAllQuads[0]->m_fXStart);
+		m_Offset.y = ((float)offset2D.y / (float)m_pAllQuads[0]->m_pTex->getHeight()) * (m_pAllQuads[0]->m_fYEnd - m_pAllQuads[0]->m_fYStart);
+	}
 }
 
 
