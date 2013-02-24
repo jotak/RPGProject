@@ -3,10 +3,7 @@
 // -----------------------------------------------------------------
 #include "MovesHelper.h"
 #include "FunctionalMove.h"
-//#include "../Utils/utils.h"
-#include<functional>
-#include<vector>
-#include<iostream>
+#include "../Utils/utils.h"
 
 // -----------------------------------------------------------------
 // Name : newConstantMove
@@ -14,7 +11,7 @@
 // -----------------------------------------------------------------
 Movement * MovesHelper::newConstantMove(Coords3D vector, double fSpeed)
 {
-	double(*func)(double) = [](double in) -> double { return in; };
+	double(*func)(double) = [](double in) -> double { return 1; };
 	return new FunctionalMove(vector, fSpeed, func);
 }
 

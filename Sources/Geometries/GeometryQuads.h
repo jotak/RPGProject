@@ -16,17 +16,16 @@ public:
     void display(CoordsScreen pos, Color color);
     void display(Coords3D pos, Color color);
     void modify(int nQuads, QuadData ** pAllQuads);
-    void modify(QuadData * pQuad)
-    {
-        modify(1, &pQuad);
-    };
+    void modify(QuadData * pQuad) { modify(1, &pQuad); };
     Texture * getTexture(int iQuad = 0);
     void setTexture(Texture * pTex, int iQuad = 0);
+    void setOffset(CoordsScreen offset2D);
     virtual void reload();
 
 protected:
     int m_iNbQuads;
     QuadData ** m_pAllQuads;
+    Coords3D m_Offset;
 };
 
 

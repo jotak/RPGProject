@@ -8,7 +8,7 @@
 FunctionalMove::FunctionalMove(Coords3D vector, double fFullSpeed, MoveFunction func) : Movement()
 {
     m_Vector = vector;
-    m_fFullSpeed = fFullSpeed;
+    m_fFullSpeed = fFullSpeed / vector.getsize();
     m_Func = func;
     m_f1DPos = 0.0f;
 }

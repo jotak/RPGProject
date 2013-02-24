@@ -30,13 +30,14 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
     GeometryQuads * pGeometry = new GeometryQuads(&quad, VB_Static);
     pTerrain->addGeometry(pGeometry);
 
-    Character * pObj = new Character(5.0f);
+    Character * pCharacter = new Character(8.0f);
     QuadData quad2(0.0f, 10.0f, 0.0f, 10.0f, string("heroe"));
     pGeometry = new GeometryQuads(&quad2, VB_Static);
-    pObj->setGeometry(pGeometry);
-    pObj->setPosition(15, 15);
-	pGameObjects->push_back(pObj);
-	_world->setActiveCharacter(pObj);
+    pGeometry->setOffset(CoordsScreen(280, 350));
+    pCharacter->setGeometry(pGeometry);
+    pCharacter->setPosition(25, 30, BOARDPLANE - 0.01f);
+	pGameObjects->push_back(pCharacter);
+	_world->setActiveCharacter(pCharacter);
 
 	_display->moveCameraTo(Coords3D(50, 50, 98));
 }

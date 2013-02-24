@@ -30,6 +30,8 @@ void WorldManager::init(WorldBuilder * pBuilder)
 {
 	pBuilder->build(&m_Terrain, &m_pGameObjects);
 	delete pBuilder;
+    _input->addCursoredEventListener(this);
+    _input->pushUncursoredEventListener(this);
 }
 
 // -----------------------------------------------------------------
@@ -65,6 +67,7 @@ bool WorldManager::onCatchButtonEvent(ButtonAction * pEvent)
     		&& pEvent->eEvent == Event_Down
     		&& pEvent->eButton == Button1) {
         Coords3D pos = _display->get3DCoords(CoordsScreen(pEvent->xPos, pEvent->yPos, BOARDPLANE), DMS_3D);
+        pos.z = BOARDPLANE;
         m_pActiveCharacter->setMoveTarget(pos);
     	return true;
     }

@@ -12,7 +12,7 @@ public:
     virtual void update(double delta);
     virtual void display();
 
-    void setPosition(double x, double y) { m_pos.x = x; m_pos.y = y; };
+    void setPosition(double x, double y, double z) { m_pos.x = x; m_pos.y = y; m_pos.z = z; };
     Geometry * getGeometry() { return m_pGeometry; };
     void setGeometry(Geometry * pGeo) { m_pGeometry = pGeo; };
 
