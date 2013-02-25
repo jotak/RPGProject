@@ -27,10 +27,9 @@ void guiFrameIntro::onBeginDisplay(int iXOffset, int iYOffset, Color * cpntColor
     float coef = max(1 - m_fTimer / m_fTotalTime, 0.001f); // must not be 0
 
     // Scaling
-    Coords3D fCenter = _display->get3DCoords(CoordsScreen(
+    Coords3D fCenter = _display->getGUI3D(CoordsScreen(
                            iXOffset + m_pFrame->getXPos() + m_pFrame->getWidth() / 2,
-                           iYOffset + m_pFrame->getYPos() + m_pFrame->getHeight() / 2),
-                       DMS_2D);
+                           iYOffset + m_pFrame->getYPos() + m_pFrame->getHeight() / 2));
     glPushMatrix();
     glTranslatef(fCenter.x * (1 - coef), fCenter.y * (1 - coef), 0.0f);
     glScalef(coef, coef, 1.0f);

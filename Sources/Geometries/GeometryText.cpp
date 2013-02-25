@@ -28,7 +28,7 @@ GeometryText::GeometryText(string sText, int iFontId, float fFontHeight, VBType 
     m_sText = string("");
     Font * pFont = _font->getFont(iFontId);
     if (pFont) {
-        Coords3D p = _display->get3DCoords(CoordsScreen(0, pFont->getFontHeight()), DMS_2D);
+        Coords3D p = _display->getGUI3D(CoordsScreen(0, pFont->getFontHeight()));
         m_fScale = fFontHeight / p.y;
     } else {
         m_fScale = -1;
@@ -52,7 +52,7 @@ GeometryText::~GeometryText()
 // -----------------------------------------------------------------
 void GeometryText::display(CoordsScreen position, Color * color)
 {
-    Coords3D d3Coords = _display->get3DCoords(position, DMS_2D);
+    Coords3D d3Coords = _display->getGUI3D(position);
     display(d3Coords, color);
 }
 
@@ -121,7 +121,6 @@ void GeometryText::setText(string sText, int iFontId)
     }
     glGenBuffers(1, &m_VboId);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-    _display->setModeState(DMS_2D);
 
     Font * pFont = _font->getFont(iFontId);
     float fTexWidth = (float) pFont->getTexture()->getWidth();
@@ -144,8 +143,8 @@ void GeometryText::setText(string sText, int iFontId)
             continue;
         CharDescriptor * acuteDesc = pFont->getLastAcuteDescriptor();
 
-        Coords3D p0 = _display->get3DCoords(CoordsScreen(iXPxl + charDesc->xoffset, iYPxl + charDesc->yoffset), DMS_2D);
-        Coords3D p1 = _display->get3DCoords(CoordsScreen(iXPxl + charDesc->xoffset + charDesc->width, iYPxl + charDesc->yoffset + charDesc->height), DMS_2D);
+        Coords3D p0 = _display->getGUI3D(CoordsScreen(iXPxl + charDesc->xoffset, iYPxl + charDesc->yoffset));
+        Coords3D p1 = _display->getGUI3D(CoordsScreen(iXPxl + charDesc->xoffset + charDesc->width, iYPxl + charDesc->yoffset + charDesc->height));
         if (m_fScale > 0)
         {
             p0.x *= m_fScale;
@@ -165,8 +164,8 @@ void GeometryText::setText(string sText, int iFontId)
 
         if (acuteDesc != NULL)  // acute?
         {
-            Coords3D p0 = _display->get3DCoords(CoordsScreen(iXPxl + acuteDesc->xoffset, iYPxl + acuteDesc->yoffset), DMS_2D);
-            Coords3D p1 = _display->get3DCoords(CoordsScreen(iXPxl + acuteDesc->xoffset + acuteDesc->width, iYPxl + acuteDesc->yoffset + acuteDesc->height), DMS_2D);
+            Coords3D p0 = _display->getGUI3D(CoordsScreen(iXPxl + acuteDesc->xoffset, iYPxl + acuteDesc->yoffset));
+            Coords3D p1 = _display->getGUI3D(CoordsScreen(iXPxl + acuteDesc->xoffset + acuteDesc->width, iYPxl + acuteDesc->yoffset + acuteDesc->height));
             float fSrcLeft = (float)acuteDesc->x / fTexWidth;
             float fSrcRight = (float)(acuteDesc->x + acuteDesc->width) / fTexWidth;
             float fSrcTop = (float)acuteDesc->y / fTexHeight;
@@ -204,7 +203,6 @@ void GeometryText::reload()
     }
     glGenBuffers(1, &m_VboId);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-    _display->setModeState(DMS_2D);
 
     Font * pFont = _font->getFont(m_iFontId);
     float fTexWidth = (float) pFont->getTexture()->getWidth();
@@ -227,8 +225,8 @@ void GeometryText::reload()
             continue;
         CharDescriptor * acuteDesc = pFont->getLastAcuteDescriptor();
 
-        Coords3D p0 = _display->get3DCoords(CoordsScreen(iXPxl + charDesc->xoffset, iYPxl + charDesc->yoffset), DMS_2D);
-        Coords3D p1 = _display->get3DCoords(CoordsScreen(iXPxl + charDesc->xoffset + charDesc->width, iYPxl + charDesc->yoffset + charDesc->height), DMS_2D);
+        Coords3D p0 = _display->getGUI3D(CoordsScreen(iXPxl + charDesc->xoffset, iYPxl + charDesc->yoffset));
+        Coords3D p1 = _display->getGUI3D(CoordsScreen(iXPxl + charDesc->xoffset + charDesc->width, iYPxl + charDesc->yoffset + charDesc->height));
         float fSrcLeft = (float)charDesc->x / fTexWidth;
         float fSrcRight = (float)(charDesc->x + charDesc->width) / fTexWidth;
         float fSrcTop = (float)charDesc->y / fTexHeight;
@@ -241,8 +239,8 @@ void GeometryText::reload()
 
         if (acuteDesc != NULL)  // acute?
         {
-            Coords3D p0 = _display->get3DCoords(CoordsScreen(iXPxl + acuteDesc->xoffset, iYPxl + acuteDesc->yoffset), DMS_2D);
-            Coords3D p1 = _display->get3DCoords(CoordsScreen(iXPxl + acuteDesc->xoffset + acuteDesc->width, iYPxl + acuteDesc->yoffset + acuteDesc->height), DMS_2D);
+            Coords3D p0 = _display->getGUI3D(CoordsScreen(iXPxl + acuteDesc->xoffset, iYPxl + acuteDesc->yoffset));
+            Coords3D p1 = _display->getGUI3D(CoordsScreen(iXPxl + acuteDesc->xoffset + acuteDesc->width, iYPxl + acuteDesc->yoffset + acuteDesc->height));
             float fSrcLeft = (float)acuteDesc->x / fTexWidth;
             float fSrcRight = (float)(acuteDesc->x + acuteDesc->width) / fTexWidth;
             float fSrcTop = (float)acuteDesc->y / fTexHeight;

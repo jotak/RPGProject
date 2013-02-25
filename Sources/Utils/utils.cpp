@@ -117,3 +117,19 @@ void wsafecat(char * dst, unsigned int size, const char * src)
     else
         strncat(dst, src, size);
 }
+
+f3d sin(const f3d &d3) {
+	return f3d(sin(d3.x), sin(d3.y), sin(d3.z));
+}
+f3d cos(const f3d &d3) {
+	return f3d(cos(d3.x), cos(d3.y), cos(d3.z));
+}
+f3d tan(const f3d &d3) {
+	return f3d(tan(d3.x), tan(d3.y), tan(d3.z));
+}
+f3d atan(const f3d &d3) {
+	return f3d(atan(d3.x), atan(d3.y), atan(d3.z));
+}
+f3d sqrt(const f3d &d3) {
+	return f3d(sqrt(d3.x), sqrt(d3.y), sqrt(d3.z));
+}

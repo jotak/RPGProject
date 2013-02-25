@@ -10,7 +10,9 @@
 #define XYZ_OPPLUSEQ(T)           void operator+= (T other) { x += other.x; y += other.y; z += other.z; };
 #define XYZ_OPMINUS(T)            T operator- (T other) { return T(x - other.x, y - other.y, z - other.z); };
 #define XYZ_OPMINUSEQ(T)          void operator-= (T other) { x -= other.x; y -= other.y; z -= other.z; };
-#define XYZ_OPMULT(T, T2)         T operator* (T2 k) { return T(x * k, y * k, z * (double)k); };
+#define XYZ_OPMULT(T)          	   T operator* (T other) { return T(x * other.x, y * other.y, z * other.z); };
+#define XYZ_OPPLUS2(T, T2)        T operator+ (T2 k) { return T(x + k, y + k, z + (double)k); };
+#define XYZ_OPMULT2(T, T2)        T operator* (T2 k) { return T(x * k, y * k, z * (double)k); };
 #define XYZ_OPDIV(T, T2)          T operator/ (T2 k) { return T(x / k, y / k, z / (double)k); };
 #define XYZ_DECLAREVAR(T)         T x, y; double z;
 
@@ -22,7 +24,7 @@
 #define XY_OPPLUSEQ(T)            void operator+= (T other) { x += other.x; y += other.y; };
 #define XY_OPMINUS(T)             T operator- (T other) { return T(x - other.x, y - other.y); };
 #define XY_OPMINUSEQ(T)           void operator-= (T other) { x -= other.x; y -= other.y; };
-#define XY_OPMULT(T, T2)          T operator* (T2 k) { return T(x * k, y * k); };
+#define XY_OPMULT(T, T2)         T operator* (T2 k) { return T(x * k, y * k); };
 #define XY_OPDIV(T, T2)           T operator/ (T2 k) { return T(x / k, y / k); };
 #define XY_DECLAREVAR(T)          T x, y;
 
@@ -38,7 +40,7 @@ public:
     XYZ_OPPLUSEQ(CoordsScreen)
     XYZ_OPMINUS(CoordsScreen)
     XYZ_OPMINUSEQ(CoordsScreen)
-    XYZ_OPMULT(CoordsScreen, int)
+    XYZ_OPMULT2(CoordsScreen, int)
     XYZ_OPDIV(CoordsScreen, int)
     XYZ_DECLAREVAR(int)
 };
@@ -68,8 +70,10 @@ public:
     XYZ_OPPLUSEQ(Coords3D)
     XYZ_OPMINUS(Coords3D)
     XYZ_OPMINUSEQ(Coords3D)
-    XYZ_OPMULT(Coords3D, double)
+    XYZ_OPMULT(Coords3D)
+    XYZ_OPMULT2(Coords3D, double)
     XYZ_OPDIV(Coords3D, double)
+    XYZ_OPPLUS2(Coords3D, double)
     double getsize()
     {
         return sqrt(x*x+y*y+z*z);
@@ -94,5 +98,12 @@ public:
 };
 
 #define f3d   Coords3D
+#define i3d   CoordsScreen
+
+extern f3d sin(const f3d &d3);
+extern f3d cos(const f3d &d3);
+extern f3d tan(const f3d &d3);
+extern f3d atan(const f3d &d3);
+extern f3d sqrt(const f3d &d3);
 
 #endif

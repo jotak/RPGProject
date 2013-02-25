@@ -39,7 +39,7 @@ GeometryCylinder::~GeometryCylinder()
 // -----------------------------------------------------------------
 void GeometryCylinder::display(CoordsScreen pos, Color * color, Color * borderColor)
 {
-    Coords3D d3Coords = _display->get3DCoords(pos, DMS_2D);
+    Coords3D d3Coords = _display->getGUI3D(pos);
     display(d3Coords, color, borderColor);
 }
 

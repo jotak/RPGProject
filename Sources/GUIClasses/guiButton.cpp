@@ -125,10 +125,9 @@ void guiButton::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color doc
             case BCO_Scale:
             {
                 float coef = 1.2f;
-                Coords3D fCenter = _display->get3DCoords(CoordsScreen(
+                Coords3D fCenter = _display->getGUI3D(CoordsScreen(
                                        iXOffset + getXPos() + getWidth() / 2,
-                                       iYOffset + getYPos() + getHeight() / 2),
-                                   DMS_2D);
+                                       iYOffset + getYPos() + getHeight() / 2));
                 glPushMatrix();
                 glTranslatef(fCenter.x * (1 - coef), fCenter.y * (1 - coef), 0.0f);
                 glScalef(coef, coef, 1.0f);
@@ -166,10 +165,9 @@ void guiButton::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color doc
             case BCO_Scale:
             {
                 float coef = 1.2f;
-                Coords3D fCenter = _display->get3DCoords(CoordsScreen(
+                Coords3D fCenter = _display->getGUI3D(CoordsScreen(
                                        iXOffset + getXPos() + getWidth() / 2,
-                                       iYOffset + getYPos() + getHeight() / 2),
-                                   DMS_2D);
+                                       iYOffset + getYPos() + getHeight() / 2));
                 glPushMatrix();
                 glTranslatef(fCenter.x * (1 - coef), fCenter.y * (1 - coef), 0.0f);
                 glScalef(coef, coef, 1.0f);
