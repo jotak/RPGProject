@@ -64,7 +64,7 @@ void GeometryQuads::display(CoordsScreen pos, Color color)
         return;
     }
 
-    Coords3D d3Coords = _display->get3DCoords(pos, DMS_2D);
+    Coords3D d3Coords = _display->getGUI3D(pos);
     display(d3Coords, color);
 }
 
@@ -87,7 +87,7 @@ void GeometryQuads::display(Coords3D pos, Color color)
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glPushMatrix();
-    glTranslatef(pos.x, pos.y, -pos.z);
+    glTranslatef(pos.x, pos.y, FARPLANE - pos.z);
     doModTransforms(&color);
 
     if (m_bShaderEnabled) {
@@ -104,7 +104,7 @@ void GeometryQuads::display(Coords3D pos, Color color)
         glUseProgram(0);
     }
 
-    glPopMatrix();
+	glPopMatrix();
     glDisableClientState(GL_TEXTURE_COORD_ARRAY);
     glDisableClientState(GL_VERTEX_ARRAY);
     glDisable(GL_TEXTURE_2D);
@@ -158,10 +158,10 @@ void GeometryQuads::modify(int nQuads, QuadData ** pAllQuads)
         m_pAllQuads[i] = pAllQuads[i]->clone();
 
         // Vertex
-        vertices[4*i+0].set(pAllQuads[i]->m_fXStart, pAllQuads[i]->m_fYStart, 0.0f, pAllQuads[i]->m_fUStart, pAllQuads[i]->m_fVStart);
-        vertices[4*i+1].set(pAllQuads[i]->m_fXEnd  , pAllQuads[i]->m_fYStart, 0.0f, pAllQuads[i]->m_fUEnd  , pAllQuads[i]->m_fVStart);
-        vertices[4*i+2].set(pAllQuads[i]->m_fXEnd  , pAllQuads[i]->m_fYEnd  , 0.0f, pAllQuads[i]->m_fUEnd  , pAllQuads[i]->m_fVEnd  );
-        vertices[4*i+3].set(pAllQuads[i]->m_fXStart, pAllQuads[i]->m_fYEnd  , 0.0f, pAllQuads[i]->m_fUStart, pAllQuads[i]->m_fVEnd  );
+        vertices[4*i+0].set(pAllQuads[i]->m_fXStart, pAllQuads[i]->m_fYStart, 0.0f, pAllQuads[i]->m_fUStart, pAllQuads[i]->m_fVEnd  );
+        vertices[4*i+1].set(pAllQuads[i]->m_fXEnd  , pAllQuads[i]->m_fYStart, 0.0f, pAllQuads[i]->m_fUEnd  , pAllQuads[i]->m_fVEnd  );
+        vertices[4*i+2].set(pAllQuads[i]->m_fXEnd  , pAllQuads[i]->m_fYEnd  , 0.0f, pAllQuads[i]->m_fUEnd  , pAllQuads[i]->m_fVStart);
+        vertices[4*i+3].set(pAllQuads[i]->m_fXStart, pAllQuads[i]->m_fYEnd  , 0.0f, pAllQuads[i]->m_fUStart, pAllQuads[i]->m_fVStart);
     }
     glBufferData(GL_ARRAY_BUFFER, m_iNbQuads * 4 * sizeof(Vertex), vertices, glType);
     delete[] vertices;
@@ -212,10 +212,10 @@ void GeometryQuads::reload()
     for (int i = 0; i < m_iNbQuads; i++)
     {
         // Vertex
-        vertices[4*i+0].set(m_pAllQuads[i]->m_fXStart, m_pAllQuads[i]->m_fYStart, 0.0f, m_pAllQuads[i]->m_fUStart, m_pAllQuads[i]->m_fVStart);
-        vertices[4*i+1].set(m_pAllQuads[i]->m_fXEnd  , m_pAllQuads[i]->m_fYStart, 0.0f, m_pAllQuads[i]->m_fUEnd  , m_pAllQuads[i]->m_fVStart);
-        vertices[4*i+2].set(m_pAllQuads[i]->m_fXEnd  , m_pAllQuads[i]->m_fYEnd  , 0.0f, m_pAllQuads[i]->m_fUEnd  , m_pAllQuads[i]->m_fVEnd  );
-        vertices[4*i+3].set(m_pAllQuads[i]->m_fXStart, m_pAllQuads[i]->m_fYEnd  , 0.0f, m_pAllQuads[i]->m_fUStart, m_pAllQuads[i]->m_fVEnd  );
+        vertices[4*i+0].set(m_pAllQuads[i]->m_fXStart, m_pAllQuads[i]->m_fYStart, 0.0f, m_pAllQuads[i]->m_fUStart, m_pAllQuads[i]->m_fVEnd  );
+        vertices[4*i+1].set(m_pAllQuads[i]->m_fXEnd  , m_pAllQuads[i]->m_fYStart, 0.0f, m_pAllQuads[i]->m_fUEnd  , m_pAllQuads[i]->m_fVEnd  );
+        vertices[4*i+2].set(m_pAllQuads[i]->m_fXEnd  , m_pAllQuads[i]->m_fYEnd  , 0.0f, m_pAllQuads[i]->m_fUEnd  , m_pAllQuads[i]->m_fVStart);
+        vertices[4*i+3].set(m_pAllQuads[i]->m_fXStart, m_pAllQuads[i]->m_fYEnd  , 0.0f, m_pAllQuads[i]->m_fUStart, m_pAllQuads[i]->m_fVStart);
     }
     glBufferData(GL_ARRAY_BUFFER, m_iNbQuads * 4 * sizeof(Vertex), vertices, glType);
     delete[] vertices;
@@ -241,8 +241,8 @@ void GeometryQuads::setOffset(CoordsScreen offset2D)
 QuadData::QuadData(int xstart, int xend, int ystart, int yend, string texture)
 {
 	init(
-			_display->get3DCoords(CoordsScreen(xstart, ystart), DMS_2D),
-			_display->get3DCoords(CoordsScreen(xend, yend), DMS_2D),
+			_display->getGUI3D(CoordsScreen(xstart, ystart)),
+			_display->getGUI3D(CoordsScreen(xend, yend)),
 			_tex->loadTexture(texture));
 }
 
@@ -253,8 +253,8 @@ QuadData::QuadData(int xstart, int xend, int ystart, int yend, string texture)
 QuadData::QuadData(int xstart, int xend, int ystart, int yend, Texture * texture)
 {
 	init(
-			_display->get3DCoords(CoordsScreen(xstart, ystart), DMS_2D),
-			_display->get3DCoords(CoordsScreen(xend, yend), DMS_2D),
+			_display->getGUI3D(CoordsScreen(xstart, ystart)),
+			_display->getGUI3D(CoordsScreen(xend, yend)),
 			texture);
 }
 
@@ -265,8 +265,8 @@ QuadData::QuadData(int xstart, int xend, int ystart, int yend, Texture * texture
 QuadData::QuadData(int xstart, int xend, int ystart, int yend, int ustart, int uend, int vstart, int vend, string texture)
 {
 	init(
-			_display->get3DCoords(CoordsScreen(xstart, ystart), DMS_2D),
-			_display->get3DCoords(CoordsScreen(xend, yend), DMS_2D),
+			_display->getGUI3D(CoordsScreen(xstart, ystart)),
+			_display->getGUI3D(CoordsScreen(xend, yend)),
 			_tex->loadTexture(texture, false, false, ustart, uend, vstart, vend));
 }
 

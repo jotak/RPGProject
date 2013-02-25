@@ -15,7 +15,6 @@ DisplayEngine * DisplayEngine::m_pInstance = NULL;
 // ------------------------------------------------------------------
 DisplayEngine::DisplayEngine()
 {
-    m_ModeState = DMS_Undefined;
     m_bReady = false;
     m_iStencilState = 0;
     m_iWindow = -1;
@@ -23,6 +22,7 @@ DisplayEngine::DisplayEngine()
     m_iStencilDepth = 0;
     m_dScreenRatio = 1;
     m_bIgnoreNextResize = false;
+    m_lookAtDelta = f3d(-0.05f, -0.25f, 0);
 }
 
 // ------------------------------------------------------------------
@@ -41,7 +41,7 @@ DisplayEngine::~DisplayEngine()
 void DisplayEngine::init()
 {
     glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA | GLUT_STENCIL | GLUT_ALPHA);
-    m_f3CamPos = Coords3D(0.0f, 0.0f, 0.0f);
+    m_f3CamPos = f3d(0.0f, 0.0f, 0.0f);
 
     initGlutWindow();
 }
@@ -61,16 +61,13 @@ void DisplayEngine::initGlutWindow()
         glutDestroyWindow(m_iWindow);
     }
 
-    if (_params->isFullscreen())
-    {
+    if (_params->isFullscreen()) {
         glutGameModeString(_params->getGameModeString().c_str());
         glutEnterGameMode();
         _params->setScreenXSize(glutGameModeGet(GLUT_GAME_MODE_WIDTH));
         _params->setScreenYSize(glutGameModeGet(GLUT_GAME_MODE_HEIGHT));
         m_iWindow = -2;
-    }
-    else
-    {
+    } else {
         glutInitWindowPosition(_params->getWinXPos(), _params->getWinYPos());
         _params->setScreenXSize(_params->getWinWidth());
         _params->setScreenYSize(_params->getWinHeight());
@@ -132,27 +129,12 @@ bool DisplayEngine::canResize()
 // ------------------------------------------------------------------
 void DisplayEngine::resizeWindow()
 {
-    //if (m_bLookAtMode)
-    //{
-    //  m_dScreenRatio = 16.0f / 9.0f;
-    //  double hMargin = 0;
-    //  double vMargin = 0;
-    //  if (m_pClientParams->screenXSize > m_dScreenRatio * (double) m_pClientParams->screenYSize)
-    //    vMargin = ((double) m_pClientParams->screenXSize - m_dScreenRatio * (double) m_pClientParams->screenYSize) / 2;
-    //  else if (m_pClientParams->screenYSize > (double) m_pClientParams->screenXSize / m_dScreenRatio)
-    //    hMargin = ((double) m_pClientParams->screenYSize - (double) m_pClientParams->screenXSize / m_dScreenRatio) / 2;
-    //	glViewport(vMargin, hMargin, m_pClientParams->screenXSize - vMargin, m_pClientParams->screenYSize - hMargin);
-    //}
-    //else
-    //{
     glViewport(0, 0, _params->getScreenXSize(), _params->getScreenYSize());
     m_dScreenRatio = BASE_WIDTH / BASE_HEIGHT;
-//    m_dScreenRatio = (double) m_pClientParams->screenXSize / (double) m_pClientParams->screenYSize;
-    //}
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    glFrustum(-m_dScreenRatio, m_dScreenRatio, 1.0f, -1.0f, NEARPLANE, FARPLANE);
+    gluPerspective(50.0, m_dScreenRatio, NEARPLANE, FARPLANE);
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     moveCameraTo(m_f3CamPos);
@@ -188,7 +170,6 @@ void DisplayEngine::begin2D()
     glMatrixMode(GL_MODELVIEW);
     glPushMatrix();
     glLoadIdentity();
-    m_ModeState = DMS_2D;
 }
 
 // ------------------------------------------------------------------
@@ -200,7 +181,6 @@ void DisplayEngine::end2D()
     glPopMatrix();
     glMatrixMode(GL_MODELVIEW);
     glPopMatrix();
-    m_ModeState = DMS_Undefined;
 }
 
 // ------------------------------------------------------------------
@@ -208,7 +188,6 @@ void DisplayEngine::end2D()
 // ------------------------------------------------------------------
 void DisplayEngine::begin3D()
 {
-    m_ModeState = DMS_3D;
 }
 
 // ------------------------------------------------------------------
@@ -216,13 +195,12 @@ void DisplayEngine::begin3D()
 // ------------------------------------------------------------------
 void DisplayEngine::end3D()
 {
-    m_ModeState = DMS_Undefined;
 }
 
 // ------------------------------------------------------------------
 // Name : moveCameraBy
 // ------------------------------------------------------------------
-void DisplayEngine::moveCameraBy(Coords3D d3Delta)
+void DisplayEngine::moveCameraBy(f3d d3Delta)
 {
     moveCameraTo(m_f3CamPos + d3Delta);
 }
@@ -230,75 +208,58 @@ void DisplayEngine::moveCameraBy(Coords3D d3Delta)
 // ------------------------------------------------------------------
 // Name : moveCameraTo
 // ------------------------------------------------------------------
-void DisplayEngine::moveCameraTo(Coords3D d3Pos)
+void DisplayEngine::moveCameraTo(f3d d3Pos)
 {
     m_f3CamPos = d3Pos;
     glLoadIdentity();
-    gluLookAt(m_f3CamPos.x, m_f3CamPos.y, -m_f3CamPos.z, m_f3CamPos.x - 0.5f, m_f3CamPos.y - 2.5f, -m_f3CamPos.z-BOARDPLANE, 0, 1, 0);
-}
-
-#define X2X   (2.0f * m_dScreenRatio)
-#define X2Y   (2.0f)
-#define M1X   (m_dScreenRatio)
-#define M1Y   (1.0f)
-
-// ------------------------------------------------------------------
-// Name : getScreenCoords
-// ------------------------------------------------------------------
-CoordsScreen DisplayEngine::getScreenCoords(Coords3D d3Coords, DisplayModeState modeState)
-{
-    CoordsScreen screenCoords; // TODO
-    return screenCoords;
+    gluLookAt(m_f3CamPos.x, m_f3CamPos.y, m_f3CamPos.z, m_f3CamPos.x - m_lookAtDelta.x, m_f3CamPos.y - m_lookAtDelta.y, 0, 0, 1, 0);
 }
 
 // ------------------------------------------------------------------
-// Name : get3DCoords
+// Name : getGUI3D
 // ------------------------------------------------------------------
-Coords3D DisplayEngine::get3DCoords(CoordsScreen screenCoords, DisplayModeState modeState)
+f3d DisplayEngine::getGUI3D(i3d screenCoords)
 {
-    switch (modeState)
-    {
-    case DMS_2D:
-        return Coords3D((double)screenCoords.x, (double)screenCoords.y, screenCoords.z);
-    case DMS_3DCamIndependant:
-    {
-        Coords3D d3Coords(((double)screenCoords.x * X2X / (double)_params->getScreenXSize()) - M1X, ((double)screenCoords.y * X2Y / (double)_params->getScreenYSize()) - M1Y, screenCoords.z);
-//      Coords3D d3Coords(((float)screenCoords.x * 2.0f / (float)m_pClientParams->screenXSize) - 1.0f, 1.0f - ((float)screenCoords.y * 2.0f / (float)m_pClientParams->screenYSize), screenCoords.z);
-        return d3Coords;
-    }
-    case DMS_3D:
-    default:
-    {
-        double fX = ((double)screenCoords.x * X2X / (double)_params->getScreenXSize()) - M1X;
-        double fY = ((double)screenCoords.y * X2Y / (double)_params->getScreenYSize()) - M1Y;
-//      float fX = ((float)screenCoords.x * 2.0f / (float)m_pClientParams->screenXSize) - 1.0f;
-//      float fY = 1.0f - ((float)screenCoords.y * 2.0f / (float)m_pClientParams->screenYSize);
-        Coords3D d3Coords(m_f3CamPos.x + fX * (screenCoords.z - m_f3CamPos.z) / NEARPLANE, m_f3CamPos.y + fY * (screenCoords.z - m_f3CamPos.z) / NEARPLANE, 0.0f);
-        return d3Coords;
-    }
-    }
+	return f3d((double)screenCoords.x, (double)screenCoords.y, screenCoords.z);
 }
 
 // ------------------------------------------------------------------
-// Name : get3DDistance
+// Name : unproject
+//	Retrieve mouse 3D coordinates on screen's plane
 // ------------------------------------------------------------------
-Coords3D DisplayEngine::get3DDistance(CoordsScreen screenDist, DisplayModeState modeState)
+f3d DisplayEngine::unproject(i3d mouse)
 {
-    switch (modeState)
-    {
-    case DMS_2D:
-        return Coords3D((double)screenDist.x, (double)screenDist.y, screenDist.z);
-    case DMS_3D:
-    default:
-    {
-        double fX = -(double)screenDist.x * X2X / (double)_params->getScreenXSize();
-        double fY = -(double)screenDist.y * X2Y / (double)_params->getScreenYSize();
-//      float fX = -(float)screenDist.x * 2.0f / (float)m_pClientParams->screenXSize;
-//      float fY = (float)screenDist.y * 2.0f / (float)m_pClientParams->screenYSize;
-        Coords3D d3Coords(fX * (screenDist.z - m_f3CamPos.z) / NEARPLANE, fY * (screenDist.z - m_f3CamPos.z) / NEARPLANE, 0.0f);
-        return d3Coords;
-    }
-    }
+    GLint viewport[4];
+    GLdouble modelview[16];
+    GLdouble projection[16];
+    GLint winX, winY;
+    GLfloat winZ;
+    GLdouble posX, posY, posZ;
+
+    glGetDoublev(GL_MODELVIEW_MATRIX, modelview);
+    glGetDoublev(GL_PROJECTION_MATRIX, projection);
+    glGetIntegerv(GL_VIEWPORT, viewport);
+
+    winX = mouse.x;
+    winY = viewport[3] - mouse.y;
+    winZ = 0;
+//    glReadPixels(winX, winY, 1, 1, GL_DEPTH_COMPONENT, GL_FLOAT, &winZ);
+    gluUnProject((float)winX, (float)winY, winZ, modelview, projection, viewport, &posX, &posY, &posZ);
+
+    return f3d(posX, posY, posZ);
+}
+
+// ------------------------------------------------------------------
+// Name : getBoard3
+// ------------------------------------------------------------------
+f3d DisplayEngine::getBoard3D(i3d mouse)
+{
+    // unproject gives the 3D coords on "virtual" screen.
+    f3d d3u = unproject(mouse);
+    // Knowing this and the camera position, we can deduce the line equation
+    // and retrieve the intersection of this line with the board plane, that is, the 3D clicked coords on ground
+    double t = (NEARPLANE - m_f3CamPos.z) / (m_f3CamPos.z - d3u.z);
+    return m_f3CamPos + (m_f3CamPos - d3u) * t;
 }
 
 // ------------------------------------------------------------------

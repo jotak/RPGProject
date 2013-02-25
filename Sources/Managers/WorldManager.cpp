@@ -21,6 +21,7 @@ WorldManager::WorldManager() : EventListener(4)
 WorldManager::~WorldManager()
 {
 	FREEVEC(m_pGameObjects);
+    _input->unsetKeyboardListener(this);
 }
 
 // -----------------------------------------------------------------
@@ -32,6 +33,7 @@ void WorldManager::init(WorldBuilder * pBuilder)
 	delete pBuilder;
     _input->addCursoredEventListener(this);
     _input->pushUncursoredEventListener(this);
+    _input->setKeyboardListener(this);
 }
 
 // -----------------------------------------------------------------
@@ -66,9 +68,15 @@ bool WorldManager::onCatchButtonEvent(ButtonAction * pEvent)
     if (m_pActiveCharacter != NULL
     		&& pEvent->eEvent == Event_Down
     		&& pEvent->eButton == Button1) {
-        Coords3D pos = _display->get3DCoords(CoordsScreen(pEvent->xPos, pEvent->yPos, BOARDPLANE), DMS_3D);
+        Coords3D pos = _display->getBoard3D(CoordsScreen(pEvent->xPos, pEvent->yPos));
         pos.z = BOARDPLANE;
         m_pActiveCharacter->setMoveTarget(pos);
+    	return true;
+    } else if (pEvent->eEvent == Event_Down && pEvent->eButton == ButtonZ) {
+		_display->moveCameraBy(Coords3D(0,0,-0.2));
+    	return true;
+    } else if (pEvent->eEvent == Event_Down && pEvent->eButton == ButtonX) {
+		_display->moveCameraBy(Coords3D(0,0,0.2));
     	return true;
     }
 
@@ -81,4 +89,43 @@ bool WorldManager::onCatchButtonEvent(ButtonAction * pEvent)
 bool WorldManager::onCursorMoveEvent(int xPxl, int yPxl)
 {
 	return true;
+}
+
+// -----------------------------------------------------------------
+// Name : onKeyDown
+// -----------------------------------------------------------------
+bool WorldManager::onKeyDown(unsigned char key)
+{
+	return false;
+}
+
+// -----------------------------------------------------------------
+// Name : onSpecialKeyDown
+// -----------------------------------------------------------------
+bool WorldManager::onSpecialKeyDown(int key)
+{
+	switch (key)
+	{
+	case SPECKEY_LEFT:
+	{
+		_display->moveCameraBy(Coords3D(-1,0,0));
+		break;
+	}
+	case SPECKEY_RIGHT:
+	{
+		_display->moveCameraBy(Coords3D(1,0,0));
+		break;
+	}
+	case SPECKEY_UP:
+	{
+		_display->moveCameraBy(Coords3D(0,1,0));
+		break;
+	}
+	case SPECKEY_DOWN:
+	{
+		_display->moveCameraBy(Coords3D(0,-1,0));
+		break;
+	}
+	}
+    return false;
 }

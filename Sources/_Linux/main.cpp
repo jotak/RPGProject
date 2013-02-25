@@ -5,6 +5,12 @@
 #include "../Managers/MasterManager.h"
 #include <ctime>
 
+#define UNIT_TEST
+
+#ifdef UNIT_TEST
+#include "../Tests/Test.h"
+#endif
+
 MasterManager * g_pMaster = NULL;
 clock_t g_iLastUpdateTime = 0;
 
@@ -19,6 +25,10 @@ int main(int argc, char *argv[])
     atexit(cleanUp);
     g_iLastUpdateTime = clock();
     srand(time(NULL));
+
+#ifdef UNIT_TEST
+    runAllTests();
+#endif
 
     // Game root creation
     g_pMaster = new MasterManager();

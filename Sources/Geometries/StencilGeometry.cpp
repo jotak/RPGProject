@@ -28,7 +28,7 @@ StencilGeometry::StencilGeometry(int iWidth, int iHeight, VBType type) : Geometr
     }
     glGenBuffers(1, &m_VboId);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-    Coords3D d3Dim = _display->get3DCoords(CoordsScreen(iWidth, iHeight), DMS_2D);
+    Coords3D d3Dim = _display->getGUI3D(CoordsScreen(iWidth, iHeight));
     Vertex vertices[4];
     vertices[0].set(0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     vertices[1].set(d3Dim.x, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -55,7 +55,7 @@ void StencilGeometry::fillStencil(CoordsScreen position, bool bAdd)
     int iPreviousState = _display->setStencilState(bAdd ? 1 : 3);
 
     // Draw in stencil
-    Coords3D d3Coords = _display->get3DCoords(position, DMS_2D);
+    Coords3D d3Coords = _display->getGUI3D(position);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
     glVertexPointer(3, GL_FLOAT, sizeof(Vertex), BUFFER_OFFSET(2 * sizeof(GLfloat)));
     glEnableClientState(GL_VERTEX_ARRAY);
@@ -97,7 +97,7 @@ void StencilGeometry::resize(int iWidth, int iHeight)
         glDeleteBuffers(1, &m_VboId);
     glGenBuffers(1, &m_VboId);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-    Coords3D d3Dim = _display->get3DCoords(CoordsScreen(iWidth, iHeight), DMS_2D);
+    Coords3D d3Dim = _display->getGUI3D(CoordsScreen(iWidth, iHeight));
     Vertex vertices[4];
     vertices[0].set(0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     vertices[1].set(d3Dim.x, 0.0f, 0.0f, 1.0f, 0.0f);
@@ -127,7 +127,7 @@ void StencilGeometry::reload()
     }
     glGenBuffers(1, &m_VboId);
     glBindBuffer(GL_ARRAY_BUFFER, m_VboId);
-    Coords3D d3Dim = _display->get3DCoords(CoordsScreen(m_iWidth, m_iHeight), DMS_2D);
+    Coords3D d3Dim = _display->getGUI3D(CoordsScreen(m_iWidth, m_iHeight));
     Vertex vertices[4];
     vertices[0].set(0.0f, 0.0f, 0.0f, 0.0f, 0.0f);
     vertices[1].set(d3Dim.x, 0.0f, 0.0f, 1.0f, 0.0f);
