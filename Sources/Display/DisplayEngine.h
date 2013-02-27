@@ -8,6 +8,7 @@
 #define GUIPLANE                    50.0f	// anywhere in ]15,100] actually
 #define BOARDPLANE                  14.0f
 #define BUFFER_OFFSET(i)            ((char*)NULL + (i))
+#define PICKING_BUFSIZE				 512
 
 class DisplayEngine
 {
@@ -50,6 +51,11 @@ public:
     bool setAdditiveMode(bool bAdd);
     bool canResize();
 
+    // GL Picking
+    void startPicking(int x, int y);
+    void pickNext(unsigned int name) { glLoadName(name); };
+    unsigned int endPicking();
+
     // Shaders
     bool loadShader(GLuint * uShader, GLenum type, string sShader);
     bool linkShaders(GLuint * uProgram, GLuint uVxShader, GLuint uPxShader);
@@ -70,6 +76,7 @@ private:
     bool m_bAdditive;
     bool m_bIgnoreNextResize;
     f3d m_lookAtDelta;
+    GLuint m_PickingBuffer[PICKING_BUFSIZE];
 };
 
 // Helper alias

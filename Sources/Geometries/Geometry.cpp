@@ -63,43 +63,11 @@ void Geometry::update(double delta)
 }
 
 // -----------------------------------------------------------------
-// Name : getModifier
-// -----------------------------------------------------------------
-GeometryModifier * Geometry::getModifier(u16 uModId)
-{
-	for (GeometryModifier* &pMod : m_lstMods) {
-        if (pMod->getId() == uModId) {
-            return pMod;
-        }
-    }
-    return NULL;
-}
-
-// -----------------------------------------------------------------
 // Name : bindModifier
 // -----------------------------------------------------------------
 void Geometry::bindModifier(GeometryModifier * pMod)
 {
 	m_lstMods.push_front(pMod);
-}
-
-// -----------------------------------------------------------------
-// Name : unbindModifier
-// -----------------------------------------------------------------
-void Geometry::unbindModifier(u16 uModId, bool bAll, bool bDelete)
-{
-	for (list<GeometryModifier*>::iterator it = m_lstMods.begin(); it != m_lstMods.end(); ++it) {
-        if ((*it)->getId() == uModId)
-        {
-        	if (bDelete) {
-        		delete *it;
-        	}
-    		it = m_lstMods.erase(it);
-            if (!bAll) {
-                return;
-            }
-        }
-    }
 }
 
 // -----------------------------------------------------------------

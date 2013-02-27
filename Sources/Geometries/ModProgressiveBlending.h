@@ -6,12 +6,11 @@
 class ModProgressiveBlending : public GeometryModifier
 {
 public:
-    ModProgressiveBlending(u16 uModId, Color * startColor, Color * endColor, float fPeriod);
+    ModProgressiveBlending(Color * startColor, Color * endColor, float fPeriod);
     virtual ~ModProgressiveBlending();
 
     virtual void doTransforms(Color * pColor);
     virtual void update(double delta);
-    virtual GeometryModifier * clone(u16 uModId);
 
 protected:
     Color * m_StartColor;

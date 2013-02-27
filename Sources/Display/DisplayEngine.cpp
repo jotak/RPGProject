@@ -7,6 +7,12 @@
 #define BASE_WIDTH    1024.0f
 #define BASE_HEIGHT   576.0f
 
+#define PICKING_ACCURACY			5	// Size of the picking area in pixels ; 1 would be the most accurate but could be hard to pick small objects
+#define PICKING_HITDATA_NBNAMES		0
+#define PICKING_HITDATA_MINZ		1
+#define PICKING_HITDATA_MAXZ		2
+#define PICKING_HITDATA_FIRSTNAME	3
+
 DisplayEngine * DisplayEngine::m_pInstance = NULL;
 
 // ------------------------------------------------------------------
@@ -481,4 +487,77 @@ bool DisplayEngine::linkShaders(GLuint * uProgram, GLuint uVxShader, GLuint uPxS
         return false;
     }
     return true;
+}
+
+// ------------------------------------------------------------------
+// Name : startPicking
+//	Get object below mouse
+// ------------------------------------------------------------------
+void DisplayEngine::startPicking(int x, int y)
+{
+	GLint viewport[4];
+	glSelectBuffer(PICKING_BUFSIZE, m_PickingBuffer);
+	glRenderMode(GL_SELECT);
+
+	// Push & reset projection matrix
+	glMatrixMode(GL_PROJECTION);
+	glPushMatrix();
+	glLoadIdentity();
+
+	// Get viewport and define picking region
+	glGetIntegerv(GL_VIEWPORT, viewport);
+	gluPickMatrix(x, viewport[3] - y/*invert y*/, PICKING_ACCURACY, PICKING_ACCURACY, viewport);
+    gluPerspective(50.0, m_dScreenRatio, NEARPLANE, FARPLANE);
+
+    // Prepare drawing in selection mode
+    glMatrixMode(GL_MODELVIEW);
+    glInitNames();
+    glPushName(0);	// Push empty name to enable using glLoadName later
+}
+
+// ------------------------------------------------------------------
+// Name : endPicking
+// ------------------------------------------------------------------
+unsigned int DisplayEngine::endPicking()
+{
+	// Pop out projection
+	glMatrixMode(GL_PROJECTION);
+	glPopMatrix();
+	glMatrixMode(GL_MODELVIEW);
+	glFlush();
+
+	// Return back to RENDER mode, and retrieve SELECT mode information
+	int nbHits = glRenderMode(GL_RENDER);
+
+	if (nbHits > 1) {
+		int tott = 0;
+		tott++;
+	}
+	// If there are hits process them
+	unsigned int picked = 0;
+	if (nbHits != 0) {
+		GLuint iCurrent, minZ;
+
+		// The buffer (m_PickingBuffer) contains a list of hits data
+		//	Each hit data consists of:
+		//	- Numbers of names involved
+		//	- Min z-depth
+		//	- Max z-depth
+		//	- Name 1 involved
+		//	- Name 2 involved
+		//	- ...
+		minZ = 0xffffffff;
+		iCurrent = 0;
+		for (int i = 0; i < nbHits; i++) {
+			if (m_PickingBuffer[iCurrent + PICKING_HITDATA_NBNAMES] > 0
+					&& m_PickingBuffer[iCurrent + PICKING_HITDATA_MINZ] < minZ) {
+				minZ = m_PickingBuffer[iCurrent + PICKING_HITDATA_MINZ];
+				picked = m_PickingBuffer[iCurrent + PICKING_HITDATA_FIRSTNAME];
+			}
+			// Increase iCurrent ; "3" stands for nbnames, minz and maxz
+			iCurrent += 3 + m_PickingBuffer[iCurrent + PICKING_HITDATA_NBNAMES];
+		}
+	}
+
+	return picked;
 }

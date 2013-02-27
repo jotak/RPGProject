@@ -13,12 +13,11 @@ enum ProgressiveScalingBehavior
 class ModProgressiveScaling : public GeometryModifier
 {
 public:
-    ModProgressiveScaling(u16 uModId, float fScaleMin, float fScaleMax, float fScaleInit, float fCoef, float fScaleCenterX, float fScaleCenterY, ProgressiveScalingBehavior behavior);
+    ModProgressiveScaling(float fScaleMin, float fScaleMax, float fScaleInit, float fCoef, float fScaleCenterX, float fScaleCenterY, ProgressiveScalingBehavior behavior);
     virtual ~ModProgressiveScaling();
 
     virtual void doTransforms(Color * pColor);
     virtual void update(double delta);
-    virtual GeometryModifier * clone(u16 uModId);
 
 protected:
     ProgressiveScalingBehavior m_Behavior;

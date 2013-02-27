@@ -24,8 +24,9 @@ public:
     // Input functions
     bool onCatchButtonEvent(ButtonAction * pEvent);
     bool onCursorMoveEvent(int xPxl, int yPxl);
-    virtual bool onKeyDown(unsigned char c);
-    virtual bool onSpecialKeyDown(int key);
+    bool onKeyDown(unsigned char c);
+    bool onSpecialKeyDown(int key);
+    void pickObject(int xPxl, int yPxl);
 
     Character * getActiveCharacter() { return m_pActiveCharacter; };
     void setActiveCharacter(Character * c) { m_pActiveCharacter = c; };
@@ -37,6 +38,7 @@ private:
     Terrain m_Terrain;
     list<GameObject*> m_pGameObjects;
     Character * m_pActiveCharacter;
+    GameObject * m_pPickedObject;
 };
 
 // Helper alias

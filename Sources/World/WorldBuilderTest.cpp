@@ -6,6 +6,7 @@
 #include "../Managers/WorldManager.h"
 #include "../Display/DisplayEngine.h"
 #include "../Geometries/GeometryQuads.h"
+#include "../Geometries/ModColorize.h"
 
 // -----------------------------------------------------------------
 // Name : WorldBuilderTest
@@ -39,5 +40,14 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 	pGameObjects->push_back(pCharacter);
 	_world->setActiveCharacter(pCharacter);
 
-	_display->moveCameraTo(Coords3D(2, 2, 6));
+    pCharacter = new Character(3.0f);
+    pGeometry = new GeometryQuads(&quad2, VB_Static);
+    pGeometry->setOffset(CoordsScreen(280, 70));
+    pGeometry->bindModifier(new ModColorize(Color::red));
+    pGeometry->bindModifier(new ModColorize(Color::green));
+    pCharacter->setGeometry(pGeometry);
+    pCharacter->setPosition(5, 5, BOARDPLANE - 0.01f);
+	pGameObjects->push_back(pCharacter);
+
+	_display->moveCameraTo(Coords3D(4, 4, 6));
 }

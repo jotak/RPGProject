@@ -4,8 +4,8 @@
 // Name : ModProgressiveScaling
 //  Constructor
 // -----------------------------------------------------------------
-ModProgressiveScaling::ModProgressiveScaling(u16 uModId, float fScaleMin, float fScaleMax, float fScaleInit, float fCoef, float fScaleCenterX, float fScaleCenterY, ProgressiveScalingBehavior behavior)
-    : GeometryModifier(uModId)
+ModProgressiveScaling::ModProgressiveScaling(float fScaleMin, float fScaleMax, float fScaleInit, float fCoef, float fScaleCenterX, float fScaleCenterY, ProgressiveScalingBehavior behavior)
+    : GeometryModifier()
 {
     m_fScaleMin = fScaleMin;
     m_fScaleMax = fScaleMax;
@@ -73,13 +73,4 @@ void ModProgressiveScaling::update(double delta)
             break;
         }
     }
-}
-
-// -----------------------------------------------------------------
-// Name : clone
-// -----------------------------------------------------------------
-GeometryModifier * ModProgressiveScaling::clone(u16 uMoveId)
-{
-    ModProgressiveScaling * pClone = new ModProgressiveScaling(uMoveId, m_fScaleMin, m_fScaleMax, m_fCurrentScale, m_fCoef, m_fScaleCenterX, m_fScaleCenterY, m_Behavior);
-    return pClone;
 }

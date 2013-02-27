@@ -37,9 +37,7 @@ public:
     virtual void display(Coords3D pos, Color color) {};
 
     // Mods functions
-    GeometryModifier * getModifier(u16 uModId);
     void bindModifier(GeometryModifier * pMod);
-    void unbindModifier(u16 uModId, bool bAll, bool bDelete);
 
     // Shaders
     bool bindShader(string sVertexShader, string sPixelShader);

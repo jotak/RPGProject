@@ -4,8 +4,8 @@
 // Name : ModProgressiveRotate
 //  Constructor
 // -----------------------------------------------------------------
-ModProgressiveRotate::ModProgressiveRotate(u16 uModId, float fSpeed, float fCenterX, float fCenterY)
-    : GeometryModifier(uModId)
+ModProgressiveRotate::ModProgressiveRotate(float fSpeed, float fCenterX, float fCenterY)
+    : GeometryModifier()
 {
     m_fAngle = 0;
     m_fSpeed = fSpeed;
@@ -40,13 +40,4 @@ void ModProgressiveRotate::update(double delta)
     while (m_fAngle >= 360) {
         m_fAngle -= 360;
     }
-}
-
-// -----------------------------------------------------------------
-// Name : clone
-// -----------------------------------------------------------------
-GeometryModifier * ModProgressiveRotate::clone(u16 uMoveId)
-{
-    ModProgressiveRotate * pClone = new ModProgressiveRotate(uMoveId, m_fSpeed, m_fRotateCenterX, m_fRotateCenterY);
-    return pClone;
 }

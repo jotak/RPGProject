@@ -4,7 +4,7 @@
 // Name : ModProgressiveBlending
 //  Constructor
 // -----------------------------------------------------------------
-ModProgressiveBlending::ModProgressiveBlending(u16 uModId, Color * startColor, Color * endColor, float fPeriod) : GeometryModifier(uModId)
+ModProgressiveBlending::ModProgressiveBlending(Color * startColor, Color * endColor, float fPeriod) : GeometryModifier()
 {
     m_StartColor = startColor;
     m_EndColor = endColor;
@@ -46,13 +46,4 @@ void ModProgressiveBlending::update(double delta)
     if (m_fTimer >= m_fPeriod) {
         m_fTimer = 0;
     }
-}
-
-// -----------------------------------------------------------------
-// Name : clone
-// -----------------------------------------------------------------
-GeometryModifier * ModProgressiveBlending::clone(u16 uModId)
-{
-    ModProgressiveBlending * pClone = new ModProgressiveBlending(uModId, m_StartColor, m_EndColor, m_fPeriod);
-    return pClone;
 }

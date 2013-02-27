@@ -76,6 +76,12 @@ public:
     	a *= other->a;
     }
 
+    void blend(Color * other)
+    {
+    	add(other);
+    	multiply(0.5f);
+    }
+
     void add(float coef)
     {
     	r += coef;
@@ -98,6 +104,10 @@ public:
     float a;
 
     static const Color white;
+    static const Color red;
+    static const Color green;
+    static const Color blue;
+    static const Color black;
 };
 
 #endif
