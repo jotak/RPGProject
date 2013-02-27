@@ -76,7 +76,7 @@ void GeometryText::display(Coords3D d3Coords, Color color)
 
     glPushMatrix();
     {
-        glTranslatef(d3Coords.x, d3Coords.y, -d3Coords.z);
+        glTranslatef(d3Coords.x, d3Coords.y, FARPLANE - d3Coords.z);
         glDrawArrays(GL_QUADS, 0, 4*m_iNbQuads);
     }
 
