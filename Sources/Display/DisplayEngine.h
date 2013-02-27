@@ -5,7 +5,7 @@
 
 #define NEARPLANE                   1.0f
 #define FARPLANE                    15.0f
-#define GUIPLANE                    (FARPLANE + 2.0f)
+#define GUIPLANE                    50.0f	// anywhere in ]15,100] actually
 #define BOARDPLANE                  14.0f
 #define BUFFER_OFFSET(i)            ((char*)NULL + (i))
 
