@@ -141,14 +141,14 @@ int guiContainer::computeQuadsList(QuadData *** pQuads, Texture ** pTextures)
     int xPxlMiddleEnd = m_iWidth - m_iXOffset - pTextures[2]->getWidth();
     int yPxlMiddleStart = pTextures[0]->getHeight();
     int yPxlMiddleEnd = m_iHeight - m_iYOffset - pTextures[5]->getHeight();
-    (*pQuads)[0] = new QuadData(0,               xPxlMiddleStart,       0,                yPxlMiddleStart,        pTextures[0]);
-    (*pQuads)[1] = new QuadData(xPxlMiddleStart, xPxlMiddleEnd,         0,                yPxlMiddleStart,        pTextures[1]);
-    (*pQuads)[2] = new QuadData(xPxlMiddleEnd,   m_iWidth - m_iXOffset, 0,                yPxlMiddleStart,        pTextures[2]);
-    (*pQuads)[3] = new QuadData(0,               xPxlMiddleStart,       yPxlMiddleStart,  yPxlMiddleEnd,          pTextures[3]);
-    (*pQuads)[4] = new QuadData(xPxlMiddleEnd,   m_iWidth - m_iXOffset, yPxlMiddleStart,  yPxlMiddleEnd,          pTextures[4]);
-    (*pQuads)[5] = new QuadData(0,               xPxlMiddleStart,       yPxlMiddleEnd,    m_iHeight - m_iYOffset, pTextures[5]);
-    (*pQuads)[6] = new QuadData(xPxlMiddleStart, xPxlMiddleEnd,         yPxlMiddleEnd,    m_iHeight - m_iYOffset, pTextures[6]);
-    (*pQuads)[7] = new QuadData(xPxlMiddleEnd,   m_iWidth - m_iXOffset, yPxlMiddleEnd,    m_iHeight - m_iYOffset, pTextures[7]);
+    (*pQuads)[0] = new QuadData(0,               xPxlMiddleStart,       yPxlMiddleEnd,   m_iHeight - m_iYOffset, pTextures[0]);
+    (*pQuads)[1] = new QuadData(xPxlMiddleStart, xPxlMiddleEnd,         yPxlMiddleEnd,   m_iHeight - m_iYOffset, pTextures[1]);
+    (*pQuads)[2] = new QuadData(xPxlMiddleEnd,   m_iWidth - m_iXOffset, yPxlMiddleEnd,   m_iHeight - m_iYOffset, pTextures[2]);
+    (*pQuads)[3] = new QuadData(0,               xPxlMiddleStart,       yPxlMiddleStart, yPxlMiddleEnd,          pTextures[3]);
+    (*pQuads)[4] = new QuadData(xPxlMiddleEnd,   m_iWidth - m_iXOffset, yPxlMiddleStart, yPxlMiddleEnd,          pTextures[4]);
+    (*pQuads)[5] = new QuadData(0,               xPxlMiddleStart,       0,               yPxlMiddleStart,        pTextures[5]);
+    (*pQuads)[6] = new QuadData(xPxlMiddleStart, xPxlMiddleEnd,         0,               yPxlMiddleStart,        pTextures[6]);
+    (*pQuads)[7] = new QuadData(xPxlMiddleEnd,   m_iWidth - m_iXOffset, 0,               yPxlMiddleStart,        pTextures[7]);
     return 8;
 }
 

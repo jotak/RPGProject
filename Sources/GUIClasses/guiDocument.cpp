@@ -86,7 +86,8 @@ void guiDocument::displayAt(int iXOffset, int iYOffset, Color cpntColor, Color d
 guiComponent * guiDocument::getComponentAt(int xPxl, int yPxl)
 {
     for (list<guiComponent*>::reverse_iterator it = m_pComponentsList.rbegin(); it != m_pComponentsList.rend(); ++it) {
-        if ((*it)->isAt(xPxl, yPxl)) {
+    	guiComponent * pCpnt = *it;
+        if (pCpnt->isAt(xPxl, yPxl)) {
             return *it;
         }
     }

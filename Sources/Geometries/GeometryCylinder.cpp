@@ -52,7 +52,7 @@ void GeometryCylinder::display(Coords3D pos, Color color, Color borderColor)
     glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
     glPushMatrix();
-    glTranslatef(pos.x, pos.y, -pos.z);
+    glTranslatef(pos.x, pos.y, FARPLANE - pos.z);
     doModTransforms(&color);
     doModTransforms(&borderColor);
     glTranslatef(m_fDiameter / 2.0f, m_fDiameter / 2.0f, 0);
