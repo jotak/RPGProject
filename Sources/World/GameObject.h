@@ -2,8 +2,9 @@
 #define _GAME_OBJECT_H
 
 #include "../Geometries/Geometry.h"
+#include "../Physics/PartitionableItem.h"
 
-class GameObject
+class GameObject : public PartitionableItem
 {
 public:
 	GameObject();
