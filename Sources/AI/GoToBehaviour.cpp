@@ -1,41 +1,29 @@
 // -----------------------------------------------------------------
-// CHARACTER
+// GOTO BEHAVIOUR
 // -----------------------------------------------------------------
-#include "Character.h"
+#include "GoToBehaviour.h"
 #include "../Physics/MovesHelper.h"
+#include "../World/Character.h"
 
 // -----------------------------------------------------------------
-// Name : Character
+// Name : GoToBehaviour
 // -----------------------------------------------------------------
-Character::Character(double speed)
+GoToBehaviour::GoToBehaviour(f3d target, Character * ai) : Behaviour(ai)
 {
-	m_pBehaviour = NULL;
-	setSpeed(speed);
+	m_Target = target;
+	m_pAI->addMovement(MovesHelper::newConstantMove(target - m_pAI->getPosition(), m_pAI->getSpeed()));
 }
 
 // -----------------------------------------------------------------
-// Name : ~Character
+// Name : ~GoToBehaviour
 // -----------------------------------------------------------------
-Character::~Character()
+GoToBehaviour::~GoToBehaviour()
 {
-	FREE(m_pBehaviour);
 }
 
 // -----------------------------------------------------------------
 // Name : update
 // -----------------------------------------------------------------
-void Character::update(double delta)
+void GoToBehaviour::update(double delta)
 {
-	if (m_pBehaviour != NULL) {
-		m_pBehaviour->update(delta);
-	}
-	MovingObject::update(delta);
-}
-
-// -----------------------------------------------------------------
-// Name : setMoveTarget
-// -----------------------------------------------------------------
-void Character::setMoveTarget(Coords3D pos)
-{
-	setMovement(MovesHelper::newConstantMove(pos - m_pos, speed));
 }

@@ -1,41 +1,37 @@
 // -----------------------------------------------------------------
-// CHARACTER
+// ERRATIC MOVE BEHAVIOUR
 // -----------------------------------------------------------------
-#include "Character.h"
+#include "ErraticMoveBehaviour.h"
 #include "../Physics/MovesHelper.h"
+#include "../World/Character.h"
 
 // -----------------------------------------------------------------
-// Name : Character
+// Name : ErraticMoveBehaviour
 // -----------------------------------------------------------------
-Character::Character(double speed)
+ErraticMoveBehaviour::ErraticMoveBehaviour(Character * ai) : Behaviour(ai)
 {
-	m_pBehaviour = NULL;
-	setSpeed(speed);
+	m_fWait = 0;
 }
 
 // -----------------------------------------------------------------
-// Name : ~Character
+// Name : ~ErraticMoveBehaviour
 // -----------------------------------------------------------------
-Character::~Character()
+ErraticMoveBehaviour::~ErraticMoveBehaviour()
 {
-	FREE(m_pBehaviour);
 }
 
 // -----------------------------------------------------------------
 // Name : update
 // -----------------------------------------------------------------
-void Character::update(double delta)
+void ErraticMoveBehaviour::update(double delta)
 {
-	if (m_pBehaviour != NULL) {
-		m_pBehaviour->update(delta);
+	if (!m_pAI->isMoving()) {
+		if (m_fWait <= 0) {
+			m_fWait = (rand() % 2) * FRAND100(3);	// 0-3 seconds
+			f3d target(1 - FRAND100(2), 1 - FRAND100(2));
+			m_pAI->addMovement(MovesHelper::newConstantMove(target, m_pAI->getSpeed()));
+		} else {
+			m_fWait -= delta;
+		}
 	}
-	MovingObject::update(delta);
-}
-
-// -----------------------------------------------------------------
-// Name : setMoveTarget
-// -----------------------------------------------------------------
-void Character::setMoveTarget(Coords3D pos)
-{
-	setMovement(MovesHelper::newConstantMove(pos - m_pos, speed));
 }

@@ -27,11 +27,12 @@ typedef tr1::unordered_map<string, long> long_hash;
 typedef tr1::unordered_map<string, string> str_hash;
 typedef tr1::unordered_map<char, char> ch_hash;
 
-#define FREE(m)               { if (m != NULL) { delete m; m = NULL; } }
-#define FREEARR(m)            { if (m != NULL) { delete[] m; m = NULL; } }
-#define FREEVEC(v)            { while(!v.empty()) delete v.back(), v.pop_back(); }
-#define EPSILON               0.000001f
-#define PI                    3.141592f
+#define FREE(m)               	{ if (m != NULL) { delete m; m = NULL; } }
+#define FREEARR(m)            	{ if (m != NULL) { delete[] m; m = NULL; } }
+#define FREEVEC(v)            	{ while(!v.empty()) delete v.back(), v.pop_back(); }
+#define EPSILON               	0.000001f
+#define PI                    	3.141592f
+#define FRAND100(max)			(((double)(rand()%100))*(double)(max)/100.0f)
 
 #include "paths.h"
 #include "Coords.h"

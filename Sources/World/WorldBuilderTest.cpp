@@ -7,6 +7,7 @@
 #include "../Display/DisplayEngine.h"
 #include "../Geometries/GeometryQuads.h"
 #include "../Geometries/ModColorize.h"
+#include "../AI/ErraticMoveBehaviour.h"
 
 // -----------------------------------------------------------------
 // Name : WorldBuilderTest
@@ -47,6 +48,7 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
     pGeometry->bindModifier(new ModColorize(Color::green));
     pCharacter->setGeometry(pGeometry);
     pCharacter->setPosition(5, 5, BOARDPLANE - 0.01f);
+    pCharacter->setBehaviour(new ErraticMoveBehaviour(pCharacter));
 	pGameObjects->push_back(pCharacter);
 
 	_display->moveCameraTo(Coords3D(4, 4, 6));
