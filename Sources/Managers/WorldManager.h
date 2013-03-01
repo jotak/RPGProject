@@ -5,6 +5,7 @@
 #include "../World/Character.h"
 #include "../Input/EventListener.h"
 #include "../Input/KeyboardListener.h"
+#include "../Physics/SpacePart.h"
 
 class WorldManager : public EventListener, public KeyboardListener
 {
@@ -30,6 +31,7 @@ public:
 
     Character * getActiveCharacter() { return m_pActiveCharacter; };
     void setActiveCharacter(Character * c) { m_pActiveCharacter = c; };
+    SpacePart * getSpacePartition() { return m_pSpacePartition; };
 
 private:
     WorldManager();
@@ -39,6 +41,7 @@ private:
     list<GameObject*> m_pGameObjects;
     Character * m_pActiveCharacter;
     GameObject * m_pPickedObject;
+    SpacePart * m_pSpacePartition;
 };
 
 // Helper alias

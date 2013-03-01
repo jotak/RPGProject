@@ -23,12 +23,17 @@ MovingObject::~MovingObject()
 // -----------------------------------------------------------------
 void MovingObject::update(double delta)
 {
+	f3d oldPos = getPosition();
+	f3d newPos = oldPos;
 	GameObject::update(delta);
 	for (list<Movement*>::iterator it = m_Movements.begin(); it != m_Movements.end(); ++it) {
-		m_pos = (*it)->apply(delta, m_pos);
+		newPos = (*it)->apply(delta, newPos);
 		if ((*it)->getState() == Finished) {
 			delete *it;
 			it = m_Movements.erase(it);
 		}
+	}
+	if (oldPos != newPos) {
+		setPosition(newPos);
 	}
 }

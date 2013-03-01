@@ -7,14 +7,43 @@
 // -----------------------------------------------------------------
 // Name : SpacePart
 // -----------------------------------------------------------------
-SpacePart::SpacePart(double fWidth, double fHeight)
+SpacePart::SpacePart(double fWorldWidth, double fWorldHeight, double fInteractionRadius)
 {
-	 m_fWidth = fWidth;
-	 m_fHeight = fHeight;
-	 for (int i = 0; i < SPACE_PART_ROWS * SPACE_PART_ROWS; i++) {
-		 m_arrPartitions[i].x = i % SPACE_PART_ROWS;
-		 m_arrPartitions[i].y = i / SPACE_PART_ROWS;
-	 }
+	m_fInteractionRadius = fInteractionRadius;
+
+	double d = fWorldWidth / m_fInteractionRadius;
+	if (d == (double) (int) d) {
+		m_iNbTilesAbs = (int) d;
+		m_fWorldWidth = fWorldWidth;
+	} else {
+		m_iNbTilesAbs = 1 + (int) d;
+		m_fWorldWidth = m_fInteractionRadius * m_iNbTilesAbs;
+	}
+	d = fWorldHeight / m_fInteractionRadius;
+	if (d == (double) (int) d) {
+		m_iNbTilesOrd = (int) d;
+		m_fWorldHeight = fWorldHeight;
+	} else {
+		m_iNbTilesOrd = 1 + (int) d;
+		m_fWorldHeight = m_fInteractionRadius * m_iNbTilesOrd;
+	}
+
+	// Tile size is calculated using interaction radius
+	m_arrPartitions = new Partition[m_iNbTilesAbs * m_iNbTilesOrd];
+	for (int y = 0; y < m_iNbTilesOrd; y++) {
+		for (int x = 0; x < m_iNbTilesAbs; x++) {
+			m_arrPartitions[x + y * m_iNbTilesAbs].x = x;
+			m_arrPartitions[x + y * m_iNbTilesAbs].y = y;
+		}
+	}
+}
+
+// -----------------------------------------------------------------
+// Name : ~SpacePart
+// -----------------------------------------------------------------
+SpacePart::~SpacePart()
+{
+	delete[] m_arrPartitions;
 }
 
 // -----------------------------------------------------------------
@@ -25,21 +54,21 @@ void SpacePart::put(PartitionableItem * pItem)
 {
 	// Determine partition to use (o(1))
 	f3d pos = pItem->getPosition();
-	int i = (int) (SPACE_PART_ROWS * pos.x / m_fWidth);
-	int j = (int) (SPACE_PART_ROWS * pos.y / m_fHeight);
+	int i = (int) (m_iNbTilesAbs * pos.x / m_fWorldWidth);
+	int j = (int) (m_iNbTilesOrd * pos.y / m_fWorldHeight);
 	if (i < 0) {
 		i = 0;
-	} else if (i >= SPACE_PART_ROWS) {
-		i = SPACE_PART_ROWS - 1;
+	} else if (i >= m_iNbTilesAbs) {
+		i = m_iNbTilesAbs - 1;
 	}
 	if (j < 0) {
 		j = 0;
-	} else if (j >= SPACE_PART_ROWS) {
-		j = SPACE_PART_ROWS - 1;
+	} else if (j >= m_iNbTilesOrd) {
+		j = m_iNbTilesOrd - 1;
 	}
 
 	// Replace previous partition
-	Partition * newPartition = &(m_arrPartitions[i + j * SPACE_PART_ROWS]);
+	Partition * newPartition = &(m_arrPartitions[i + j * m_iNbTilesAbs]);
 	Partition * oldPartition = pItem->getPartition();
 	if (newPartition != oldPartition) {
 		if (oldPartition != NULL) {
@@ -72,8 +101,8 @@ list<PartitionableItem*> * SpacePart::getIndirectNeighbours(PartitionableItem * 
 	Partition * p = pItem->getPartition();
 	int x = p->x + dx;
 	int y = p->y + dy;
-	if (x >= 0 && x < SPACE_PART_ROWS && y >= 0 && y < SPACE_PART_ROWS) {
-		return &(m_arrPartitions[x + y * SPACE_PART_ROWS].partition);
+	if (x >= 0 && x < m_iNbTilesAbs && y >= 0 && y < m_iNbTilesOrd) {
+		return &(m_arrPartitions[x + y * m_iNbTilesAbs].partition);
 	} else {
 		return NULL;
 	}

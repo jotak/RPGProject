@@ -3,7 +3,6 @@
 
 #include "PartitionableItem.h"
 
-#define SPACE_PART_ROWS					10
 #define NB_INDIRECT_NEIGHBOURS_ZONES	8
 
 class Partition
@@ -16,14 +15,17 @@ public:
 class SpacePart
 {
 public:
-	SpacePart(double fWidth, double fHeight);
+	SpacePart(double fWorldWidth, double fWorldHeight, double fInteractionRadius);
+	~SpacePart();
+
 	void put(PartitionableItem*);
 	list<PartitionableItem*> * getDirectNeighbours(PartitionableItem*);
 	list<PartitionableItem*> * getIndirectNeighbours(PartitionableItem*, int);
 
 private:
-	double m_fWidth, m_fHeight;
-	Partition m_arrPartitions[SPACE_PART_ROWS*SPACE_PART_ROWS];
+	double m_fWorldWidth, m_fWorldHeight, m_fInteractionRadius;
+	int m_iNbTilesAbs, m_iNbTilesOrd;
+	Partition * m_arrPartitions;
 };
 
 #endif

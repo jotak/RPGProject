@@ -37,5 +37,5 @@ void Character::update(double delta)
 // -----------------------------------------------------------------
 void Character::setMoveTarget(Coords3D pos)
 {
-	setMovement(MovesHelper::newConstantMove(pos - m_pos, speed));
+	setMovement(MovesHelper::newConstantMove(pos - getPosition(), speed));
 }

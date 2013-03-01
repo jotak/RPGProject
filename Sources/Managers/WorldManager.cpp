@@ -14,6 +14,7 @@ WorldManager::WorldManager() : EventListener(4)
 {
 	m_pActiveCharacter = NULL;
 	m_pPickedObject = NULL;
+	m_pSpacePartition == NULL;
 }
 
 // -----------------------------------------------------------------
@@ -21,6 +22,7 @@ WorldManager::WorldManager() : EventListener(4)
 // -----------------------------------------------------------------
 WorldManager::~WorldManager()
 {
+    FREE(m_pSpacePartition);
 	FREEVEC(m_pGameObjects);
     _input->unsetKeyboardListener(this);
 }

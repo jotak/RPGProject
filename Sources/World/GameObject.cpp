@@ -3,6 +3,7 @@
 // -----------------------------------------------------------------
 #include "GameObject.h"
 #include "../Display/DisplayEngine.h"
+#include "../Managers/WorldManager.h"
 
 // -----------------------------------------------------------------
 // Name : GameObject
@@ -36,5 +37,19 @@ void GameObject::display()
 {
 	if (m_pGeometry != NULL) {
 		m_pGeometry->display(m_pos, Color::white);
+	}
+}
+
+// -----------------------------------------------------------------
+// Name : setPosition
+// -----------------------------------------------------------------
+void GameObject::setPosition(f3d newPos)
+{
+	if (newPos != m_pos) {
+		m_pos = newPos;
+		SpacePart * pSpacePartition = _world->getSpacePartition();
+		if (pSpacePartition != NULL) {
+			pSpacePartition->put(this);
+		}
 	}
 }
