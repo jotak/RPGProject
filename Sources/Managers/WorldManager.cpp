@@ -37,6 +37,12 @@ void WorldManager::init(WorldBuilder * pBuilder)
     _input->addCursoredEventListener(this);
     _input->pushUncursoredEventListener(this);
     _input->setKeyboardListener(this);
+
+    // Initialize partition system
+    m_pSpacePartition = new SpacePart(m_Terrain.getTopLeft(), m_Terrain.getDimensions(), AI_INTERACTION_RADIUS);
+	for (GameObject* &obj : m_pGameObjects) {
+		m_pSpacePartition->put(obj);
+	}
 }
 
 // -----------------------------------------------------------------

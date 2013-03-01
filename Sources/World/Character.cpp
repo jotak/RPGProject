@@ -9,7 +9,6 @@
 // -----------------------------------------------------------------
 Character::Character(double speed)
 {
-	m_pBehaviour = NULL;
 	setSpeed(speed);
 }
 
@@ -18,7 +17,6 @@ Character::Character(double speed)
 // -----------------------------------------------------------------
 Character::~Character()
 {
-	FREE(m_pBehaviour);
 }
 
 // -----------------------------------------------------------------
@@ -26,9 +24,6 @@ Character::~Character()
 // -----------------------------------------------------------------
 void Character::update(double delta)
 {
-	if (m_pBehaviour != NULL) {
-		m_pBehaviour->update(delta);
-	}
 	MovingObject::update(delta);
 }
 

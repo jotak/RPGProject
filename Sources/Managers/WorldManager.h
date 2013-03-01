@@ -7,6 +7,8 @@
 #include "../Input/KeyboardListener.h"
 #include "../Physics/SpacePart.h"
 
+#define AI_INTERACTION_RADIUS		1.5f
+
 class WorldManager : public EventListener, public KeyboardListener
 {
 public:

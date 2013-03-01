@@ -10,6 +10,8 @@
 #define BUFFER_OFFSET(i)            ((char*)NULL + (i))
 #define PICKING_BUFSIZE				 512
 
+#define F3DBOARD(x, y)				(f3d(x, y, BOARDPLANE-0.001f))
+
 class DisplayEngine
 {
 public:

@@ -3,29 +3,28 @@
 // -----------------------------------------------------------------
 #include "SpacePart.h"
 
-
 // -----------------------------------------------------------------
 // Name : SpacePart
 // -----------------------------------------------------------------
-SpacePart::SpacePart(double fWorldWidth, double fWorldHeight, double fInteractionRadius)
+SpacePart::SpacePart(f3d topLeft, f3d dimensions, double fInteractionRadius)
 {
 	m_fInteractionRadius = fInteractionRadius;
+	m_TopLeft = topLeft;
+	m_Dimensions = dimensions;
 
-	double d = fWorldWidth / m_fInteractionRadius;
+	double d = m_Dimensions.x / m_fInteractionRadius;
 	if (d == (double) (int) d) {
 		m_iNbTilesAbs = (int) d;
-		m_fWorldWidth = fWorldWidth;
 	} else {
 		m_iNbTilesAbs = 1 + (int) d;
-		m_fWorldWidth = m_fInteractionRadius * m_iNbTilesAbs;
+		m_Dimensions.x = m_fInteractionRadius * m_iNbTilesAbs;
 	}
-	d = fWorldHeight / m_fInteractionRadius;
+	d = m_Dimensions.y / m_fInteractionRadius;
 	if (d == (double) (int) d) {
 		m_iNbTilesOrd = (int) d;
-		m_fWorldHeight = fWorldHeight;
 	} else {
 		m_iNbTilesOrd = 1 + (int) d;
-		m_fWorldHeight = m_fInteractionRadius * m_iNbTilesOrd;
+		m_Dimensions.y = m_fInteractionRadius * m_iNbTilesOrd;
 	}
 
 	// Tile size is calculated using interaction radius
@@ -54,8 +53,8 @@ void SpacePart::put(PartitionableItem * pItem)
 {
 	// Determine partition to use (o(1))
 	f3d pos = pItem->getPosition();
-	int i = (int) (m_iNbTilesAbs * pos.x / m_fWorldWidth);
-	int j = (int) (m_iNbTilesOrd * pos.y / m_fWorldHeight);
+	int i = (int) (m_iNbTilesAbs * pos.x / m_Dimensions.x);
+	int j = (int) (m_iNbTilesOrd * pos.y / m_Dimensions.y);
 	if (i < 0) {
 		i = 0;
 	} else if (i >= m_iNbTilesAbs) {

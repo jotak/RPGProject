@@ -15,7 +15,7 @@ public:
 class SpacePart
 {
 public:
-	SpacePart(double fWorldWidth, double fWorldHeight, double fInteractionRadius);
+	SpacePart(f3d topLeft, f3d dimensions, double fInteractionRadius);
 	~SpacePart();
 
 	void put(PartitionableItem*);
@@ -23,7 +23,9 @@ public:
 	list<PartitionableItem*> * getIndirectNeighbours(PartitionableItem*, int);
 
 private:
-	double m_fWorldWidth, m_fWorldHeight, m_fInteractionRadius;
+	f3d m_TopLeft;
+	f3d m_Dimensions;
+	double m_fInteractionRadius;
 	int m_iNbTilesAbs, m_iNbTilesOrd;
 	Partition * m_arrPartitions;
 };
