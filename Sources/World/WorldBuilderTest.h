@@ -10,6 +10,9 @@ public:
     ~WorldBuilderTest();
 
     void build(Terrain*, list<GameObject*>*);
+
+private:
+    void createAI(string, list<GameObject*>*);
 };
 
 #endif

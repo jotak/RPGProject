@@ -18,6 +18,10 @@ public:
     virtual JoS_Element * get() = 0;
     virtual JoS_Element * get(int) = 0;
     virtual JoS_Element * get(std::string) = 0;
+    virtual bool isMap() = 0;
+    virtual bool isList() = 0;
+    virtual bool isLeaf() = 0;
+    virtual bool isNull() = 0;
 };
 
 #endif

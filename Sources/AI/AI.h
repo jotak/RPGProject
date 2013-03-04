@@ -7,7 +7,7 @@
 class AI : public Character
 {
 public:
-	AI(double speed);
+	AI(JoS_Element * json);
     virtual ~AI();
 
     virtual void update(double delta);

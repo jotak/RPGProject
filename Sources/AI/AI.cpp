@@ -8,7 +8,7 @@
 // -----------------------------------------------------------------
 // Name : AI
 // -----------------------------------------------------------------
-AI::AI(double speed) : Character(speed)
+AI::AI(JoS_Element * json) : Character(json)
 {
 	m_pBehaviour = NULL;
 }
@@ -44,12 +44,14 @@ void AI::update(double delta)
 // -----------------------------------------------------------------
 void AI::checkInteractions(list<PartitionableItem*> * lstSurroundingObjects)
 {
-	for (PartitionableItem * pItem : *lstSurroundingObjects) {
-		if (pItem != this) {
-			// Skip "this" since the AI itself is in the list
-			f3d vec = getPosition() - pItem->getPosition();
-			if (vec.getsize() < AI_INTERACTION_RADIUS) {
-				interact((GameObject*)pItem);
+	if (lstSurroundingObjects != NULL) {
+		for (PartitionableItem * pItem : *lstSurroundingObjects) {
+			if (pItem != this) {
+				// Skip "this" since the AI itself is in the list
+				f3d vec = getPosition() - pItem->getPosition();
+				if (vec.getsize() < AI_INTERACTION_RADIUS) {
+					interact((GameObject*) pItem);
+				}
 			}
 		}
 	}

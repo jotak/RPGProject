@@ -5,7 +5,7 @@
 #include <cstring>
 #include <iostream>
 #include <tr1/unordered_map>
-#include "JoS_Element.h"
+#include "JoS_Null.h"
 
 typedef std::tr1::unordered_map<std::string, JoS_Element*> jos_map;
 
@@ -30,12 +30,23 @@ public:
     		return true;
     	}
     };
-    JoS_Element * get() { return this; };
-    JoS_Element * get(int idx) { return this; };
-    JoS_Element * get(std::string key) { return m_map[key]; };
-    std::string toString() { return ""; };
-    int toInt() { return 0; };
-    double toDouble() { return 0; };
+    JoS_Element * get() { return &(JoS_Null::JoSNull); };
+    JoS_Element * get(int idx) { return &(JoS_Null::JoSNull); };
+    JoS_Element * get(std::string key) {
+    	jos_map::iterator it = m_map.find(key);
+    	if (it != m_map.end()) {
+    		return it->second;
+    	} else {
+    		return &(JoS_Null::JoSNull);
+    	}
+    };
+    std::string toString() { return JoS_Null::JoSNull.toString(); };
+    int toInt() { return JoS_Null::JoSNull.toInt(); };
+    double toDouble() { return JoS_Null::JoSNull.toDouble(); };
+    bool isMap() { return true; };
+    bool isList() { return false; };
+    bool isLeaf() { return false; };
+    bool isNull() { return false; };
 
 private:
     jos_map m_map;

@@ -10,7 +10,7 @@ class PartitionableItem
 public:
 	PartitionableItem() { m_pPartition = NULL; };
 	virtual ~PartitionableItem() {};
-	virtual f3d getPosition() = 0;
+	virtual f3d getPosition() const = 0;
 	Partition * getPartition() { return m_pPartition; };
 	void setPartition(Partition * pPartition) { m_pPartition = pPartition; };
 

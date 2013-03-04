@@ -5,7 +5,7 @@
 #include "JoS_List.h"
 #include "JoS_Map.h"
 
-class JoSon
+class JoSon : public JoS_Element
 {
 public:
     // Destructor
@@ -19,6 +19,10 @@ public:
     JoS_Element * get() { return m_pRoot->get(); };
     JoS_Element * get(int idx) { return m_pRoot->get(idx); };
     JoS_Element * get(std::string key) { return m_pRoot->get(key); };
+    bool isMap() { return m_pRoot->isMap(); };
+    bool isList() { return m_pRoot->isList(); };
+    bool isLeaf() { return m_pRoot->isLeaf(); };
+    bool isNull() { return m_pRoot->isNull(); };
 
 private:
     JoSon();

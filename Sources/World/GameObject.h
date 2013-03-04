@@ -14,7 +14,7 @@ public:
     virtual void display();
 
     void setPosition(f3d pos);
-    f3d getPosition() { return m_pos; };
+    f3d getPosition() const { return m_pos; };
     Geometry * getGeometry() { return m_pGeometry; };
     void setGeometry(Geometry * pGeo) { m_pGeometry = pGeo; };
 
