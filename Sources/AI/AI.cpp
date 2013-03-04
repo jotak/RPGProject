@@ -26,11 +26,11 @@ AI::~AI()
 // -----------------------------------------------------------------
 void AI::update(double delta)
 {
-	list<PartitionableItem*> lstSurroundingObjects = _world->getSpacePartition()->getDirectNeighbours(this);
-	checkInteractions(&lstSurroundingObjects);
+	list<PartitionableItem*> * lstSurroundingObjects = _world->getSpacePartition()->getDirectNeighbours(this);
+	checkInteractions(lstSurroundingObjects);
 	for (int i = 0; i < NB_INDIRECT_NEIGHBOURS_ZONES; i++) {
 		lstSurroundingObjects = _world->getSpacePartition()->getIndirectNeighbours(this, i);
-		checkInteractions(&lstSurroundingObjects);
+		checkInteractions(lstSurroundingObjects);
 	}
 
 	if (m_pBehaviour != NULL) {

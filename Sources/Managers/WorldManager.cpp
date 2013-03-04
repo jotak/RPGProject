@@ -14,7 +14,7 @@ WorldManager::WorldManager() : EventListener(4)
 {
 	m_pActiveCharacter = NULL;
 	m_pPickedObject = NULL;
-	m_pSpacePartition == NULL;
+	m_pSpacePartition = NULL;
 }
 
 // -----------------------------------------------------------------
