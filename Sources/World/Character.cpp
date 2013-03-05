@@ -3,6 +3,7 @@
 // -----------------------------------------------------------------
 #include "Character.h"
 #include "../Physics/MovesHelper.h"
+#include "../Managers/DebugManager.h"
 
 // -----------------------------------------------------------------
 // Name : Character
@@ -11,8 +12,8 @@ Character::Character(const JoS_Element &json)
 {
 	setSpeed(getJsonDouble(json, "speed", 5.0f));
 	const JoS_Element& jsTraits = json["traits"];
-	m_mapTraits["friendly"] = getJsonInt(jsTraits, "friendly", 0);
-	m_mapTraits["funny"] = getJsonInt(jsTraits, "funny", 0);
+	m_mapTraits["friendly"] = getJsonInt(jsTraits, "friendly", 0, 0, TRAIT_MAX_VALUE);
+	m_mapTraits["funny"] = getJsonInt(jsTraits, "funny", 0, 0, TRAIT_MAX_VALUE);
 }
 
 // -----------------------------------------------------------------
@@ -53,19 +54,31 @@ void Character::setMoveTarget(Coords3D pos)
 // -----------------------------------------------------------------
 // Name : getJsonInt
 // -----------------------------------------------------------------
-int Character::getJsonInt(const JoS_Element &json, string name, int defaultVal)
+int Character::getJsonInt(const JoS_Element &json, string name, int defaultVal, int capMin, int capMax)
 {
+	int val = defaultVal;
 	const JoS_Element& elt = json[name];
 	if (elt.isList() && elt[0].isLeaf() && elt[1].isLeaf()) {
 		// Case list of 2 elements => random in min/max
 		int min = elt[0].toInt();
 		int max = elt[1].toInt();
-		return min + rand() % (1+max-min);
+		val = min + rand() % (1+max-min);
 	} else if (elt.isLeaf()) {
-		return elt.toInt();
-	} else {
-		return defaultVal;
+		val = elt.toInt();
 	}
+
+	// Min/max capping
+	if (val < capMin) {
+		val = capMin;
+		ostringstream os; os << name << " capped up to " << capMin;
+		_debug->notifyErrorMessage(os.str());
+	} else if (val > capMax) {
+		val = capMax;
+		ostringstream os; os << name << " capped down to " << capMax;
+		_debug->notifyErrorMessage(os.str());
+	}
+
+	return val;
 }
 
 // -----------------------------------------------------------------

@@ -13,6 +13,8 @@ public:
     virtual void update(double delta);
     virtual void display();
 
+    virtual bool isCharacter() { return false; };
+
     void setPosition(f3d pos);
     f3d getPosition() const { return m_pos; };
     Geometry * getGeometry() { return m_pGeometry; };

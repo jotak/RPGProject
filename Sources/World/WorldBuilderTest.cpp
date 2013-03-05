@@ -50,11 +50,11 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 		_world->setActiveCharacter(pCharacter);
 	}
 
-	createAI(string("{speed:[1,6], traits:{friendly:[-5,5], funny:[-5,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[-5,5], funny:[-5,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[-5,5], funny:[-5,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[-5,5], funny:[-5,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[-5,5], funny:[-5,5]}}"), pGameObjects);
+	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
+	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
+	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
+	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
+	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
 
 	_display->moveCameraTo(f3d(4, 4, 6));
 }

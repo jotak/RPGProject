@@ -19,6 +19,7 @@
 
 // Other
 #include "../World/WorldBuilderTest.h"
+#include "../AI/AI.h"
 
 // -----------------------------------------------------------------
 // Name : MasterManager
@@ -46,6 +47,9 @@ MasterManager::MasterManager()
     i18n;
     _params->setWinXPos(glutGet(GLUT_WINDOW_X));
     _params->setWinYPos(glutGet(GLUT_WINDOW_Y));
+
+    // Other static stuff
+    AI::initData();
 }
 
 // -----------------------------------------------------------------
@@ -53,6 +57,9 @@ MasterManager::MasterManager()
 // -----------------------------------------------------------------
 MasterManager::~MasterManager()
 {
+    // Some static stuff
+    AI::releaseData();
+
     delete i18n;
     delete _params;
     delete _world;
