@@ -11,16 +11,15 @@ public:
     ~JoS_Leaf() {};
 
     void set(std::string leaf) { this->leaf = leaf; };
-    JoS_Element * get() { return this; };
-    JoS_Element * get(int idx) { return &(JoS_Null::JoSNull); };
-    JoS_Element * get(std::string key) { return &(JoS_Null::JoSNull); };
-    std::string toString() { return leaf; };
-    int toInt() { return atoi(leaf.c_str()); };
-    double toDouble() { return atof(leaf.c_str()); };
-    bool isMap() { return false; };
-    bool isList() { return false; };
-    bool isLeaf() { return true; };
-    bool isNull() { return false; };
+    const JoS_Element& operator[](int idx) const { return JoS_Null::JoSNull; };
+    const JoS_Element& operator[](std::string key) const { return JoS_Null::JoSNull; };
+    std::string toString() const { return leaf; };
+    int toInt() const { return atoi(leaf.c_str()); };
+    double toDouble() const { return atof(leaf.c_str()); };
+    bool isMap() const { return false; };
+    bool isList() const { return false; };
+    bool isLeaf() const { return true; };
+    bool isNull() const { return false; };
 
 private:
     std::string leaf;

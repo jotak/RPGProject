@@ -30,23 +30,23 @@ public:
     		return true;
     	}
     };
-    JoS_Element * get() { return &(JoS_Null::JoSNull); };
-    JoS_Element * get(int idx) { return &(JoS_Null::JoSNull); };
-    JoS_Element * get(std::string key) {
-    	jos_map::iterator it = m_map.find(key);
-    	if (it != m_map.end()) {
-    		return it->second;
+    const JoS_Element& operator[](int idx) const { return JoS_Null::JoSNull; };
+    const JoS_Element& operator[](std::string key) const {
+    	jos_map& map = const_cast<JoS_Map*>(this)->m_map;
+    	jos_map::iterator it = map.find(key);
+    	if (it != map.end()) {
+    		return *(it->second);
     	} else {
-    		return &(JoS_Null::JoSNull);
+    		return JoS_Null::JoSNull;
     	}
     };
-    std::string toString() { return JoS_Null::JoSNull.toString(); };
-    int toInt() { return JoS_Null::JoSNull.toInt(); };
-    double toDouble() { return JoS_Null::JoSNull.toDouble(); };
-    bool isMap() { return true; };
-    bool isList() { return false; };
-    bool isLeaf() { return false; };
-    bool isNull() { return false; };
+    std::string toString() const { return JoS_Null::JoSNull.toString(); };
+    int toInt() const { return JoS_Null::JoSNull.toInt(); };
+    double toDouble() const { return JoS_Null::JoSNull.toDouble(); };
+    bool isMap() const { return true; };
+    bool isList() const { return false; };
+    bool isLeaf() const { return false; };
+    bool isNull() const { return false; };
 
 private:
     jos_map m_map;

@@ -12,16 +12,15 @@ public:
 	JoS_Element() {};
     virtual ~JoS_Element() {};
 
-    virtual std::string toString() = 0;
-    virtual int toInt() = 0;
-    virtual double toDouble() = 0;
-    virtual JoS_Element * get() = 0;
-    virtual JoS_Element * get(int) = 0;
-    virtual JoS_Element * get(std::string) = 0;
-    virtual bool isMap() = 0;
-    virtual bool isList() = 0;
-    virtual bool isLeaf() = 0;
-    virtual bool isNull() = 0;
+    virtual std::string toString() const = 0;
+    virtual int toInt() const = 0;
+    virtual double toDouble() const = 0;
+    virtual const JoS_Element& operator[](int) const = 0;
+    virtual const JoS_Element& operator[](std::string) const = 0;
+    virtual bool isMap() const = 0;
+    virtual bool isList() const = 0;
+    virtual bool isLeaf() const = 0;
+    virtual bool isNull() const = 0;
 };
 
 #endif

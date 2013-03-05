@@ -10,16 +10,15 @@ public:
 	JoS_Null() {};
     ~JoS_Null() {};
 
-    JoS_Element * get() { return this; };
-    JoS_Element * get(int idx) { return this; };
-    JoS_Element * get(std::string key) { return this; };
-    std::string toString() { return ""; };
-    int toInt() { return 0; };
-    double toDouble() { return 0; };
-    bool isMap() { return false; };
-    bool isList() { return false; };
-    bool isLeaf() { return false; };
-    bool isNull() { return true; };
+    const JoS_Element& operator[](int idx) const { return JoSNull; };
+    const JoS_Element& operator[](std::string key) const { return JoSNull; };
+    std::string toString() const { return ""; };
+    int toInt() const { return 0; };
+    double toDouble() const { return 0; };
+    bool isMap() const { return false; };
+    bool isList() const { return false; };
+    bool isLeaf() const { return false; };
+    bool isNull() const { return true; };
 
     static JoS_Null JoSNull;
 };

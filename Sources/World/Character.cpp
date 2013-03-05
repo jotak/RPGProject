@@ -3,15 +3,14 @@
 // -----------------------------------------------------------------
 #include "Character.h"
 #include "../Physics/MovesHelper.h"
-#include "../Data/JoSon/JoSon.h"
 
 // -----------------------------------------------------------------
 // Name : Character
 // -----------------------------------------------------------------
-Character::Character(JoS_Element * json)
+Character::Character(const JoS_Element &json)
 {
 	setSpeed(getJsonDouble(json, "speed", 5.0f));
-	JoS_Element * jsTraits = json->get("traits");
+	const JoS_Element& jsTraits = json["traits"];
 	m_mapTraits["friendly"] = getJsonInt(jsTraits, "friendly", 0);
 	m_mapTraits["funny"] = getJsonInt(jsTraits, "funny", 0);
 }
@@ -54,52 +53,52 @@ void Character::setMoveTarget(Coords3D pos)
 // -----------------------------------------------------------------
 // Name : getJsonInt
 // -----------------------------------------------------------------
-int Character::getJsonInt(JoS_Element * json, string name, int defaultVal)
+int Character::getJsonInt(const JoS_Element &json, string name, int defaultVal)
 {
-	JoS_Element * elt = json->get(name);
-	if (elt->isList() && elt->get(0)->isLeaf() && elt->get(1)->isLeaf()) {
+	const JoS_Element& elt = json[name];
+	if (elt.isList() && elt[0].isLeaf() && elt[1].isLeaf()) {
 		// Case list of 2 elements => random in min/max
-		int min = elt->get(0)->get()->toInt();
-		int max = elt->get(1)->get()->toInt();
+		int min = elt[0].toInt();
+		int max = elt[1].toInt();
 		return min + rand() % (1+max-min);
-	} else if (!elt->isLeaf()) {
-		return defaultVal;
+	} else if (elt.isLeaf()) {
+		return elt.toInt();
 	} else {
-		return elt->get()->toInt();
+		return defaultVal;
 	}
 }
 
 // -----------------------------------------------------------------
 // Name : getJsonDouble
 // -----------------------------------------------------------------
-double Character::getJsonDouble(JoS_Element * json, string name, double defaultVal)
+double Character::getJsonDouble(const JoS_Element &json, string name, double defaultVal)
 {
-	JoS_Element * elt = json->get(name);
-	if (elt->isList() && elt->get(0)->isLeaf() && elt->get(1)->isLeaf()) {
+	const JoS_Element& elt = json[name];
+	if (elt.isList() && elt[0].isLeaf() && elt[1].isLeaf()) {
 		// Case list of 2 elements => random in min/max
-		double min = elt->get(0)->get()->toDouble();
-		double max = elt->get(1)->get()->toDouble();
+		double min = elt[0].toDouble();
+		double max = elt[1].toDouble();
 		return min + FRAND100(max-min);
-	} else if (!elt->isLeaf()) {
-		return defaultVal;
+	} else if (elt.isLeaf()) {
+		return elt.toDouble();
 	} else {
-		return elt->get()->toDouble();
+		return defaultVal;
 	}
 }
 
 // -----------------------------------------------------------------
 // Name : getJsonString
 // -----------------------------------------------------------------
-string Character::getJsonString(JoS_Element * json, string name, string defaultVal)
+string Character::getJsonString(const JoS_Element &json, string name, string defaultVal)
 {
-	JoS_Element * elt = json->get(name);
-	if (elt->isList()) {
+	const JoS_Element& elt = json[name];
+	if (elt.isList()) {
 		// Enumeration of strings => take random one
-		int idx = rand() % ((JoS_List*)elt)->size();
-		return elt->get(idx)->toString();
-	} else if (!elt->isLeaf()) {
-		return defaultVal;
+		int idx = rand() % ((JoS_List&)elt).size();
+		return elt[idx].toString();
+	} else if (elt.isLeaf()) {
+		return elt.toString();
 	} else {
-		return elt->get()->toString();
+		return defaultVal;
 	}
 }

@@ -13,16 +13,15 @@ public:
     static JoSon * fromString(std::string strJoson, std::string * sError);
     static JoSon * fromFile(std::string fileJoson, std::string * sError);
 
-    std::string toString() { return m_pRoot->toString(); };
-    int toInt() { return m_pRoot->toInt(); };
-    double toDouble() { return m_pRoot->toDouble(); };
-    JoS_Element * get() { return m_pRoot->get(); };
-    JoS_Element * get(int idx) { return m_pRoot->get(idx); };
-    JoS_Element * get(std::string key) { return m_pRoot->get(key); };
-    bool isMap() { return m_pRoot->isMap(); };
-    bool isList() { return m_pRoot->isList(); };
-    bool isLeaf() { return m_pRoot->isLeaf(); };
-    bool isNull() { return m_pRoot->isNull(); };
+    std::string toString() const { return m_pRoot->toString(); };
+    int toInt() const { return m_pRoot->toInt(); };
+    double toDouble() const { return m_pRoot->toDouble(); };
+    const JoS_Element& operator[](int idx) const { return (*m_pRoot)[idx]; };
+    const JoS_Element& operator[](std::string key) const { return (*m_pRoot)[key]; };
+    bool isMap() const { return m_pRoot->isMap(); };
+    bool isList() const { return m_pRoot->isList(); };
+    bool isLeaf() const { return m_pRoot->isLeaf(); };
+    bool isNull() const { return m_pRoot->isNull(); };
 
 private:
     JoSon();

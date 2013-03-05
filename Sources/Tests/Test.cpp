@@ -78,33 +78,34 @@ void testJoSon() {
 	cout << "Starting testJoSon..." << endl;
 
 	string sError;
-	JoSon * json = JoSon::fromString(string("{a:1, b:[2, 3, \"toto et tata\"], c : foo}"), &sError);
+	JoSon * jsonPtr = JoSon::fromString(string("{a:1, b:[2, 3, \"toto et tata\"], c : foo}"), &sError);
+	JoSon& json = *jsonPtr;
 
-	assert(json->isMap());
-	assert(json->get("a")->isLeaf());
-	string a = json->get("a")->toString();
+	assert(json.isMap());
+	assert(json["a"].isLeaf());
+	string a = json["a"].toString();
 	assert(a == "1");
-	assert(json->get("b")->isList());
-	assert(json->get("b")->get(0)->isLeaf());
-	double b0 = json->get("b")->get(0)->toDouble();
+	assert(json["b"].isList());
+	assert(json["b"][0].isLeaf());
+	double b0 = json["b"][0].toDouble();
 	assert(b0 == 2.0f);
-	assert(json->get("b")->get(1)->isLeaf());
-	int b1 = json->get("b")->get(1)->toInt();
+	assert(json["b"][1].isLeaf());
+	int b1 = json["b"][1].toInt();
 	assert(b1 == 3);
-	assert(json->get("b")->get(2)->isLeaf());
-	string b2 = json->get("b")->get(2)->toString();
+	assert(json["b"][2].isLeaf());
+	string b2 = json["b"][2].toString();
 	assert(b2 == "toto et tata");
-	assert(json->get("c")->isLeaf());
-	string c = json->get("c")->toString();
+	assert(json["c"].isLeaf());
+	string c = json["c"].toString();
 	assert(c == "foo");
-	assert(json->get("d")->isNull());
-	string d = json->get("d")->toString();
+	assert(json["d"].isNull());
+	string d = json["d"].toString();
 	assert(d == "");
-	assert(json->get("e")->get(9)->get()->isNull());
-	int e = json->get("e")->get(9)->get()->toInt();
+	assert(json["e"][9].isNull());
+	int e = json["e"][9].toInt();
 	assert(e == 0);
 
-	delete json;
+	delete jsonPtr;
 	cout << "testJoSon OK" << endl;
 }
 

@@ -40,7 +40,7 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 	if (json == NULL) {
 		_debug->notifyErrorMessage(sError);
 	} else {
-		Character * pCharacter = new Character(json);
+		Character * pCharacter = new Character(*json);
 		QuadData quad2(0.0f, 0.5f, 0.0f, 0.5f, string("heroe"));
 		pGeometry = new GeometryQuads(&quad2, VB_Static);
 		pGeometry->setOffset(CoordsScreen(280, 70));
@@ -69,7 +69,7 @@ void WorldBuilderTest::createAI(string strJson, list<GameObject*> * pGameObjects
 	if (json == NULL) {
 		_debug->notifyErrorMessage(string("Error when loading json: ") + strJson + " - Error message: " + sError);
 	} else {
-		AI * pAI = new AI(json);
+		AI * pAI = new AI(*json);
 		delete json;
 	    QuadData quad2(0.0f, 0.5f, 0.0f, 0.5f, string("heroe"));
 		GeometryQuads * pGeometry = new GeometryQuads(&quad2, VB_Static);

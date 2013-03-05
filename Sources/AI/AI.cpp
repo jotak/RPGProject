@@ -8,7 +8,7 @@
 // -----------------------------------------------------------------
 // Name : AI
 // -----------------------------------------------------------------
-AI::AI(JoS_Element * json) : Character(json)
+AI::AI(JoS_Element& json) : Character(json)
 {
 	m_pBehaviour = NULL;
 }

@@ -28,7 +28,7 @@ public:
     GLubyte * getTexels() { return m_pTexels; };
     bool isLoadedInVideo() { return m_bIsLoadedInVideo; };
     bool isMipMap() { return m_bMipMap; };
-    JoSon * getComposedDescriptor() { return m_pComposedDescriptor; };
+    const JoSon& getComposedDescriptor() { return *m_pComposedDescriptor; };
 
 protected:
     string m_sFilename;

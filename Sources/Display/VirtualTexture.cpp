@@ -39,11 +39,11 @@ VirtualTexture::~VirtualTexture()
 // -----------------------------------------------------------------
 VirtualTexture * VirtualTexture::build(Texture * pMaster, string sFilename, string sTitle)
 {
-	JoS_Element * texCoords = pMaster->getComposedDescriptor()->get(sTitle);
-    int ustart = texCoords->get(0)->toInt();
-    int uend = texCoords->get(1)->toInt();
-    int vstart = texCoords->get(2)->toInt();
-    int vend = texCoords->get(3)->toInt();
+	const JoS_Element& texCoords = pMaster->getComposedDescriptor()[sTitle];
+    int ustart = texCoords[0].toInt();
+    int uend = texCoords[1].toInt();
+    int vstart = texCoords[2].toInt();
+    int vend = texCoords[3].toInt();
 
     int width = 1 + uend - ustart;
     int height = 1 + vend - vstart;
