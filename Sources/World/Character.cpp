@@ -5,6 +5,8 @@
 #include "../Physics/MovesHelper.h"
 #include "../Managers/DebugManager.h"
 
+JoSon * Character::m_pTraitsRelations = NULL;
+
 // -----------------------------------------------------------------
 // Name : Character
 // -----------------------------------------------------------------
@@ -12,8 +14,12 @@ Character::Character(const JoS_Element &json)
 {
 	setSpeed(getJsonDouble(json, "speed", 5.0f));
 	const JoS_Element& jsTraits = json["traits"];
-	m_mapTraits["friendly"] = getJsonInt(jsTraits, "friendly", 0, 0, TRAIT_MAX_VALUE);
-	m_mapTraits["funny"] = getJsonInt(jsTraits, "funny", 0, 0, TRAIT_MAX_VALUE);
+
+	int nbTraits = ((JoS_List&)((*m_pTraitsRelations)["_list_"])).size();
+	for (int i = 0; i < nbTraits; i++) {
+		string trait = (*m_pTraitsRelations)["_list_"][i].toString();
+		m_mapTraits[trait] = getJsonInt(jsTraits, trait, 0, 0, TRAIT_MAX_VALUE);
+	}
 }
 
 // -----------------------------------------------------------------
@@ -30,7 +36,9 @@ ostream& operator<< (ostream& stream, const Character& character) {
 	f3d pos = character.getPosition();
 	stream << "x: " << pos.x << " / y: " << pos.y << " / speed: " << character.speed;
 	for (pair<string, long> entry : character.m_mapTraits) {
-		stream << " / " << entry.first << ": " << entry.second;
+		if (entry.second != 0) {
+			stream << " / " << entry.first << ": " << entry.second;
+		}
 	}
 	return stream;
 }
@@ -114,4 +122,49 @@ string Character::getJsonString(const JoS_Element &json, string name, string def
 	} else {
 		return defaultVal;
 	}
+}
+
+// -----------------------------------------------------------------
+// Name : initData
+//	static
+// -----------------------------------------------------------------
+void Character::initData()
+{
+    // Build file name
+    string jsonDesc = string(AI_PATH) + "traitsRelations.json";
+    string err;
+    m_pTraitsRelations = JoSon::fromFile(jsonDesc, &err);
+    if (m_pTraitsRelations == NULL) {
+    	_debug->notifyErrorMessage(err);
+    }
+}
+
+// -----------------------------------------------------------------
+// Name : releaseData
+//	static
+// -----------------------------------------------------------------
+void Character::releaseData()
+{
+	FREE(m_pTraitsRelations);
+}
+
+// -----------------------------------------------------------------
+// Name : getTraitsRelation
+// Relation is not comutable: getTraitsRelation(A, B) != getTraitsRelation(B, A)
+//	static
+// -----------------------------------------------------------------
+float Character::getTraitsRelation(string from, string towards)
+{
+	if (m_pTraitsRelations != NULL && !(*m_pTraitsRelations)[from][towards].isNull()) {
+		float value = (float) (*m_pTraitsRelations)[from][towards].toDouble();
+		// Cap value in [-1,1]
+		if (value > 1.0f) {
+			value = 1.0f;
+		} else if (value < -1.0f) {
+			value = -1.0f;
+		}
+		return value;
+	}
+	// Value not found => neutral relation
+	return 0.0f;
 }

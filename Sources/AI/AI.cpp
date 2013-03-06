@@ -6,8 +6,6 @@
 #include "../Managers/DebugManager.h"
 #include "../Physics/SpacePart.h"
 
-JoSon * AI::m_pTraitsRelations = NULL;
-
 // -----------------------------------------------------------------
 // Name : AI
 // -----------------------------------------------------------------
@@ -81,9 +79,7 @@ void AI::interact(GameObject * pOther)
 // -----------------------------------------------------------------
 float AI::computeObjectiveAttraction(Character * pOther)
 {
-	// TODO: bad algorithm ; impact of relation should not be the same when "from" is high, and when "from" is low. Division by nbRelations is bad.
 	float attraction = 0.0f;
-	int nbRelations = 0;
 	long_hash * pThisTraits = getTraits();
 	long_hash * pOtherTraits = pOther->getTraits();
 	for (pair<string, long> from : *pThisTraits) {
@@ -92,63 +88,17 @@ float AI::computeObjectiveAttraction(Character * pOther)
 			float fRelation = (float)from.second/*[0,5]*/ * (float)to.second/*[0,5]*/ * getTraitsRelation(from.first, to.first)/*[0,1]*/ / (float)(TRAIT_MAX_VALUE * TRAIT_MAX_VALUE);
 			// Square it so that an "extreme" relation counts for more than a neutral one
 			attraction += (fRelation * abs(fRelation));
-			nbRelations++;
 		}
-	}
-	if (nbRelations > 0) {
-		attraction /= (float) nbRelations;
 	}
 
 	// "Friendly" traits automatically improves attraction
-//	int friendly = (*pThisTraits)[TRAITS_FRIENDLY];
-//	if (friendly > 0) {
-//		attraction = (attraction + friendly) / (friendly+1);
-//	}
+	float friendly = ((float)(*pThisTraits)[TRAITS_FRIENDLY]) / (float)(TRAIT_MAX_VALUE);
+	attraction += friendly / 2;
+
+	friendly = ((float)(*pOtherTraits)[TRAITS_FRIENDLY]) / (float)(TRAIT_MAX_VALUE);
+	attraction += friendly;
+
+	// charismatic, charmer, cold
 
 	return attraction;
-}
-
-// -----------------------------------------------------------------
-// Name : initData
-//	static
-// -----------------------------------------------------------------
-void AI::initData()
-{
-    // Build file name
-    string jsonDesc = string(AI_PATH) + "traitsRelations.json";
-    string err;
-    m_pTraitsRelations = JoSon::fromFile(jsonDesc, &err);
-    if (m_pTraitsRelations == NULL) {
-    	_debug->notifyErrorMessage(err);
-    }
-}
-
-// -----------------------------------------------------------------
-// Name : releaseData
-//	static
-// -----------------------------------------------------------------
-void AI::releaseData()
-{
-	FREE(m_pTraitsRelations);
-}
-
-// -----------------------------------------------------------------
-// Name : getTraitsRelation
-// Relation is not comutable: getTraitsRelation(A, B) != getTraitsRelation(B, A)
-//	static
-// -----------------------------------------------------------------
-float AI::getTraitsRelation(string from, string towards)
-{
-	if (m_pTraitsRelations != NULL && !(*m_pTraitsRelations)[from][towards].isNull()) {
-		float value = (float) (*m_pTraitsRelations)[from][towards].toDouble();
-		// Cap value in [-1,1]
-		if (value > 1.0f) {
-			value = 1.0f;
-		} else if (value < -1.0f) {
-			value = -1.0f;
-		}
-		return value;
-	}
-	// Value not found => neutral relation
-	return 0.0f;
 }

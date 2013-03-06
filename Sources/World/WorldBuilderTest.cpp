@@ -50,11 +50,12 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 		_world->setActiveCharacter(pCharacter);
 	}
 
-	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{friendly:[0,5], funny:[0,5]}}"), pGameObjects);
+	string strJson("{speed:[1,6], traits:{funny:[-10,5], friendly:[-10,5], aggressive:[-10,5], charismatic:[-10,5], brave:[-10,5], charmer:[-10,5], solitary:[-10,5], tidy:[-10,5], dirty:[-10,5], cold:[-10,5], partier:[-10,5], impressionable:[-10,5], rough:[-10,5], obsequious:[-10,5], naturelover:[-10,5], malicious:[-10,5], petty:[-10,5], freeloader:[-10,5], romantic:[-10,5], coward:[-10,5], sexaddict:[-10,5], inhibited:[-10,5], impulsive:[-10,5], snob:[-10,5], technophile:[-10,5], magicphile:[-10,5], familysense:[-10,5], sly:[-10,5], taciturn:[-10,5], spitfire:[-10,5], opportunist:[-10,5], optimist:[-10,5], sceptic:[-10,5], religious:[-10,5], cartesian:[-10,5], righteous:[-10,5], egocentric:[-10,5], austere:[-10,5], warm:[-10,5], leader:[-10,5]}}");
+	createAI(strJson, pGameObjects);
+	createAI(strJson, pGameObjects);
+	createAI(strJson, pGameObjects);
+	createAI(strJson, pGameObjects);
+	createAI(strJson, pGameObjects);
 
 	_display->moveCameraTo(f3d(4, 4, 6));
 }
