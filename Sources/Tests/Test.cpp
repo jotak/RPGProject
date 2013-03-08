@@ -109,7 +109,54 @@ void testJoSon() {
 	cout << "testJoSon OK" << endl;
 }
 
+// Not actually a test... but detect if there are some similare traits, in which case it could be better to remove one.
+void detectSimilarTraits()
+{
+    string jsonDesc = string(AI_PATH) + "traitsRelations.json";
+    string err;
+    JoSon * pTraitsRelations = JoSon::fromFile(jsonDesc, &err);
+    assert(pTraitsRelations != NULL);
+    JoSon& rel = *pTraitsRelations;
+
+    // Compare each trait with each other to see if they are similar
+	int nbTraits = ((JoS_List&)(rel["_list_"])).size();
+	for (int i = 0; i < nbTraits; i++) {
+		string trait1 = rel["_list_"][i].toString();
+		for (int j = i+1; j < nbTraits; j++) {
+			string trait2 = rel["_list_"][j].toString();
+			double totalSimilarity = 0.0f;
+			int nbCounted = 0;
+			for (int k = 0; k < nbTraits; k++) {
+				string trait3 = rel["_list_"][k].toString();
+				double i_k = rel[trait1][trait3].toDouble();
+				double k_i = rel[trait3][trait1].toDouble();
+				double j_k = rel[trait2][trait3].toDouble();
+				double k_j = rel[trait3][trait2].toDouble();
+				if (i_k != 0 || j_k != 0) {
+					nbCounted++;
+					double similarity = 1.0f - fabs(i_k - j_k);
+					totalSimilarity += similarity;
+				}
+				if (k_i != 0 || k_j != 0) {
+					nbCounted++;
+					double similarity = 1.0f - fabs(k_i - k_j);
+					totalSimilarity += similarity;
+				}
+			}
+			if (nbCounted > 0) {
+				int pct = (int)(100.0f*totalSimilarity/(float)nbCounted);
+				if (pct >= 70) {
+					cout << trait1 << " / " << trait2 << ": " << pct << endl;
+				}
+			}
+		}
+	}
+
+    delete pTraitsRelations;
+}
+
 void runAllTests() {
 	testF3d();
 	testJoSon();
+	detectSimilarTraits();
 }
