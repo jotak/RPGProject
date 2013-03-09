@@ -11,7 +11,7 @@
 GoToBehaviour::GoToBehaviour(f3d target, Character * ai) : Behaviour(ai)
 {
 	m_Target = target;
-	m_pAI->addMovement(MovesHelper::newConstantMove(target - m_pAI->getPosition(), m_pAI->getSpeed()));
+	m_pAI->addMovement(MovesHelper::newConstantMove(target - m_pAI->getPosition(), m_pAI->get3DSpeed()));
 }
 
 // -----------------------------------------------------------------

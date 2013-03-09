@@ -30,6 +30,7 @@ typedef tr1::unordered_map<char, char> ch_hash;
 #define FREE(m)               	{ if (m != NULL) { delete m; m = NULL; } }
 #define FREEARR(m)            	{ if (m != NULL) { delete[] m; m = NULL; } }
 #define FREEVEC(v)            	{ while(!v.empty()) delete v.back(), v.pop_back(); }
+#define FREESTACK(v)           { while(!v.empty()) delete v.top(), v.pop(); }
 #define EPSILON               	0.000001f
 #define PI                    	3.141592f
 #define FRAND100(max)			(((double)(rand()%100))*(double)(max)/100.0f)

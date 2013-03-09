@@ -21,6 +21,7 @@ AI::AI(JoS_Element& json) : Character(json)
 AI::~AI()
 {
 	FREE(m_pBehaviour);
+	FREESTACK(m_pActionsStack);
 }
 
 // -----------------------------------------------------------------
@@ -30,25 +31,57 @@ void AI::update(double delta)
 {
 	m_fInteractTimer -= delta;
 	if (m_fInteractTimer <= 0) {
-		m_fInteractTimer = INTERACT_DELAY;
-		list<PartitionableItem*> * lstSurroundingObjects = _world->getSpacePartition()->getDirectNeighbours(this);
-		checkInteractions(lstSurroundingObjects);
-		for (int i = 0; i < NB_INDIRECT_NEIGHBOURS_ZONES; i++) {
-			lstSurroundingObjects = _world->getSpacePartition()->getIndirectNeighbours(this, i);
-			checkInteractions(lstSurroundingObjects);
+		// Time to take a decision!
+		m_fInteractTimer = DECISION_DELAY;
+		AIAction * newAction = evaluateActionToDo();
+		if (newAction != NULL) {
+			// There's something we want to do
+			m_pActionsStack.push(newAction);
 		}
 	}
 
-	if (m_pBehaviour != NULL) {
-		m_pBehaviour->update(delta);
+	if (!m_pActionsStack.empty()) {
+		// Do what we want to do
+		AIAction * currentAction = m_pActionsStack.top();
+		currentAction->update(delta);
+		if (currentAction->isFinished()) {
+			// This task is done
+			delete currentAction;
+			m_pActionsStack.pop();
+		}
 	}
+
+//	if (m_pBehaviour != NULL) {
+//		m_pBehaviour->update(delta);
+//	}
 	Character::update(delta);
+}
+
+// -----------------------------------------------------------------
+// Name : evaluateActionToDo
+// -----------------------------------------------------------------
+AIAction * AI::evaluateActionToDo()
+{
+	return NULL;
 }
 
 // -----------------------------------------------------------------
 // Name : checkInteractions
 // -----------------------------------------------------------------
-void AI::checkInteractions(list<PartitionableItem*> * lstSurroundingObjects)
+void AI::checkInteractions()
+{
+	list<PartitionableItem*> * lstSurroundingObjects = _world->getSpacePartition()->getDirectNeighbours(this);
+	checkInteractionsForList(lstSurroundingObjects);
+	for (int i = 0; i < NB_INDIRECT_NEIGHBOURS_ZONES; i++) {
+		lstSurroundingObjects = _world->getSpacePartition()->getIndirectNeighbours(this, i);
+		checkInteractionsForList(lstSurroundingObjects);
+	}
+}
+
+// -----------------------------------------------------------------
+// Name : checkInteractionsForList
+// -----------------------------------------------------------------
+void AI::checkInteractionsForList(list<PartitionableItem*> * lstSurroundingObjects)
 {
 	if (lstSurroundingObjects != NULL) {
 		for (PartitionableItem * pItem : *lstSurroundingObjects) {

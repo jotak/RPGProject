@@ -22,6 +22,7 @@ public:
     void setSpeed(double speed) { this->speed = speed; };
     void setMoveTarget(Coords3D pos);
     long_hash * getTraits() { return &m_mapTraits; };
+    double get3DSpeed();
 
     static void initData();
     static void releaseData();

@@ -52,11 +52,19 @@ void Character::update(double delta)
 }
 
 // -----------------------------------------------------------------
+// Name : get3DSpeed
+// -----------------------------------------------------------------
+double Character::get3DSpeed()
+{
+	return 2.0f + speed / 2.0f;
+}
+
+// -----------------------------------------------------------------
 // Name : setMoveTarget
 // -----------------------------------------------------------------
 void Character::setMoveTarget(Coords3D pos)
 {
-	setMovement(MovesHelper::newConstantMove(pos - getPosition(), speed));
+	setMovement(MovesHelper::newConstantMove(pos - getPosition(), get3DSpeed()));
 }
 
 // -----------------------------------------------------------------
