@@ -57,4 +57,10 @@ extern int getSavedGames(char ** sSavesList, unsigned int iListSize, int iSavesN
 extern int getMaps(char ** sMapsList, unsigned int iListSize, int iMapNameSize);
 extern bool getAvailableDisplayModes(list<DisplayMode>*);
 
+template <typename From, typename To>
+struct static_caster
+{
+    To operator()(From p) { return static_cast<To>(p); }
+};
+
 #endif

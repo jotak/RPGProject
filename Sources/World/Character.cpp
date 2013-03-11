@@ -5,19 +5,21 @@
 #include "../Physics/MovesHelper.h"
 #include "../Managers/DebugManager.h"
 
-JoSon * Character::m_pTraitsRelations = NULL;
+JoSon * Character::TraitsRelations = NULL;
+JoSon * Character::Dialogs = NULL;
 
 // -----------------------------------------------------------------
 // Name : Character
 // -----------------------------------------------------------------
 Character::Character(const JoS_Element &json)
 {
+	name = getJsonString(json, "name", "Dude");
 	setSpeed(getJsonDouble(json, "speed", 5.0f));
 	const JoS_Element& jsTraits = json["traits"];
 
-	int nbTraits = ((JoS_List&)((*m_pTraitsRelations)["_list_"])).size();
+	int nbTraits = ((JoS_List&)((*TraitsRelations)["_list_"])).size();
 	for (int i = 0; i < nbTraits; i++) {
-		string trait = (*m_pTraitsRelations)["_list_"][i].toString();
+		string trait = (*TraitsRelations)["_list_"][i].toString();
 		m_mapTraits[trait] = getJsonInt(jsTraits, trait, 0, 0, TRAIT_MAX_VALUE);
 	}
 }
@@ -65,6 +67,14 @@ double Character::get3DSpeed()
 void Character::setMoveTarget(Coords3D pos)
 {
 	setMovement(MovesHelper::newConstantMove(pos - getPosition(), get3DSpeed()));
+}
+
+// -----------------------------------------------------------------
+// Name : say
+// -----------------------------------------------------------------
+void Character::say(string sentence)
+{
+	cout << name << ": " << sentence << endl;
 }
 
 // -----------------------------------------------------------------
@@ -141,8 +151,15 @@ void Character::initData()
     // Build file name
     string jsonDesc = string(AI_PATH) + "traitsRelations.json";
     string err;
-    m_pTraitsRelations = JoSon::fromFile(jsonDesc, &err);
-    if (m_pTraitsRelations == NULL) {
+    TraitsRelations = JoSon::fromFile(jsonDesc, &err);
+    if (TraitsRelations == NULL) {
+    	_debug->notifyErrorMessage(err);
+    }
+
+    // Build file name
+    jsonDesc = string(AI_PATH) + "dialogs.json";
+    Dialogs = JoSon::fromFile(jsonDesc, &err);
+    if (Dialogs == NULL) {
     	_debug->notifyErrorMessage(err);
     }
 }
@@ -153,7 +170,8 @@ void Character::initData()
 // -----------------------------------------------------------------
 void Character::releaseData()
 {
-	FREE(m_pTraitsRelations);
+	FREE(TraitsRelations);
+	FREE(Dialogs);
 }
 
 // -----------------------------------------------------------------
@@ -163,8 +181,8 @@ void Character::releaseData()
 // -----------------------------------------------------------------
 float Character::getTraitsRelation(string from, string towards)
 {
-	if (m_pTraitsRelations != NULL && !(*m_pTraitsRelations)[from][towards].isNull()) {
-		float value = (float) (*m_pTraitsRelations)[from][towards].toDouble();
+	if (TraitsRelations != NULL && !(*TraitsRelations)[from][towards].isNull()) {
+		float value = (float) (*TraitsRelations)[from][towards].toDouble();
 		// Cap value in [-1,1]
 		if (value > 1.0f) {
 			value = 1.0f;

@@ -5,6 +5,7 @@
 #include "../Managers/WorldManager.h"
 #include "../Managers/DebugManager.h"
 #include "../Physics/SpacePart.h"
+#include "DiscussionAction.h"
 
 // -----------------------------------------------------------------
 // Name : AI
@@ -57,12 +58,69 @@ void AI::update(double delta)
 	Character::update(delta);
 }
 
+bool isSurrounding(AI * that, PartitionableItem * pItem) {
+	if (pItem != that) {
+		// Skip "this" since the AI itself is in the list
+		f3d vec = that->getPosition() - pItem->getPosition();
+		if (vec.getsize() < AI_INTERACTION_RADIUS) {
+			return true;
+		}
+	}
+	return false;
+}
+bool isSurroundingCharacter(AI * that, PartitionableItem * pItem) {
+	return ((GameObject*)pItem)->isCharacter() && isSurrounding(that, pItem);
+}
+bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
+	return ((GameObject*)pItem)->isAI() && isSurrounding(that, pItem);
+}
+
 // -----------------------------------------------------------------
 // Name : evaluateActionToDo
 // -----------------------------------------------------------------
 AIAction * AI::evaluateActionToDo()
 {
+	AIAction * currentAction = NULL;
+	if (!m_pActionsStack.empty()) {
+		currentAction = m_pActionsStack.top();
+	}
+
+	// Nothing to do? 1/10 chances to start banality discussion with people arround
+	if (currentAction == NULL) {
+		list<PartitionableItem*> lstSurrounding;
+		list<AI*> lstNeighbours;
+
+		getSurroundingObjects(&lstSurrounding, isSurroundingAI);
+		transform(lstSurrounding.begin(), lstSurrounding.end(), back_inserter(lstNeighbours), static_caster<PartitionableItem*, AI*>());
+		if (!lstNeighbours.empty()) {
+			if (rand() % 10 == 0) {
+				return startDiscussion(string("WEATHER_BANALITIES"), lstNeighbours);
+			}
+		}
+	}
 	return NULL;
+}
+
+// -----------------------------------------------------------------
+// Name : startDiscussion
+// -----------------------------------------------------------------
+AIAction * AI::startDiscussion(string discussionId, list<AI*> &lstNeighbours)
+{
+	Discussion * pDiscussion = new Discussion((*Character::Dialogs)[discussionId], this);
+	for (AI * ai : lstNeighbours) {
+		pDiscussion->join(ai);
+	}
+	return new DiscussionAction(this, pDiscussion);
+}
+
+// -----------------------------------------------------------------
+// Name : suggestAction
+//	Returns true if action is accepted
+// -----------------------------------------------------------------
+bool AI::suggestAction(AIAction * pAction)
+{
+	m_pActionsStack.push(pAction);
+	return true;
 }
 
 // -----------------------------------------------------------------
@@ -70,28 +128,34 @@ AIAction * AI::evaluateActionToDo()
 // -----------------------------------------------------------------
 void AI::checkInteractions()
 {
-	list<PartitionableItem*> * lstSurroundingObjects = _world->getSpacePartition()->getDirectNeighbours(this);
-	checkInteractionsForList(lstSurroundingObjects);
-	for (int i = 0; i < NB_INDIRECT_NEIGHBOURS_ZONES; i++) {
-		lstSurroundingObjects = _world->getSpacePartition()->getIndirectNeighbours(this, i);
-		checkInteractionsForList(lstSurroundingObjects);
+	list<PartitionableItem*> lstSurrounding;
+	getSurroundingObjects(&lstSurrounding, isSurrounding);
+
+	for (PartitionableItem * pItem : lstSurrounding) {
+		interact((GameObject*) pItem);
 	}
 }
 
-// -----------------------------------------------------------------
-// Name : checkInteractionsForList
-// -----------------------------------------------------------------
-void AI::checkInteractionsForList(list<PartitionableItem*> * lstSurroundingObjects)
+// --------------------------------------------------------------------
+// Name : getSurroundingObjects
+//	Initialize lstSurroundingObjects as empty list when calling method
+// --------------------------------------------------------------------
+void AI::getSurroundingObjects(list<PartitionableItem*> * lstReturn, FilterPredicate filter)
 {
-	if (lstSurroundingObjects != NULL) {
-		for (PartitionableItem * pItem : *lstSurroundingObjects) {
-			if (pItem != this) {
-				// Skip "this" since the AI itself is in the list
-				f3d vec = getPosition() - pItem->getPosition();
-				if (vec.getsize() < AI_INTERACTION_RADIUS) {
-					interact((GameObject*) pItem);
-				}
-			}
+	list<PartitionableItem*> lstSurroundingObjects;
+	list<PartitionableItem*> * lst = _world->getSpacePartition()->getDirectNeighbours(this);
+	lstSurroundingObjects.insert(lstSurroundingObjects.end(), lst->begin(), lst->end());
+	for (int i = 0; i < NB_INDIRECT_NEIGHBOURS_ZONES; i++) {
+		lst = _world->getSpacePartition()->getIndirectNeighbours(this, i);
+		if (lst != NULL) {
+			lstSurroundingObjects.insert(lstSurroundingObjects.end(), lst->begin(), lst->end());
+		}
+	}
+
+	// Apply filters
+	for (PartitionableItem * pItem : lstSurroundingObjects) {
+		if (filter(this, pItem)) {
+			lstReturn->push_back(pItem);
 		}
 	}
 }

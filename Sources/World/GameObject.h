@@ -14,6 +14,7 @@ public:
     virtual void display();
 
     virtual bool isCharacter() { return false; };
+    virtual bool isAI() { return false; };
 
     void setPosition(f3d pos);
     f3d getPosition() const { return m_pos; };

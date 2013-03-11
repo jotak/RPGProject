@@ -79,7 +79,7 @@ void WorldBuilderTest::createAI(string strJson, list<GameObject*> * pGameObjects
 		pGeometry->bindModifier(new ModColorize(Color::red));
 		pGeometry->bindModifier(new ModColorize(Color::green));
 		pAI->setGeometry(pGeometry);
-		pAI->setPosition(F3DBOARD(rand() % 10, rand() % 10));
+		pAI->setPosition(F3DBOARD(2 + rand() % 2, 2 + rand() % 2));
 		pAI->setBehaviour(new ErraticMoveBehaviour(pAI));
 		pGameObjects->push_back(pAI);
 		cout << "AI created: " << *pAI << endl;

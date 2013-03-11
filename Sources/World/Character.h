@@ -23,20 +23,24 @@ public:
     void setMoveTarget(Coords3D pos);
     long_hash * getTraits() { return &m_mapTraits; };
     double get3DSpeed();
+    void say(string);
 
     static void initData();
     static void releaseData();
     static float getTraitsRelation(string from, string towards);
+
+protected:
+    static JoSon * TraitsRelations;
+    static JoSon * Dialogs;
 
 private:
     int getJsonInt(const JoS_Element &json, string name, int defaultVal, int capMin, int capMax);
     double getJsonDouble(const JoS_Element &json, string name, double defaultVal);
     string getJsonString(const JoS_Element &json, string name, string defaultVal);
 
+    string name;
     double speed;	// 3d unit / second
     long_hash m_mapTraits;
-
-    static JoSon * m_pTraitsRelations;
 };
 
 #endif
