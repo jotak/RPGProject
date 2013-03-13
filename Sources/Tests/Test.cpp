@@ -119,7 +119,7 @@ void detectSimilarTraits()
     JoSon& rel = *pTraitsRelations;
 
     // Compare each trait with each other to see if they are similar
-	int nbTraits = ((JoS_List&)(rel["_list_"])).size();
+	int nbTraits = rel["_list_"].size();
 	for (int i = 0; i < nbTraits; i++) {
 		string trait1 = rel["_list_"][i].toString();
 		for (int j = i+1; j < nbTraits; j++) {

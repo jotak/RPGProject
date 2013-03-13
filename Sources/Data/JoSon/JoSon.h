@@ -22,6 +22,7 @@ public:
     bool isList() const { return m_pRoot->isList(); };
     bool isLeaf() const { return m_pRoot->isLeaf(); };
     bool isNull() const { return m_pRoot->isNull(); };
+    int size() const { return m_pRoot->size(); };
 
 private:
     JoSon();

@@ -20,6 +20,7 @@ public:
     bool isList() const { return false; };
     bool isLeaf() const { return true; };
     bool isNull() const { return false; };
+    int size() const { return 0; };
 
 private:
     std::string leaf;

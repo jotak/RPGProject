@@ -4,6 +4,10 @@
 #include "../Data/JoSon/JoSon.h"
 #include "AI.h"
 
+#define DIALOG_CONDITION_IDLE		"idle"
+#define DIALOG_CONDITION_BUSY		"busy"
+#define DIALOG_CONDITION_HUNGRY		"hungry"
+
 class Discussion
 {
 public:

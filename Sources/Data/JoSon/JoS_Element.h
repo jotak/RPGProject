@@ -21,6 +21,7 @@ public:
     virtual bool isList() const = 0;
     virtual bool isLeaf() const = 0;
     virtual bool isNull() const = 0;
+    virtual int size() const = 0;
 };
 
 #endif

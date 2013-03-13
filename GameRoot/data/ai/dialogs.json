@@ -1,33 +1,39 @@
-{
-	"WEATHER_BANALITIES": {
-		text: "Beau temps, n'est-ce pas?",
+[{
+	text: "Beau temps, n'est-ce pas?",
+	condState: [idle],
+	responses: [{
+		text: "Pour sûr! Que diriez-vous d'une promenade?",
+		condTraits: ["friendly", "warm", "romantic", "generous", "charmer"],
 		responses: [{
-			text: "Pour sûr! Que diriez-vous d'une promenade?",
-			condTraits: ["friendly", "warm", "romantic", "generous", "charmer"],
-			responses: [{
-				text: "Avec plaisir!",
-				condTraits: ["friendly", "warm", "romantic", "generous"],
-				condActivity: [idle],
-				actions: [walkWith],
-				relationship: 2
-			},{
-				text: "Navré mais je n'ai pas le temps, une autre fois peut-être",
-				condTraits: ["friendly", "warm", "generous"],
-				condActivity: [busy],
-				actions: [leaveDiscussion]
-			},{
-				text: "Non, je ne veux pas",
-				condTraits: ["rough","solitary","cold"],
-				actions: [leaveDiscussion],
-				relationship: -1
-			}]
+			text: "Avec plaisir!",
+			condTraits: ["friendly", "warm", "romantic", "generous"],
+			condState: [idle],
+			actions: [walkWith],
+			relationship: 2
 		},{
-			text: "En effet"
+			text: "Navré mais je n'ai pas le temps, une autre fois peut-être",
+			condTraits: ["friendly", "warm", "generous"],
+			condState: [busy],
+			actions: [leaveDiscussion]
 		},{
-			text: "Si vous avez des choses intéressantes à dire, faîtes-moi signe!",
-			condTraits: ["rough","aggressive"],
+			text: "Non, je ne veux pas",
+			condTraits: ["rough","solitary","cold"],
 			actions: [leaveDiscussion],
-			relationship: -3
+			relationship: -1
 		}]
-	}
-}
+	},{
+		text: "En effet"
+	},{
+		text: "Si vous avez des choses intéressantes à dire, faîtes-moi signe!",
+		condTraits: ["rough","aggressive"],
+		actions: [leaveDiscussion],
+		relationship: -3
+	}]
+},{
+	text: "J'ai faim!",
+	condState: [hungry],
+	responses: [{
+		text: "Moi aussi!",
+		condState: [hungry]
+	}]
+}]

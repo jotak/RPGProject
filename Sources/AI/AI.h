@@ -22,6 +22,8 @@ public:
     void setBehaviour(Behaviour * pBehaviour) { FREE(m_pBehaviour); m_pBehaviour = pBehaviour; };
     virtual bool isAI() { return true; };
     bool suggestAction(AIAction * pAction);
+    bool isBusy();
+    bool isHungry();
 
 private:
     AIAction * evaluateActionToDo();
@@ -29,7 +31,8 @@ private:
     void checkInteractions();
     void interact(GameObject*);
     float computeObjectiveAttraction(Character * pOther);
-    AIAction * startDiscussion(string, list<AI*>&);
+    AIAction * startDiscussion(const JoS_Element&, list<AI*>&);
+    const JoS_Element& pickDialog(const JoS_Element&);
 
     Behaviour * m_pBehaviour;
     double m_fInteractTimer;

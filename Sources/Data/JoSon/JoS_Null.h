@@ -19,6 +19,7 @@ public:
     bool isList() const { return false; };
     bool isLeaf() const { return false; };
     bool isNull() const { return true; };
+    int size() const { return 0; };
 
     static JoS_Null JoSNull;
 };

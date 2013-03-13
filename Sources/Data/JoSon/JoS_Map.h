@@ -47,6 +47,7 @@ public:
     bool isList() const { return false; };
     bool isLeaf() const { return false; };
     bool isNull() const { return false; };
+    int size() const { return m_map.size(); };
 
 private:
     jos_map m_map;

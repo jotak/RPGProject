@@ -17,7 +17,7 @@ Character::Character(const JoS_Element &json)
 	setSpeed(getJsonDouble(json, "speed", 5.0f));
 	const JoS_Element& jsTraits = json["traits"];
 
-	int nbTraits = ((JoS_List&)((*TraitsRelations)["_list_"])).size();
+	int nbTraits = (*TraitsRelations)["_list_"].size();
 	for (int i = 0; i < nbTraits; i++) {
 		string trait = (*TraitsRelations)["_list_"][i].toString();
 		m_mapTraits[trait] = getJsonInt(jsTraits, trait, 0, 0, TRAIT_MAX_VALUE);
@@ -133,7 +133,7 @@ string Character::getJsonString(const JoS_Element &json, string name, string def
 	const JoS_Element& elt = json[name];
 	if (elt.isList()) {
 		// Enumeration of strings => take random one
-		int idx = rand() % ((JoS_List&)elt).size();
+		int idx = rand() % elt.size();
 		return elt[idx].toString();
 	} else if (elt.isLeaf()) {
 		return elt.toString();

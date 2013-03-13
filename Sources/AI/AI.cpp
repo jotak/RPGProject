@@ -94,7 +94,10 @@ AIAction * AI::evaluateActionToDo()
 		transform(lstSurrounding.begin(), lstSurrounding.end(), back_inserter(lstNeighbours), static_caster<PartitionableItem*, AI*>());
 		if (!lstNeighbours.empty()) {
 			if (rand() % 10 == 0) {
-				return startDiscussion(string("WEATHER_BANALITIES"), lstNeighbours);
+				const JoS_Element& dlg = pickDialog(*Character::Dialogs);
+				if (!dlg.isNull()) {
+					return startDiscussion(dlg, lstNeighbours);
+				}
 			}
 		}
 	}
@@ -102,11 +105,50 @@ AIAction * AI::evaluateActionToDo()
 }
 
 // -----------------------------------------------------------------
+// Name : pickDialog
+// -----------------------------------------------------------------
+const JoS_Element& AI::pickDialog(const JoS_Element& listItems)
+{
+	list<int> lstAcceptableIdx;
+	for (int itemIdx = 0; itemIdx < listItems.size(); itemIdx++) {
+		const JoS_Element& item = listItems[itemIdx];
+		const JoS_Element& lstCondStates = item["condState"];
+		bool bMatchConditions = true;
+		for (int j = 0; j < lstCondStates.size(); j++) {
+			string condition = lstCondStates[j].toString();
+			if (condition == DIALOG_CONDITION_IDLE) {
+				bMatchConditions &= !isBusy();
+				continue;
+			}
+			if (condition == DIALOG_CONDITION_BUSY) {
+				bMatchConditions &= isBusy();
+				continue;
+			}
+			if (condition == DIALOG_CONDITION_HUNGRY) {
+				bMatchConditions &= isHungry();
+				continue;
+			}
+		}
+		if (bMatchConditions) {
+			// This item is acceptable
+			lstAcceptableIdx.push_back(itemIdx);
+		}
+	}
+	if (!lstAcceptableIdx.empty()) {
+		int rnd = rand() % lstAcceptableIdx.size();
+		list<int>::iterator it = lstAcceptableIdx.begin();
+		for (; rnd > 0; it++, rnd--);
+		return listItems[*it];
+	}
+	return JoS_Null::JoSNull;
+}
+
+// -----------------------------------------------------------------
 // Name : startDiscussion
 // -----------------------------------------------------------------
-AIAction * AI::startDiscussion(string discussionId, list<AI*> &lstNeighbours)
+AIAction * AI::startDiscussion(const JoS_Element& dialog, list<AI*> &lstNeighbours)
 {
-	Discussion * pDiscussion = new Discussion((*Character::Dialogs)[discussionId], this);
+	Discussion * pDiscussion = new Discussion(dialog, this);
 	for (AI * ai : lstNeighbours) {
 		pDiscussion->join(ai);
 	}
@@ -198,4 +240,20 @@ float AI::computeObjectiveAttraction(Character * pOther)
 	// charismatic, charmer, cold
 
 	return attraction;
+}
+
+// -----------------------------------------------------------------
+// Name : isBusy
+// -----------------------------------------------------------------
+bool AI::isBusy()
+{
+	return !m_pActionsStack.empty();
+}
+
+// -----------------------------------------------------------------
+// Name : isHungry
+// -----------------------------------------------------------------
+bool AI::isHungry()
+{
+	return true;
 }
