@@ -4,6 +4,7 @@
 	responses: [{
 		text: "Pour sûr! Que diriez-vous d'une promenade?",
 		condTraits: ["friendly", "warm", "romantic", "generous", "charmer"],
+		condState: [idle],
 		responses: [{
 			text: "Avec plaisir!",
 			condTraits: ["friendly", "warm", "romantic", "generous"],

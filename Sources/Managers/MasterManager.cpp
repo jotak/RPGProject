@@ -11,6 +11,7 @@
 #include "../Display/TextureEngine.h"
 #include "../Fonts/FontEngine.h"
 #include "../Input/InputEngine.h"
+#include "../Utils/GarbageCollector.h"
 
 // High level (managers)
 #include "InterfaceManager.h"
@@ -32,6 +33,7 @@ MasterManager::MasterManager()
 
 	// Create singleton instances
     // Engines
+    _gc;
 	_display;
 	_tex;
 	_font;
@@ -69,6 +71,7 @@ MasterManager::~MasterManager()
     delete _tex;
     delete _debug;
     delete _display;
+    delete _gc;
 }
 
 // -----------------------------------------------------------------
@@ -114,6 +117,7 @@ void MasterManager::update(double delta)
 	DEBUG_MSG(3, "_world->update");
 	_world->update(delta);
     _display->saveWinPos();
+    _gc->run();
 }
 
 // -----------------------------------------------------------------

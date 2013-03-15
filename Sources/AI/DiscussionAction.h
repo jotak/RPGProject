@@ -7,14 +7,23 @@
 class DiscussionAction : public AIAction
 {
 public:
+	DiscussionAction(AI * ai);
 	DiscussionAction(AI * ai, Discussion * pDiscussion);
-    virtual ~DiscussionAction();
+    ~DiscussionAction();
 
-    virtual void update(double delta);
-    virtual bool isFinished();
+    Discussion * initiate(JoS_Element&);
+    void update(double delta);
+    bool isFinished();
+    bool prepareResponse(JoS_Element&);
+    bool canRespond() { return m_pResponse != NULL; };
+    JoS_Element& respond();
+    bool isTalking();
+    void leaveDiscussion() { m_pDiscussion = NULL; };
 
 private:
     Discussion * m_pDiscussion;
+    double m_fSentenceTimer;
+    JoS_Element * m_pResponse;
 };
 
 #endif

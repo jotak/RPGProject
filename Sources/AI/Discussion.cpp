@@ -7,13 +7,10 @@
 // -----------------------------------------------------------------
 // Name : Discussion
 // -----------------------------------------------------------------
-Discussion::Discussion(const JoS_Element& discussion, AI * pFirstTalker)
-	: m_pLastSentence(discussion)
+Discussion::Discussion(JoS_Element& dialog, DiscussionAction * pInitiator)
 {
-	m_pLastTalker = pFirstTalker;
-	string sentence = discussion["text"].toString();
-	m_pLastTalker->say(sentence);
-	m_fSentenceTimer = sentence.length() / 30.0f;	// 10 characters per second
+	m_pCurrentSentence = &dialog;
+	m_pParticipants.push_back(pInitiator);
 }
 
 // -----------------------------------------------------------------
@@ -24,31 +21,42 @@ Discussion::~Discussion()
 }
 
 // -----------------------------------------------------------------
-// Name : update
-// -----------------------------------------------------------------
-void Discussion::update(double delta)
-{
-	if (m_fSentenceTimer > 0) {
-		m_fSentenceTimer -= delta;
-	}
-}
-
-// -----------------------------------------------------------------
 // Name : join
 // -----------------------------------------------------------------
-void Discussion::join(AI * pParticipant)
+void Discussion::join(DiscussionAction * pParticipant)
 {
-	DiscussionAction * pListening = new DiscussionAction(pParticipant, this);
-	if (pParticipant->suggestAction(pListening)) {
-		m_pParticipants.push_back(pParticipant);
-	} else {
-		delete pListening;
-	}
+	m_pParticipants.push_back(pParticipant);
 }
 
 // -----------------------------------------------------------------
-// Name : leave
+// Name : notifyStoppedTalking
 // -----------------------------------------------------------------
-void Discussion::leave(AI * pParticipant)
+void Discussion::notifyStoppedTalking(DiscussionAction * pPreviousTalker)
 {
+	int nbPotentialTalkers = 0;
+	for (DiscussionAction * pTalker : m_pParticipants) {
+		if (pTalker == pPreviousTalker) {
+			pTalker->prepareResponse(JoS_Null::JoSNull);
+		} else if (pTalker->prepareResponse(*m_pCurrentSentence)) {
+			nbPotentialTalkers++;
+		}
+	}
+	if (nbPotentialTalkers > 0) {
+		int rndNextTalker = rand() % nbPotentialTalkers;
+		for (DiscussionAction * pTalker : m_pParticipants) {
+			if (pTalker->canRespond()) {
+				if (rndNextTalker == 0) {
+					m_pCurrentSentence = &(pTalker->respond());
+					break;
+				}
+				rndNextTalker--;
+			}
+		}
+	} else {
+		// Everybody left!
+		for (list<DiscussionAction*>::iterator it = m_pParticipants.begin(); it != m_pParticipants.end(); ++it) {
+			(*it)->leaveDiscussion();
+		}
+		_gc->garbageMe(this);
+	}
 }

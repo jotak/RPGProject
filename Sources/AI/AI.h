@@ -7,10 +7,11 @@
 #include <stack>
 
 #define DECISION_DELAY			0.5f
-
 #define TRAITS_FRIENDLY			"friendly"
 
 typedef tr1::function<bool (AI*, PartitionableItem*)> FilterPredicate;
+
+class Discussion;
 
 class AI : public Character
 {
@@ -21,9 +22,9 @@ public:
     virtual void update(double delta);
     void setBehaviour(Behaviour * pBehaviour) { FREE(m_pBehaviour); m_pBehaviour = pBehaviour; };
     virtual bool isAI() { return true; };
-    bool suggestAction(AIAction * pAction);
     bool isBusy();
     bool isHungry();
+    JoS_Element& pickDialog(JoS_Element&);
 
 private:
     AIAction * evaluateActionToDo();
@@ -31,8 +32,8 @@ private:
     void checkInteractions();
     void interact(GameObject*);
     float computeObjectiveAttraction(Character * pOther);
-    AIAction * startDiscussion(const JoS_Element&, list<AI*>&);
-    const JoS_Element& pickDialog(const JoS_Element&);
+    AIAction * startDiscussion(JoS_Element&, list<AI*>&);
+    void joinDiscussion(Discussion*);
 
     Behaviour * m_pBehaviour;
     double m_fInteractTimer;

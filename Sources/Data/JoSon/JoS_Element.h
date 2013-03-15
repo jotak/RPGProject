@@ -15,8 +15,8 @@ public:
     virtual std::string toString() const = 0;
     virtual int toInt() const = 0;
     virtual double toDouble() const = 0;
-    virtual const JoS_Element& operator[](int) const = 0;
-    virtual const JoS_Element& operator[](std::string) const = 0;
+    virtual JoS_Element& operator[](int) const = 0;
+    virtual JoS_Element& operator[](std::string) const = 0;
     virtual bool isMap() const = 0;
     virtual bool isList() const = 0;
     virtual bool isLeaf() const = 0;

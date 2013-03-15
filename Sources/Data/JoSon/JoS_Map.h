@@ -30,8 +30,8 @@ public:
     		return true;
     	}
     };
-    const JoS_Element& operator[](int idx) const { return JoS_Null::JoSNull; };
-    const JoS_Element& operator[](std::string key) const {
+    JoS_Element& operator[](int idx) const { return JoS_Null::JoSNull; };
+    JoS_Element& operator[](std::string key) const {
     	jos_map& map = const_cast<JoS_Map*>(this)->m_map;
     	jos_map::iterator it = map.find(key);
     	if (it != map.end()) {

@@ -3,28 +3,26 @@
 
 #include "../Data/JoSon/JoSon.h"
 #include "AI.h"
+#include "../Utils/GarbageCollector.h"
 
 #define DIALOG_CONDITION_IDLE		"idle"
 #define DIALOG_CONDITION_BUSY		"busy"
 #define DIALOG_CONDITION_HUNGRY		"hungry"
 
-class Discussion
+class DiscussionAction;
+
+class Discussion : public Garbageable
 {
 public:
-	Discussion(const JoS_Element& discussion, AI * pFirstTalker);
+	Discussion(JoS_Element&, DiscussionAction*);
     ~Discussion();
 
-    void update(double delta);
-    void join(AI * pParticipant);
-    void leave(AI * pParticipant);
-
-    AI * getLastTalker() { return m_pLastTalker; };
+    void join(DiscussionAction * pParticipant);
+    void notifyStoppedTalking(DiscussionAction*);
 
 private:
-    const JoS_Element& m_pLastSentence;
-    AI * m_pLastTalker;
-    list<AI*> m_pParticipants;
-    double m_fSentenceTimer;
+    JoS_Element * m_pCurrentSentence;
+    list<DiscussionAction*> m_pParticipants;
 };
 
 #endif

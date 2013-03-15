@@ -11,8 +11,8 @@ public:
     ~JoS_Leaf() {};
 
     void set(std::string leaf) { this->leaf = leaf; };
-    const JoS_Element& operator[](int idx) const { return JoS_Null::JoSNull; };
-    const JoS_Element& operator[](std::string key) const { return JoS_Null::JoSNull; };
+    JoS_Element& operator[](int idx) const { return JoS_Null::JoSNull; };
+    JoS_Element& operator[](std::string key) const { return JoS_Null::JoSNull; };
     std::string toString() const { return leaf; };
     int toInt() const { return atoi(leaf.c_str()); };
     double toDouble() const { return atof(leaf.c_str()); };

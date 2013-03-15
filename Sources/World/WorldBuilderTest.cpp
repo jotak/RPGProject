@@ -54,9 +54,9 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 //	createAI(strJson, pGameObjects);
 //	createAI(strJson, pGameObjects);
 //	createAI(strJson, pGameObjects);
-	createAI(string("{speed:[1,6], traits:{funny:3, friendly:3, charismatic:2, partier:3, freeloader:1, sexaddict:4, impulsive:1, opportunist:1, optimist:2, warm:4, leader:2}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{aggressive:5, brave:3, rough:2, malicious:3, impulsive:3, technophile:3, spitfire:1, egocentric:4, stingy: 2}}"), pGameObjects);
-	createAI(string("{speed:[1,6], traits:{brave:3, solitary:4, dirty:1, cold:1, rough:3, naturelover:2, inhibited:1, taciturn:2, sceptic:3, cartesian:3, generous: 3, calm: 4}}"), pGameObjects);
+	createAI(string("{name: Dude1, speed:[1,6], traits:{funny:3, friendly:3, charismatic:2, partier:3, freeloader:1, sexaddict:4, impulsive:1, opportunist:1, optimist:2, warm:4, leader:2}}"), pGameObjects);
+	createAI(string("{name: Dude2, speed:[1,6], traits:{aggressive:5, brave:3, rough:2, malicious:3, impulsive:3, technophile:3, spitfire:1, egocentric:4, stingy: 2}}"), pGameObjects);
+	createAI(string("{name: Dude3, speed:[1,6], traits:{brave:3, solitary:4, dirty:1, cold:1, rough:3, naturelover:2, inhibited:1, taciturn:2, sceptic:3, cartesian:3, generous: 3, calm: 4}}"), pGameObjects);
 
 	_display->moveCameraTo(f3d(4, 4, 6));
 }

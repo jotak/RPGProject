@@ -10,8 +10,8 @@ public:
 	JoS_Null() {};
     ~JoS_Null() {};
 
-    const JoS_Element& operator[](int idx) const { return JoSNull; };
-    const JoS_Element& operator[](std::string key) const { return JoSNull; };
+    JoS_Element& operator[](int idx) const { return JoSNull; };
+    JoS_Element& operator[](std::string key) const { return JoSNull; };
     std::string toString() const { return ""; };
     int toInt() const { return 0; };
     double toDouble() const { return 0; };

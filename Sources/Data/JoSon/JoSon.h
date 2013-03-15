@@ -16,8 +16,8 @@ public:
     std::string toString() const { return m_pRoot->toString(); };
     int toInt() const { return m_pRoot->toInt(); };
     double toDouble() const { return m_pRoot->toDouble(); };
-    const JoS_Element& operator[](int idx) const { return (*m_pRoot)[idx]; };
-    const JoS_Element& operator[](std::string key) const { return (*m_pRoot)[key]; };
+    JoS_Element& operator[](int idx) const { return (*m_pRoot)[idx]; };
+    JoS_Element& operator[](std::string key) const { return (*m_pRoot)[key]; };
     bool isMap() const { return m_pRoot->isMap(); };
     bool isList() const { return m_pRoot->isList(); };
     bool isLeaf() const { return m_pRoot->isLeaf(); };

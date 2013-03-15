@@ -94,7 +94,7 @@ AIAction * AI::evaluateActionToDo()
 		transform(lstSurrounding.begin(), lstSurrounding.end(), back_inserter(lstNeighbours), static_caster<PartitionableItem*, AI*>());
 		if (!lstNeighbours.empty()) {
 			if (rand() % 10 == 0) {
-				const JoS_Element& dlg = pickDialog(*Character::Dialogs);
+				JoS_Element& dlg = pickDialog(*Character::Dialogs);
 				if (!dlg.isNull()) {
 					return startDiscussion(dlg, lstNeighbours);
 				}
@@ -107,7 +107,7 @@ AIAction * AI::evaluateActionToDo()
 // -----------------------------------------------------------------
 // Name : pickDialog
 // -----------------------------------------------------------------
-const JoS_Element& AI::pickDialog(const JoS_Element& listItems)
+JoS_Element& AI::pickDialog(JoS_Element& listItems)
 {
 	list<int> lstAcceptableIdx;
 	for (int itemIdx = 0; itemIdx < listItems.size(); itemIdx++) {
@@ -146,23 +146,25 @@ const JoS_Element& AI::pickDialog(const JoS_Element& listItems)
 // -----------------------------------------------------------------
 // Name : startDiscussion
 // -----------------------------------------------------------------
-AIAction * AI::startDiscussion(const JoS_Element& dialog, list<AI*> &lstNeighbours)
+AIAction * AI::startDiscussion(JoS_Element& dialog, list<AI*> &lstNeighbours)
 {
-	Discussion * pDiscussion = new Discussion(dialog, this);
+	DiscussionAction * discussionAction = new DiscussionAction(this);
+	Discussion * pDiscussion = discussionAction->initiate(dialog);
 	for (AI * ai : lstNeighbours) {
-		pDiscussion->join(ai);
+		ai->joinDiscussion(pDiscussion);
 	}
-	return new DiscussionAction(this, pDiscussion);
+	return discussionAction;
 }
 
 // -----------------------------------------------------------------
-// Name : suggestAction
-//	Returns true if action is accepted
+// Name : joinDiscussion
 // -----------------------------------------------------------------
-bool AI::suggestAction(AIAction * pAction)
+void AI::joinDiscussion(Discussion * pDiscussion)
 {
-	m_pActionsStack.push(pAction);
-	return true;
+	// TODO: evaluate if current action is actually more important than talking
+	DiscussionAction * discussionAction = new DiscussionAction(this, pDiscussion);
+	pDiscussion->join(discussionAction);
+	m_pActionsStack.push(discussionAction);
 }
 
 // -----------------------------------------------------------------
