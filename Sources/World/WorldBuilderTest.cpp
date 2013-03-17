@@ -50,13 +50,9 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 		_world->setActiveCharacter(pCharacter);
 	}
 
-//	string strJson("{speed:[1,6], traits:{funny:[-10,5], friendly:[-10,5], aggressive:[-10,5], charismatic:[-10,5], brave:[-10,5], charmer:[-10,5], solitary:[-10,5], tidy:[-10,5], dirty:[-10,5], cold:[-10,5], partier:[-10,5], impressionable:[-10,5], rough:[-10,5], obsequious:[-10,5], naturelover:[-10,5], malicious:[-10,5], petty:[-10,5], freeloader:[-10,5], romantic:[-10,5], coward:[-10,5], sexaddict:[-10,5], inhibited:[-10,5], impulsive:[-10,5], snob:[-10,5], technophile:[-10,5], magicphile:[-10,5], familysense:[-10,5], sly:[-10,5], taciturn:[-10,5], spitfire:[-10,5], opportunist:[-10,5], optimist:[-10,5], sceptic:[-10,5], religious:[-10,5], cartesian:[-10,5], righteous:[-10,5], egocentric:[-10,5], warm:[-10,5], leader:[-10,5], generous:[-10,5], stingy:[-10,5], faithful:[-10,5], calm:[-10,5]}}");
-//	createAI(strJson, pGameObjects);
-//	createAI(strJson, pGameObjects);
-//	createAI(strJson, pGameObjects);
-	createAI(string("{name: Dude1, speed:[1,6], traits:{funny:3, friendly:3, charismatic:2, partier:3, freeloader:1, sexaddict:4, impulsive:1, opportunist:1, optimist:2, warm:4, leader:2}}"), pGameObjects);
-	createAI(string("{name: Dude2, speed:[1,6], traits:{aggressive:5, brave:3, rough:2, malicious:3, impulsive:3, technophile:3, spitfire:1, egocentric:4, stingy: 2}}"), pGameObjects);
-	createAI(string("{name: Dude3, speed:[1,6], traits:{brave:3, solitary:4, dirty:1, cold:1, rough:3, naturelover:2, inhibited:1, taciturn:2, sceptic:3, cartesian:3, generous: 3, calm: 4}}"), pGameObjects);
+	createAI(string("jophur.json"), pGameObjects);
+	createAI(string("dude1.json"), pGameObjects);
+	createAI(string("dude2.json"), pGameObjects);
 
 	_display->moveCameraTo(f3d(4, 4, 6));
 }
@@ -64,12 +60,12 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 // -----------------------------------------------------------------
 // Name : createAI
 // -----------------------------------------------------------------
-void WorldBuilderTest::createAI(string strJson, list<GameObject*> * pGameObjects)
+void WorldBuilderTest::createAI(string fileJson, list<GameObject*> * pGameObjects)
 {
 	string sError;
-	JoSon * json = JoSon::fromString(strJson, &sError);
+	JoSon * json = JoSon::fromFile(string(AI_PATH) + fileJson, &sError);
 	if (json == NULL) {
-		_debug->notifyErrorMessage(string("Error when loading json: ") + strJson + " - Error message: " + sError);
+		_debug->notifyErrorMessage(string("Error when loading json: ") + fileJson + " - Error message: " + sError);
 	} else {
 		AI * pAI = new AI(*json);
 		delete json;

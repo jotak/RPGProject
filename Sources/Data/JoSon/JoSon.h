@@ -33,9 +33,13 @@ private:
     std::string readString(std::stringstream * stream);
     char getNextChar(std::stringstream * stream);
     bool expect(std::stringstream * stream, char expected);
+    char streamGet(std::stringstream * stream);
+    void streamUnget(std::stringstream * stream);
 
     JoS_Element * m_pRoot;
     std::string m_sError;
+    int m_iLine, m_iCol;
+    std::string m_sLastWordRead;
 };
 
 #endif

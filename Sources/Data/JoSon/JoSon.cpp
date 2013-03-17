@@ -14,6 +14,8 @@ JoSon::JoSon()
 {
 	m_pRoot = NULL;
 	m_sError = "";
+	m_iLine = m_iCol = 0;
+	m_sLastWordRead = "";
 }
 
 // -----------------------------------------------------------------
@@ -27,12 +29,41 @@ JoSon::~JoSon()
 }
 
 // -----------------------------------------------------------------
+// Name : streamGet
+// -----------------------------------------------------------------
+char JoSon::streamGet(std::stringstream * stream)
+{
+	char c = stream->get();
+	if (c == '\n') {
+		m_iLine++;
+		m_iCol = 0;
+	} else if (c != '\r') {
+		m_iCol++;
+	}
+	return c;
+}
+
+// -----------------------------------------------------------------
+// Name : streamUnget
+// -----------------------------------------------------------------
+void JoSon::streamUnget(std::stringstream * stream)
+{
+	stream->unget();
+	if (m_iCol == 0) {
+		m_iCol = 999;
+		m_iLine--;
+	} else {
+		m_iCol--;
+	}
+}
+
+// -----------------------------------------------------------------
 // Name : getNextChar
 // -----------------------------------------------------------------
 char JoSon::getNextChar(std::stringstream * stream)
 {
 	while (stream->good()) {
-		char c = stream->get();
+		char c = streamGet(stream);
 		if (c != ' ' && c != '\t' && c != '\n' && c != '\r') {
 			return c;
 		}
@@ -52,7 +83,7 @@ std::string JoSon::readString(std::stringstream * stream)
 	if (c == '\"' || c == '\'') {
 		first = c;
 		while (stream->good()) {
-			c = stream->get();
+			c = streamGet(stream);
 			if (c == first) {
 				break;
 			} else {
@@ -60,12 +91,12 @@ std::string JoSon::readString(std::stringstream * stream)
 			}
 		}
 	} else {
-		stream->unget();
+		streamUnget(stream);
 		while (stream->good()) {
-			c = stream->get();
+			c = streamGet(stream);
 			if (c == ' ' || c == '\t' || c == '\n' || c == '\r' || c == ',' || c == ':' || c == ']' || c == '}') {
 				// This is end of string condition
-				stream->unget();
+				streamUnget(stream);
 				break;
 			} else {
 				str << c;
@@ -84,7 +115,7 @@ bool JoSon::expect(std::stringstream * stream, char expected)
 	char c = getNextChar(stream);
 	if (c != expected) {
 		// Syntax error
-		m_sError = std::string("Syntax error: '") + expected + "' expected.";
+		m_sError = std::string("Syntax error: '") + expected + "' expected, found '" + c + "'.";
 		return false;
 	} else {
 		return true;
@@ -102,6 +133,7 @@ JoS_Map * JoSon::readMap(std::stringstream * stream)
 	while (key != "") {
 
 		if (!expect(stream, ':')) {
+			m_sLastWordRead = key;
 			delete map;
 			return NULL;
 		}
@@ -117,7 +149,7 @@ JoS_Map * JoSon::readMap(std::stringstream * stream)
 		}
 
 		if (!expect(stream, ',')) {
-			stream->unget();
+			streamUnget(stream);
 			break;
 		}
 
@@ -150,7 +182,7 @@ JoS_List * JoSon::readList(std::stringstream * stream)
 		}
 
 		if (!expect(stream, ',')) {
-			stream->unget();
+			streamUnget(stream);
 			break;
 		}
 
@@ -186,7 +218,7 @@ JoS_Element * JoSon::readAny(std::stringstream * stream)
 	case '[':
 		return readList(stream);
 	default:
-		stream->unget();
+		streamUnget(stream);
 		return readLeaf(stream);
 	}
 }
@@ -200,7 +232,10 @@ JoSon * JoSon::fromString(std::string strJoson, std::string * sError)
 	std::stringstream ss(strJoson);
 	joSon->m_pRoot = joSon->readAny(&ss);
 	if (joSon->m_pRoot == NULL) {
-		*sError = std::string("JoSon error, fromString: ") + joSon->m_sError;
+		std::ostringstream oss;
+		oss << "JoSon error, fromString [line " << joSon->m_iLine
+				<< ", col " << joSon->m_iCol << ", after " << joSon->m_sLastWordRead << "] " << joSon->m_sError;
+		*sError = oss.str();
 		delete joSon;
 		return NULL;
 	}
@@ -231,7 +266,7 @@ JoSon * JoSon::fromFile(std::string fileJoson, std::string * sError)
 			return joSon;
 		}
 	} else {
-		*sError = std::string("JoSon error, fromFile[") + fileJoson + "]";
+		*sError = std::string("JoSon error, can't open file, fromFile[") + fileJoson + "]";
 		return NULL;
 	}
 }

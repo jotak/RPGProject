@@ -1,0 +1,102 @@
+{
+name: "Jophur",
+gender: male,
+age: 42,
+job: fisherman,
+speed: 3,
+traits: {
+	funny:3,
+	friendly:3,
+	charismatic:2,
+	partier:3,
+	freeloader:1,
+	sexaddict:4,
+	impulsive:1,
+	opportunist:1,
+	optimist:2,
+	warm:4,
+	leader:2
+},
+timetable: [{
+	at: [7.5, 8.5],
+	task: {
+		goTo: [6, 3.5],
+		startActivity: {
+			name: fishing,
+			ability: 3
+		}
+	}
+},{
+	at: 12,
+	task: {
+		goTo: [2.8, 5],
+		startActivity: {
+			name: eat
+		}
+	}
+},{
+	at: [12.5, 13],
+	task: {
+		setStatus: idle
+	}
+},{
+	at: 14,
+	task: {
+		goTo: [2.5, 3],
+		startActivity: {
+			name: sell,
+			ability: 4,
+			merchandise: [{
+				type: food,
+				name: fish,
+				price: 5
+			}],
+		}
+	}
+},{
+	at: [17, 18],
+	task: {
+		goTo: [2.8, 5],
+		setStatus: idle
+	}
+},{
+	at: 21,
+	task: {
+		goTo: [5.5, 3],
+		startActivity: {
+			name: eat
+		}
+	}
+},{
+	at: 22,
+	task: {
+		goTo: [5.5, 3],
+		startActivity: {
+			name: sleep
+		}
+	}
+}],
+dialogs: [{
+	text: "ILS SONT FRAIS MES POISSONS, ILS SONT FRAIS!!",
+	condState: [working]
+},{
+	text: "ILS SONT BEAUX MES POISSONS, ILS SONT BEAUX!!",
+	condState: [working]
+},{
+	text: "Regardez ce rouget %mabonnedame%, du premier choix",
+	condState: [working]
+},{
+	text: "Alors %name%, tu tires ou tu pointes?"
+},{
+	text: "J'ai amené les boules les gars, on commence?",
+	condState: [idle],
+	startActivity: "playPetanque"
+},{
+	text: "J'ai faim!",
+	condState: [hungry],
+	responses: [{
+		text: "Moi aussi!",
+		condState: [hungry]
+	}]
+}]
+}
