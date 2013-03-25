@@ -6,7 +6,7 @@
 #include "../Managers/DebugManager.h"
 
 JoSon * Character::TraitsRelations = NULL;
-JoSon * Character::Dialogs = NULL;
+jos_map Character::CommonDialogs;
 
 // -----------------------------------------------------------------
 // Name : Character
@@ -20,7 +20,7 @@ Character::Character(const JoS_Element &json)
 	int nbTraits = (*TraitsRelations)["_list_"].size();
 	for (int i = 0; i < nbTraits; i++) {
 		string trait = (*TraitsRelations)["_list_"][i].toString();
-		m_mapTraits[trait] = getJsonInt(jsTraits, trait, 0, 0, TRAIT_MAX_VALUE);
+		mapTraits[trait] = getJsonInt(jsTraits, trait, 0, 0, TRAIT_MAX_VALUE);
 	}
 }
 
@@ -37,7 +37,7 @@ Character::~Character()
 ostream& operator<< (ostream& stream, const Character& character) {
 	f3d pos = character.getPosition();
 	stream << "x: " << pos.x << " / y: " << pos.y << " / speed: " << character.speed;
-	for (pair<string, long> entry : character.m_mapTraits) {
+	for (pair<string, long> entry : character.mapTraits) {
 		if (entry.second != 0) {
 			stream << " / " << entry.first << ": " << entry.second;
 		}
@@ -155,13 +155,31 @@ void Character::initData()
     if (TraitsRelations == NULL) {
     	_debug->notifyErrorMessage(err);
     }
+}
 
-    // Build file name
-    jsonDesc = string(AI_PATH) + "dialogs.json";
-    Dialogs = JoSon::fromFile(jsonDesc, &err);
-    if (Dialogs == NULL) {
-    	_debug->notifyErrorMessage(err);
-    }
+// -----------------------------------------------------------------
+// Name : getCommonDialogs
+//	This method looks for a dialog json object. First try to check if it's already loaded ; else try to load it from file
+//	static
+// -----------------------------------------------------------------
+JoS_Element& Character::getCommonDialogs(string name)
+{
+	jos_map::iterator it = CommonDialogs.find(name);
+	if (it != CommonDialogs.end()) {
+		return *(it->second);
+	} else {
+	    // Build file name
+	    string jsonDesc = string(AI_PATH) + name + ".json";
+	    string err;
+	    JoSon * json = JoSon::fromFile(jsonDesc, &err);
+	    if (json == NULL) {
+	    	_debug->notifyErrorMessage(err);
+			return JoS_Null::JoSNull;
+	    } else {
+	    	CommonDialogs[name] = json;
+	    	return *json;
+	    }
+	}
 }
 
 // -----------------------------------------------------------------
@@ -171,7 +189,10 @@ void Character::initData()
 void Character::releaseData()
 {
 	FREE(TraitsRelations);
-	FREE(Dialogs);
+	for (pair<string, JoS_Element*> entry : CommonDialogs) {
+		delete entry.second;
+	}
+	CommonDialogs.clear();
 }
 
 // -----------------------------------------------------------------

@@ -1,1 +1,16 @@
-{name: Dude2, speed:[1,6], traits:{aggressive:5, brave:3, rough:2, malicious:3, impulsive:3, technophile:3, spitfire:1, egocentric:4, stingy: 2}}
+{
+name: Dude2,
+speed:[1,6],
+traits:{
+	aggressive:5,
+	brave:3,
+	rough:2,
+	malicious:3,
+	impulsive:3,
+	technophile:3,
+	spitfire:1,
+	egocentric:4,
+	stingy: 2
+},
+inheritDialogs: dialogs
+}

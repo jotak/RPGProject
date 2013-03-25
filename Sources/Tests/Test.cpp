@@ -78,7 +78,7 @@ void testJoSon() {
 	cout << "Starting testJoSon..." << endl;
 
 	string sError;
-	JoSon * jsonPtr = JoSon::fromString(string("{a:1, b:[2, 3, \"toto et tata\"], c : foo}"), &sError);
+	JoSon * jsonPtr = JoSon::fromString(string("{a:1, b:[2, 3, \"toto et tata\"], c : foo, f:[9,8,7,8,9]}"), &sError);
 	JoSon& json = *jsonPtr;
 
 	assert(json.isMap());
@@ -104,6 +104,14 @@ void testJoSon() {
 	assert(json["e"][9].isNull());
 	int e = json["e"][9].toInt();
 	assert(e == 0);
+
+	// Extended list
+	JoS_Union extended((JoS_List&)json["b"]);
+	extended.concat((JoS_List&)json["f"])->concat((JoS_List&)json["b"]);
+	assert(extended.size() == 11);
+	assert(extended[0].toInt() == 2);
+	assert(extended[5].toInt() == 7);
+	assert(extended[10].toString() == "toto et tata");
 
 	delete jsonPtr;
 	cout << "testJoSon OK" << endl;

@@ -4,6 +4,7 @@
 #include "JoS_Leaf.h"
 #include "JoS_List.h"
 #include "JoS_Map.h"
+#include "JoS_Union.h"
 
 class JoSon : public JoS_Element
 {

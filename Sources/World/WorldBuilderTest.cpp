@@ -62,13 +62,8 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 // -----------------------------------------------------------------
 void WorldBuilderTest::createAI(string fileJson, list<GameObject*> * pGameObjects)
 {
-	string sError;
-	JoSon * json = JoSon::fromFile(string(AI_PATH) + fileJson, &sError);
-	if (json == NULL) {
-		_debug->notifyErrorMessage(string("Error when loading json: ") + fileJson + " - Error message: " + sError);
-	} else {
-		AI * pAI = new AI(*json);
-		delete json;
+	AI * pAI = AI::buildAI(fileJson);
+	if (pAI != NULL) {
 	    QuadData quad2(0.0f, 0.5f, 0.0f, 0.5f, string("heroe"));
 		GeometryQuads * pGeometry = new GeometryQuads(&quad2, VB_Static);
 		pGeometry->setOffset(CoordsScreen(280, 70));

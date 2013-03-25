@@ -16,18 +16,20 @@ class Discussion;
 class AI : public Character
 {
 public:
-	AI(JoS_Element& json);
+	static AI * buildAI(string jsonFile);
     virtual ~AI();
 
     virtual void update(double delta);
-    void setBehaviour(Behaviour * pBehaviour) { FREE(m_pBehaviour); m_pBehaviour = pBehaviour; };
+    void setBehaviour(Behaviour * pBehaviour) { FREE(this->pBehaviour); this->pBehaviour = pBehaviour; };
     virtual bool isAI() { return true; };
     bool isBusy();
     bool isHungry();
     JoS_Element& pickDialog(JoS_Element&);
 
 private:
-    AIAction * evaluateActionToDo();
+	AI(JoS_Element * json);
+
+	AIAction * evaluateActionToDo();
     void getSurroundingObjects(list<PartitionableItem*>*, FilterPredicate filter);
     void checkInteractions();
     void interact(GameObject*);
@@ -35,9 +37,11 @@ private:
     AIAction * startDiscussion(JoS_Element&, list<AI*>&);
     void joinDiscussion(Discussion*);
 
-    Behaviour * m_pBehaviour;
-    double m_fInteractTimer;
-    stack<AIAction*> m_pActionsStack;
+    JoS_Element * json;
+    Behaviour * pBehaviour;
+    double fInteractTimer;
+    stack<AIAction*> pActionsStack;
+    JoS_Union * dialogs;
 };
 
 #endif

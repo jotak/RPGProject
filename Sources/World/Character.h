@@ -10,7 +10,7 @@
 class Character : public MovingObject
 {
 public:
-	Character(const JoS_Element &json);
+	Character(const JoS_Element& json);
     virtual ~Character();
 
     friend ostream& operator<< (ostream& stream, const Character& character);
@@ -21,17 +21,18 @@ public:
     double getSpeed() { return speed; };
     void setSpeed(double speed) { this->speed = speed; };
     void setMoveTarget(Coords3D pos);
-    long_hash * getTraits() { return &m_mapTraits; };
+    long_hash * getTraits() { return &mapTraits; };
     double get3DSpeed();
     void say(string);
 
     static void initData();
     static void releaseData();
+    static JoS_Element& getCommonDialogs(string name);
     static float getTraitsRelation(string from, string towards);
 
 protected:
     static JoSon * TraitsRelations;
-    static JoSon * Dialogs;
+    static jos_map CommonDialogs;
 
 private:
     int getJsonInt(const JoS_Element &json, string name, int defaultVal, int capMin, int capMax);
@@ -40,7 +41,7 @@ private:
 
     string name;
     double speed;	// 3d unit / second
-    long_hash m_mapTraits;
+    long_hash mapTraits;
 };
 
 #endif

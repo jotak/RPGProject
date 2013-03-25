@@ -10,10 +10,16 @@
 // -----------------------------------------------------------------
 // Name : AI
 // -----------------------------------------------------------------
-AI::AI(JoS_Element& json) : Character(json)
+AI::AI(JoS_Element * json) : Character(*json)
 {
-	m_pBehaviour = NULL;
-	m_fInteractTimer = 0;
+	this->json = json;
+	pBehaviour = NULL;
+	fInteractTimer = 0;
+	dialogs = new JoS_Union((*json)["dialogs"]);
+	JoS_Element& addDialogs = (*json)["inheritDialogs"];
+	if (addDialogs.isLeaf()) {
+		dialogs->concat(Character::getCommonDialogs(addDialogs.toString()));
+	}
 }
 
 // -----------------------------------------------------------------
@@ -21,8 +27,25 @@ AI::AI(JoS_Element& json) : Character(json)
 // -----------------------------------------------------------------
 AI::~AI()
 {
-	FREE(m_pBehaviour);
-	FREESTACK(m_pActionsStack);
+	FREE(pBehaviour);
+	FREESTACK(pActionsStack);
+	FREE(json);
+	FREE(dialogs);
+}
+
+// -----------------------------------------------------------------
+// Name : buildAI
+// -----------------------------------------------------------------
+AI * AI::buildAI(string jsonFile)
+{
+	string sError;
+	JoSon * json = JoSon::fromFile(string(AI_PATH) + jsonFile, &sError);
+	if (json == NULL) {
+		_debug->notifyErrorMessage(string("Error when loading json: ") + jsonFile + " - Error message: " + sError);
+		return NULL;
+	} else {
+		return new AI(json);
+	}
 }
 
 // -----------------------------------------------------------------
@@ -30,25 +53,25 @@ AI::~AI()
 // -----------------------------------------------------------------
 void AI::update(double delta)
 {
-	m_fInteractTimer -= delta;
-	if (m_fInteractTimer <= 0) {
+	fInteractTimer -= delta;
+	if (fInteractTimer <= 0) {
 		// Time to take a decision!
-		m_fInteractTimer = DECISION_DELAY;
+		fInteractTimer = DECISION_DELAY;
 		AIAction * newAction = evaluateActionToDo();
 		if (newAction != NULL) {
 			// There's something we want to do
-			m_pActionsStack.push(newAction);
+			pActionsStack.push(newAction);
 		}
 	}
 
-	if (!m_pActionsStack.empty()) {
+	if (!pActionsStack.empty()) {
 		// Do what we want to do
-		AIAction * currentAction = m_pActionsStack.top();
+		AIAction * currentAction = pActionsStack.top();
 		currentAction->update(delta);
 		if (currentAction->isFinished()) {
 			// This task is done
 			delete currentAction;
-			m_pActionsStack.pop();
+			pActionsStack.pop();
 		}
 	}
 
@@ -81,8 +104,8 @@ bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
 AIAction * AI::evaluateActionToDo()
 {
 	AIAction * currentAction = NULL;
-	if (!m_pActionsStack.empty()) {
-		currentAction = m_pActionsStack.top();
+	if (!pActionsStack.empty()) {
+		currentAction = pActionsStack.top();
 	}
 
 	// Nothing to do? 1/10 chances to start banality discussion with people arround
@@ -94,7 +117,7 @@ AIAction * AI::evaluateActionToDo()
 		transform(lstSurrounding.begin(), lstSurrounding.end(), back_inserter(lstNeighbours), static_caster<PartitionableItem*, AI*>());
 		if (!lstNeighbours.empty()) {
 			if (rand() % 10 == 0) {
-				JoS_Element& dlg = pickDialog(*Character::Dialogs);
+				JoS_Element& dlg = pickDialog(*dialogs);
 				if (!dlg.isNull()) {
 					return startDiscussion(dlg, lstNeighbours);
 				}
@@ -164,7 +187,7 @@ void AI::joinDiscussion(Discussion * pDiscussion)
 	// TODO: evaluate if current action is actually more important than talking
 	DiscussionAction * discussionAction = new DiscussionAction(this, pDiscussion);
 	pDiscussion->join(discussionAction);
-	m_pActionsStack.push(discussionAction);
+	pActionsStack.push(discussionAction);
 }
 
 // -----------------------------------------------------------------
@@ -249,7 +272,7 @@ float AI::computeObjectiveAttraction(Character * pOther)
 // -----------------------------------------------------------------
 bool AI::isBusy()
 {
-	return !m_pActionsStack.empty();
+	return !pActionsStack.empty();
 }
 
 // -----------------------------------------------------------------
