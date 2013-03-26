@@ -12,5 +12,5 @@ traits:{
 	egocentric:4,
 	stingy: 2
 },
-inheritDialogs: dialogs
+inheritDialogs: dialogs.json
 }

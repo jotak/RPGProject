@@ -169,7 +169,7 @@ JoS_Element& Character::getCommonDialogs(string name)
 		return *(it->second);
 	} else {
 	    // Build file name
-	    string jsonDesc = string(AI_PATH) + name + ".json";
+	    string jsonDesc = string(AI_PATH) + name;
 	    string err;
 	    JoSon * json = JoSon::fromFile(jsonDesc, &err);
 	    if (json == NULL) {
