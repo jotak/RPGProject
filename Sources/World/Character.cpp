@@ -4,6 +4,7 @@
 #include "Character.h"
 #include "../Physics/MovesHelper.h"
 #include "../Managers/DebugManager.h"
+#include "../Data/JSonUtil.h"
 
 JoSon * Character::TraitsRelations = NULL;
 jos_map Character::CommonDialogs;
@@ -13,14 +14,14 @@ jos_map Character::CommonDialogs;
 // -----------------------------------------------------------------
 Character::Character(const JoS_Element &json)
 {
-	name = getJsonString(json, "name", "Dude");
-	setSpeed(getJsonDouble(json, "speed", 5.0f));
+	name = JSonUtil::getString(json["name"], "Dude");
+	setSpeed(JSonUtil::getDouble(json["speed"], 5.0f));
 	const JoS_Element& jsTraits = json["traits"];
 
 	int nbTraits = (*TraitsRelations)["_list_"].size();
 	for (int i = 0; i < nbTraits; i++) {
 		string trait = (*TraitsRelations)["_list_"][i].toString();
-		mapTraits[trait] = getJsonInt(jsTraits, trait, 0, 0, TRAIT_MAX_VALUE);
+		mapTraits[trait] = JSonUtil::getCappedInt(jsTraits[trait], 0, TRAIT_MAX_VALUE);
 	}
 }
 
@@ -75,71 +76,6 @@ void Character::setMoveTarget(Coords3D pos)
 void Character::say(string sentence)
 {
 	cout << name << ": " << sentence << endl;
-}
-
-// -----------------------------------------------------------------
-// Name : getJsonInt
-// -----------------------------------------------------------------
-int Character::getJsonInt(const JoS_Element &json, string name, int defaultVal, int capMin, int capMax)
-{
-	int val = defaultVal;
-	const JoS_Element& elt = json[name];
-	if (elt.isList() && elt[0].isLeaf() && elt[1].isLeaf()) {
-		// Case list of 2 elements => random in min/max
-		int min = elt[0].toInt();
-		int max = elt[1].toInt();
-		val = min + rand() % (1+max-min);
-	} else if (elt.isLeaf()) {
-		val = elt.toInt();
-	}
-
-	// Min/max capping
-	if (val < capMin) {
-		val = capMin;
-		ostringstream os; os << name << " capped up to " << capMin;
-		_debug->notifyErrorMessage(os.str());
-	} else if (val > capMax) {
-		val = capMax;
-		ostringstream os; os << name << " capped down to " << capMax;
-		_debug->notifyErrorMessage(os.str());
-	}
-
-	return val;
-}
-
-// -----------------------------------------------------------------
-// Name : getJsonDouble
-// -----------------------------------------------------------------
-double Character::getJsonDouble(const JoS_Element &json, string name, double defaultVal)
-{
-	const JoS_Element& elt = json[name];
-	if (elt.isList() && elt[0].isLeaf() && elt[1].isLeaf()) {
-		// Case list of 2 elements => random in min/max
-		double min = elt[0].toDouble();
-		double max = elt[1].toDouble();
-		return min + FRAND100(max-min);
-	} else if (elt.isLeaf()) {
-		return elt.toDouble();
-	} else {
-		return defaultVal;
-	}
-}
-
-// -----------------------------------------------------------------
-// Name : getJsonString
-// -----------------------------------------------------------------
-string Character::getJsonString(const JoS_Element &json, string name, string defaultVal)
-{
-	const JoS_Element& elt = json[name];
-	if (elt.isList()) {
-		// Enumeration of strings => take random one
-		int idx = rand() % elt.size();
-		return elt[idx].toString();
-	} else if (elt.isLeaf()) {
-		return elt.toString();
-	} else {
-		return defaultVal;
-	}
 }
 
 // -----------------------------------------------------------------

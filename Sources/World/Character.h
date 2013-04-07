@@ -35,10 +35,6 @@ protected:
     static jos_map CommonDialogs;
 
 private:
-    int getJsonInt(const JoS_Element &json, string name, int defaultVal, int capMin, int capMax);
-    double getJsonDouble(const JoS_Element &json, string name, double defaultVal);
-    string getJsonString(const JoS_Element &json, string name, string defaultVal);
-
     string name;
     double speed;	// 3d unit / second
     long_hash mapTraits;
