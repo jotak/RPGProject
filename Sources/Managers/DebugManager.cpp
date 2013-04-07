@@ -9,6 +9,7 @@
 #include "../Display/DisplayEngine.h"
 #include "../Fonts/FontEngine.h"
 #include "../Data/Parameters.h"
+#include "../World/WorldTime.h"
 
 DebugManager * DebugManager::m_pInstance = NULL;
 
@@ -70,9 +71,10 @@ void DebugManager::update(double delta)
             Coords3D c3 = _display->getBoard3D(cs);
             Coords3D cam = _display->getCamera();
             stringstream ss;
+            ss << _time->getTime() << endl;
             ss << "ScreenX=" << cs.x << " ; ScreenY=" << cs.y << endl;
             ss << "3dX=" << c3.x << " ; 3dY=" << c3.y << endl;
-             ss << "CamX=" << cam.x << " ; CamY=" << cam.y << " ; CamZ=" << cam.z << endl;
+            ss << "CamX=" << cam.x << " ; CamY=" << cam.y << " ; CamZ=" << cam.z << endl;
             ss << "FPS : " << fFps << endl;
             if (m_pFPSGeometry == NULL) {
                 m_pFPSGeometry = new GeometryText(ss.str(), m_iFontId, VB_Static);

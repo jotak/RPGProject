@@ -3,15 +3,20 @@
 // Gere le monde
 // -----------------------------------------------------------------
 #include "WorldManager.h"
+#include "../World/WorldTime.h"
 #include "../Input/InputEngine.h"
 
 WorldManager * WorldManager::m_pInstance = NULL;
+WorldTime * WorldTime::m_pInstance = NULL;
 
 // -----------------------------------------------------------------
 // Name : WorldManager
 // -----------------------------------------------------------------
 WorldManager::WorldManager() : EventListener(4)
 {
+	// Init world time
+	_time;
+
 	m_pActiveCharacter = NULL;
 	m_pPickedObject = NULL;
 	m_pSpacePartition = NULL;
@@ -25,6 +30,7 @@ WorldManager::~WorldManager()
     FREE(m_pSpacePartition);
 	FREEVEC(m_pGameObjects);
     _input->unsetKeyboardListener(this);
+    delete _time;
 }
 
 // -----------------------------------------------------------------
@@ -50,6 +56,7 @@ void WorldManager::init(WorldBuilder * pBuilder)
 // -----------------------------------------------------------------
 void WorldManager::update(double delta)
 {
+	_time->add(delta);
 	for (GameObject* &obj : m_pGameObjects) {
 		obj->update(delta);
 	}
