@@ -33,17 +33,18 @@ Character::~Character()
 }
 
 // -----------------------------------------------------------------
-// Name : operator<< (~toString)
+// Name : toString
 // -----------------------------------------------------------------
-ostream& operator<< (ostream& stream, const Character& character) {
-	f3d pos = character.getPosition();
-	stream << "x: " << pos.x << " / y: " << pos.y << " / speed: " << character.speed;
-	for (pair<string, long> entry : character.mapTraits) {
+string Character::toString() const {
+	std::ostringstream oss;
+	oss << GameObject::toString();
+	oss << " | speed: " << speed;
+	for (pair<string, long> entry : mapTraits) {
 		if (entry.second != 0) {
-			stream << " / " << entry.first << ": " << entry.second;
+			oss << " | " << entry.first << ": " << entry.second;
 		}
 	}
-	return stream;
+	return oss.str();
 }
 
 // -----------------------------------------------------------------
@@ -89,7 +90,7 @@ void Character::initData()
     string err;
     TraitsRelations = JoSon::fromFile(jsonDesc, &err);
     if (TraitsRelations == NULL) {
-    	_debug->notifyErrorMessage(err);
+    	_debug->error(err);
     }
 }
 
@@ -109,7 +110,7 @@ JoS_Element& Character::getCommonDialogs(string name)
 	    string err;
 	    JoSon * json = JoSon::fromFile(jsonDesc, &err);
 	    if (json == NULL) {
-	    	_debug->notifyErrorMessage(err);
+	    	_debug->error(err);
 			return JoS_Null::JoSNull;
 	    } else {
 	    	CommonDialogs[name] = json;

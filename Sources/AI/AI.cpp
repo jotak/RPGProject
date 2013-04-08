@@ -15,10 +15,27 @@ AI::AI(JoS_Element * json) : Character(*json)
 	this->json = json;
 	pBehaviour = NULL;
 	fInteractTimer = 0;
+
+	// Dialogs
 	dialogs = new JoS_Union((*json)["dialogs"]);
 	JoS_Element& addDialogs = (*json)["inheritDialogs"];
 	if (addDialogs.isLeaf()) {
 		dialogs->concat(Character::getCommonDialogs(addDialogs.toString()));
+	}
+
+	// Timetable
+	JoS_Element& jsonTimetable = (*json)["timetable"];
+	if (jsonTimetable.isList()) {
+		pTimetable = new Timetable(&jsonTimetable);
+		// Initialize table by finding current task
+		TimetableTask * pCurTask = pTimetable->findCurrentTask();
+		if (pCurTask == NULL) {
+			// No task => invalid time table => no time table
+			_debug->error(getName() + " has invalid timetable");
+			FREE(pTimetable);
+		}
+	} else {
+		pTimetable = NULL;
 	}
 }
 
@@ -31,6 +48,21 @@ AI::~AI()
 	FREESTACK(pActionsStack);
 	FREE(json);
 	FREE(dialogs);
+	FREE(pTimetable);
+}
+
+// -----------------------------------------------------------------
+// Name : toString
+// -----------------------------------------------------------------
+string AI::toString() const {
+	std::ostringstream oss;
+	oss << Character::toString();
+	if (pTimetable != NULL) {
+		oss << " | task: " << pTimetable->findCurrentTask()->getIndex();
+	} else {
+		oss << " | no timetable";
+	}
+	return oss.str();
 }
 
 // -----------------------------------------------------------------
@@ -41,7 +73,7 @@ AI * AI::buildAI(string jsonFile)
 	string sError;
 	JoSon * json = JoSon::fromFile(string(AI_PATH) + jsonFile, &sError);
 	if (json == NULL) {
-		_debug->notifyErrorMessage(string("Error when loading json: ") + jsonFile + " - Error message: " + sError);
+		_debug->error(string("Error when loading json: ") + jsonFile + " - Error message: " + sError);
 		return NULL;
 	} else {
 		return new AI(json);

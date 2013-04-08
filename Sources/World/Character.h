@@ -13,11 +13,12 @@ public:
 	Character(const JoS_Element& json);
     virtual ~Character();
 
-    friend ostream& operator<< (ostream& stream, const Character& character);
+    virtual string toString() const;
     virtual void update(double delta);
 
     virtual bool isCharacter() { return true; };
 
+    string getName() { return name; };
     double getSpeed() { return speed; };
     void setSpeed(double speed) { this->speed = speed; };
     void setMoveTarget(Coords3D pos);

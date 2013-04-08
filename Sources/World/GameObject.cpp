@@ -21,6 +21,23 @@ GameObject::~GameObject()
 }
 
 // -----------------------------------------------------------------
+// Name : operator<< (~toString)
+// -----------------------------------------------------------------
+ostream& operator<< (ostream& stream, const GameObject& obj) {
+	stream << obj.toString();
+	return stream;
+}
+
+// -----------------------------------------------------------------
+// Name : toString
+// -----------------------------------------------------------------
+string GameObject::toString() const {
+	std::ostringstream oss;
+	oss << "x: " << m_pos.x << " | y: " << m_pos.y;
+	return oss.str();
+}
+
+// -----------------------------------------------------------------
 // Name : update
 // -----------------------------------------------------------------
 void GameObject::update(double delta)

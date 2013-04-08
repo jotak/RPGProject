@@ -10,6 +10,8 @@ public:
 	GameObject();
     virtual ~GameObject();
 
+    friend ostream& operator<< (ostream& stream, const GameObject& obj);
+    virtual string toString() const;
     virtual void update(double delta);
     virtual void display();
 

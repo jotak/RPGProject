@@ -4,6 +4,7 @@
 #include "../World/Character.h"
 #include "Behaviour.h"
 #include "AIAction.h"
+#include "Timetable.h"
 #include <stack>
 
 #define DECISION_DELAY			0.5f
@@ -19,6 +20,7 @@ public:
 	static AI * buildAI(string jsonFile);
     virtual ~AI();
 
+    virtual string toString() const;
     virtual void update(double delta);
     void setBehaviour(Behaviour * pBehaviour) { FREE(this->pBehaviour); this->pBehaviour = pBehaviour; };
     virtual bool isAI() { return true; };
@@ -42,6 +44,7 @@ private:
     double fInteractTimer;
     stack<AIAction*> pActionsStack;
     JoS_Union * dialogs;
+    Timetable * pTimetable;
 };
 
 #endif
