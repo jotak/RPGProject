@@ -29,7 +29,7 @@ public:
 
     // Other function
     void log(string msg);
-    void notifyErrorMessage(string msg);
+    void error(string msg);
     void notifyLoadingMessage(string msg);
     void clear();
     void switchShowFPS()

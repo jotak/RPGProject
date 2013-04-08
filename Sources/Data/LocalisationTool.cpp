@@ -74,7 +74,7 @@ void LocalisationTool::init()
     // Open file
     ifstream file(sPath.c_str());
     if (!file.is_open()) {
-        _debug->notifyErrorMessage(string("Could not open language file. Check out file ") + sPath + ".");
+        _debug->error(string("Could not open language file. Check out file ") + sPath + ".");
         return;
     }
 
@@ -90,7 +90,7 @@ void LocalisationTool::init()
     	}
     }
     if (langCol < 0) {
-    	_debug->notifyErrorMessage(string("Can't find column for language ") + sLang + " in CSV file.");
+    	_debug->error(string("Can't find column for language ") + sLang + " in CSV file.");
     	langCol = 0;
     }
 
@@ -121,7 +121,7 @@ string LocalisationTool::getText(string sKey, void ** pArgs)
     // Get text in hashmap
     string ret = m_sAllTexts[sKey];
     if (ret == "") {
-        _debug->notifyErrorMessage("l12n key not found: " + sKey);
+        _debug->error("l12n key not found: " + sKey);
         ret = sKey;
     }
 

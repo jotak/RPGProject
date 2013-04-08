@@ -158,9 +158,9 @@ void DebugManager::clear()
 }
 
 // -----------------------------------------------------------------
-// Name : notifyErrorMessage
+// Name : error
 // -----------------------------------------------------------------
-void DebugManager::notifyErrorMessage(string msg)
+void DebugManager::error(string msg)
 {
     addCustomeLine(msg);
 }

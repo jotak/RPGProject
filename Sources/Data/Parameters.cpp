@@ -49,7 +49,7 @@ void Parameters::load()
         m_iSoundVolume = reader.findIntValue("SoundVolume", 10);
         m_iMusicVolume = reader.findIntValue("MusicVolume", 10);
     } else {
-        _debug->notifyErrorMessage("Can't read file config.ini");
+        _debug->error("Can't read file config.ini");
     }
 }
 
@@ -72,6 +72,6 @@ void Parameters::save()
     writer.set("MusicVolume", m_iMusicVolume);
 
     if (!writer.write("config.ini")) {
-        _debug->notifyErrorMessage("Can't write config.ini");
+        _debug->error("Can't write config.ini");
     }
 }

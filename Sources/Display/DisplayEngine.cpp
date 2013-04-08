@@ -95,19 +95,19 @@ void DisplayEngine::initGlutWindow()
 
     GLenum err = glewInit();
     if (err != GLEW_OK) {
-        _debug->notifyErrorMessage(string("Error in glewInit: ") + (char*) glewGetErrorString(err) + ".\n");
+        _debug->error(string("Error in glewInit: ") + (char*) glewGetErrorString(err) + ".\n");
     }
     if (!glewIsSupported("GL_ARB_shading_language_100")) {
-    	_debug->notifyErrorMessage("Warning: extension GL_ARB_shading_language_100 not supported.");
+    	_debug->error("Warning: extension GL_ARB_shading_language_100 not supported.");
     }
     if (!glewIsSupported("GL_ARB_shader_objects")) {
-    	_debug->notifyErrorMessage("Warning: extension GL_ARB_shader_objects not supported.");
+    	_debug->error("Warning: extension GL_ARB_shader_objects not supported.");
     }
     if (!glewIsSupported("GL_ARB_vertex_shader")) {
-    	_debug->notifyErrorMessage("Warning: extension GL_ARB_vertex_shader not supported.");
+    	_debug->error("Warning: extension GL_ARB_vertex_shader not supported.");
     }
     if (!glewIsSupported("GL_ARB_fragment_shader")) {
-    	_debug->notifyErrorMessage("Warning: extension GL_ARB_fragment_shader not supported.");
+    	_debug->error("Warning: extension GL_ARB_fragment_shader not supported.");
     }
 
 	for (Geometry* &pGeo : m_pRegisteredGeometries) {
@@ -419,7 +419,7 @@ bool DisplayEngine::loadShader(GLuint * uShader, GLenum type, string sShader)
     *uShader = glCreateShader(type);
     if (*uShader == 0)
     {
-        _debug->notifyErrorMessage("Error in loadShader: can't create shader " + sShader);
+        _debug->error("Error in loadShader: can't create shader " + sShader);
         return false;
     }
 
@@ -430,7 +430,7 @@ bool DisplayEngine::loadShader(GLuint * uShader, GLenum type, string sShader)
     if (!file.is_open()) {
         glDeleteShader(*uShader);
         *uShader = 0;
-        _debug->notifyErrorMessage("Error in loadShader: can't read source file " + sShader);
+        _debug->error("Error in loadShader: can't read source file " + sShader);
         return false;
     }
 
@@ -447,7 +447,7 @@ bool DisplayEngine::loadShader(GLuint * uShader, GLenum type, string sShader)
         char sLog[1024] = "";
         GLint size = 1024;  // wtf?
         glGetShaderInfoLog(*uShader, size, &size, sLog);
-        _debug->notifyErrorMessage("Error in loadShader: can't compile " + sShader + ".\n" + sLog);
+        _debug->error("Error in loadShader: can't compile " + sShader + ".\n" + sLog);
         glDeleteShader(*uShader);
         *uShader = 0;
         return false;
@@ -462,7 +462,7 @@ bool DisplayEngine::linkShaders(GLuint * uProgram, GLuint uVxShader, GLuint uPxS
 {
     if (uVxShader == 0 && uPxShader == 0)
     {
-    	_debug->notifyErrorMessage("Error in linkShaders: invalid shaders.");
+    	_debug->error("Error in linkShaders: invalid shaders.");
         return false;
     }
     *uProgram = glCreateProgram();
@@ -481,7 +481,7 @@ bool DisplayEngine::linkShaders(GLuint * uProgram, GLuint uVxShader, GLuint uPxS
         char sLog[1024] = "";
         GLint size = 1024;  // wtf?
         glGetProgramInfoLog(*uProgram, size, &size, sLog);
-        _debug->notifyErrorMessage(string("Error in linkShaders: can't link program.\n") + sLog);
+        _debug->error(string("Error in linkShaders: can't link program.\n") + sLog);
         glDeleteProgram(*uProgram);
         *uProgram = 0;
         return false;

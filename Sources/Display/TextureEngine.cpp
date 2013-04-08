@@ -134,7 +134,7 @@ Texture * TextureEngine::findTexture(string sFilename)
     			return vTex;
     		}
     	}
-        _debug->notifyErrorMessage(string("Texture not found: ") + sFilename);
+        _debug->error(string("Texture not found: ") + sFilename);
     }
 
     return NULL;

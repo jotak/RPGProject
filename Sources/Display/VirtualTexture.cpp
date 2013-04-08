@@ -48,7 +48,7 @@ VirtualTexture * VirtualTexture::build(Texture * pMaster, string sFilename, stri
     int width = 1 + uend - ustart;
     int height = 1 + vend - vstart;
     if (width <= 0 || height <= 0) {
-    	_debug->notifyErrorMessage(string("Error while building virtual texture ") + sFilename + ": invalid width or height.");
+    	_debug->error(string("Error while building virtual texture ") + sFilename + ": invalid width or height.");
     	return NULL;
     }
 

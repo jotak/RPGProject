@@ -26,7 +26,7 @@ Texture::Texture(string sFilename, bool bComposed, bool bMipMap)
         string err;
         m_pComposedDescriptor = JoSon::fromFile(jsonDesc, &err);
         if (m_pComposedDescriptor == NULL) {
-        	_debug->notifyErrorMessage(err);
+        	_debug->error(err);
         }
     }
 }
@@ -57,7 +57,7 @@ bool Texture::load()
     FILE * f = NULL;
     errno_t err = fopen_s(&f, sFilePath.c_str(), "rb");
     if (err != 0) {
-    	_debug->notifyErrorMessage("Can't open texture for reading: " + sFilePath);
+    	_debug->error("Can't open texture for reading: " + sFilePath);
     	return false;
     }
 
@@ -66,7 +66,7 @@ bool Texture::load()
     fread(magic, 1, sizeof(magic), f);
     if (!png_check_sig(magic, sizeof(magic))) {
     	fclose(f);
-    	_debug->notifyErrorMessage("Not a valid PNG: " + sFilePath);
+    	_debug->error("Not a valid PNG: " + sFilePath);
     	return false;
     }
 
@@ -74,7 +74,7 @@ bool Texture::load()
     png_structp lpPng = png_create_read_struct(PNG_LIBPNG_VER_STRING, NULL, NULL, NULL);
     if (!lpPng) {
     	fclose(f);
-    	_debug->notifyErrorMessage("Can't create PNG structure: " + sFilePath);
+    	_debug->error("Can't create PNG structure: " + sFilePath);
     	return false;
     }
     png_infop lpPngInfo = png_create_info_struct(lpPng);
@@ -82,7 +82,7 @@ bool Texture::load()
     {
     	fclose(f);
         png_destroy_read_struct(&lpPng, NULL, NULL);
-    	_debug->notifyErrorMessage("Can't create PNG info structure: " + sFilePath);
+    	_debug->error("Can't create PNG info structure: " + sFilePath);
     	return false;
     }
 
@@ -92,7 +92,7 @@ bool Texture::load()
     	fclose(f);
         png_destroy_read_struct(&lpPng, &lpPngInfo, NULL);
         unload();
-    	_debug->notifyErrorMessage("PNG read exception: " + sFilePath);
+    	_debug->error("PNG read exception: " + sFilePath);
     	return false;
     }
 
@@ -154,7 +154,7 @@ bool Texture::load()
         unload();
         ostringstream os;
         os << "Unknown PNG color type " << iColorType << ": " << sFilePath;
-    	_debug->notifyErrorMessage(os.str());
+    	_debug->error(os.str());
     	return false;
     }
     }

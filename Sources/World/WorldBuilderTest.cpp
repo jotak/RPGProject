@@ -38,7 +38,7 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
 	string sError;
 	JoSon * json = JoSon::fromString(string("{speed:3, traits:{friendly:2, funny:1}}"), &sError);
 	if (json == NULL) {
-		_debug->notifyErrorMessage(sError);
+		_debug->error(sError);
 	} else {
 		Character * pCharacter = new Character(*json);
 		QuadData quad2(0.0f, 0.5f, 0.0f, 0.5f, string("heroe"));

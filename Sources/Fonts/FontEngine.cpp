@@ -69,7 +69,7 @@ int FontEngine::registerFont(string sFontName)
     bool ok = m_pAllFonts[iFont]->load(sFontName);
     if (!ok)
     {
-        _debug->notifyErrorMessage("Error when loading font " + sFontName);
+        _debug->error("Error when loading font " + sFontName);
         delete m_pAllFonts[iFont];
         m_pAllFonts[iFont] = NULL;
         return 1;
