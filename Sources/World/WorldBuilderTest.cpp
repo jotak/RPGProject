@@ -7,7 +7,7 @@
 #include "../Display/DisplayEngine.h"
 #include "../Geometries/GeometryQuads.h"
 #include "../Geometries/ModColorize.h"
-#include "../AI/ErraticMoveBehaviour.h"
+#include "../AI/Actions/ErraticMoveAction.h"
 #include "../AI/AI.h"
 #include "../Managers/DebugManager.h"
 
@@ -71,7 +71,6 @@ void WorldBuilderTest::createAI(string fileJson, list<GameObject*> * pGameObject
 		pGeometry->bindModifier(new ModColorize(Color::green));
 		pAI->setGeometry(pGeometry);
 		pAI->setPosition(F3DBOARD(2 + rand() % 2, 2 + rand() % 2));
-		pAI->setBehaviour(new ErraticMoveBehaviour(pAI));
 		pGameObjects->push_back(pAI);
 		cout << "AI created: " << *pAI << endl;
 	}

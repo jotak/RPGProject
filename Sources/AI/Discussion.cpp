@@ -2,7 +2,7 @@
 // DISCUSSION
 // -----------------------------------------------------------------
 #include "Discussion.h"
-#include "DiscussionAction.h"
+#include "Actions/DiscussionAction.h"
 
 // -----------------------------------------------------------------
 // Name : Discussion

@@ -1,29 +1,29 @@
 // -----------------------------------------------------------------
-// ERRATIC MOVE BEHAVIOUR
+// ERRATIC MOVE ACTION
 // -----------------------------------------------------------------
-#include "ErraticMoveBehaviour.h"
-#include "../Physics/MovesHelper.h"
-#include "../World/Character.h"
+#include "ErraticMoveAction.h"
+#include "../../Physics/MovesHelper.h"
+#include "../AI.h"
 
 // -----------------------------------------------------------------
-// Name : ErraticMoveBehaviour
+// Name : ErraticMoveAction
 // -----------------------------------------------------------------
-ErraticMoveBehaviour::ErraticMoveBehaviour(Character * ai) : Behaviour(ai)
+ErraticMoveAction::ErraticMoveAction(AI * ai) : AIAction(ai)
 {
 	m_fWait = 0;
 }
 
 // -----------------------------------------------------------------
-// Name : ~ErraticMoveBehaviour
+// Name : ~ErraticMoveAction
 // -----------------------------------------------------------------
-ErraticMoveBehaviour::~ErraticMoveBehaviour()
+ErraticMoveAction::~ErraticMoveAction()
 {
 }
 
 // -----------------------------------------------------------------
 // Name : update
 // -----------------------------------------------------------------
-void ErraticMoveBehaviour::update(double delta)
+void ErraticMoveAction::update(double delta)
 {
 	if (!m_pAI->isMoving()) {
 		if (m_fWait <= 0) {

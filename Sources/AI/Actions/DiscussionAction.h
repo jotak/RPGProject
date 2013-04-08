@@ -2,7 +2,7 @@
 #define _DISCUSSION_ACTION_H
 
 #include "AIAction.h"
-#include "Discussion.h"
+#include "../Discussion.h"
 
 class DiscussionAction : public AIAction
 {

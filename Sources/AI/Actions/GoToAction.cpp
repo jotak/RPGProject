@@ -1,29 +1,29 @@
 // -----------------------------------------------------------------
-// GOTO BEHAVIOUR
+// GOTO ACTION
 // -----------------------------------------------------------------
-#include "GoToBehaviour.h"
-#include "../Physics/MovesHelper.h"
-#include "../World/Character.h"
+#include "GoToAction.h"
+#include "../../Physics/MovesHelper.h"
+#include "../AI.h"
 
 // -----------------------------------------------------------------
-// Name : GoToBehaviour
+// Name : GoToAction
 // -----------------------------------------------------------------
-GoToBehaviour::GoToBehaviour(f3d target, Character * ai) : Behaviour(ai)
+GoToAction::GoToAction(f3d target, AI * ai) : AIAction(ai)
 {
 	m_Target = target;
 	m_pAI->addMovement(MovesHelper::newConstantMove(target - m_pAI->getPosition(), m_pAI->get3DSpeed()));
 }
 
 // -----------------------------------------------------------------
-// Name : ~GoToBehaviour
+// Name : ~GoToAction
 // -----------------------------------------------------------------
-GoToBehaviour::~GoToBehaviour()
+GoToAction::~GoToAction()
 {
 }
 
 // -----------------------------------------------------------------
 // Name : update
 // -----------------------------------------------------------------
-void GoToBehaviour::update(double delta)
+void GoToAction::update(double delta)
 {
 }

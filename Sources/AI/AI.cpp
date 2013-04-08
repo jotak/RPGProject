@@ -5,7 +5,7 @@
 #include "../Managers/WorldManager.h"
 #include "../Managers/DebugManager.h"
 #include "../Physics/SpacePart.h"
-#include "DiscussionAction.h"
+#include "Actions/DiscussionAction.h"
 
 // -----------------------------------------------------------------
 // Name : AI
@@ -13,8 +13,8 @@
 AI::AI(JoS_Element * json) : Character(*json)
 {
 	this->json = json;
-	pBehaviour = NULL;
 	fInteractTimer = 0;
+	pCurrentTask = NULL;
 
 	// Dialogs
 	dialogs = new JoS_Union((*json)["dialogs"]);
@@ -28,8 +28,8 @@ AI::AI(JoS_Element * json) : Character(*json)
 	if (jsonTimetable.isList()) {
 		pTimetable = new Timetable(&jsonTimetable);
 		// Initialize table by finding current task
-		TimetableTask * pCurTask = pTimetable->findCurrentTask();
-		if (pCurTask == NULL) {
+		checkTimetable();
+		if (pCurrentTask == NULL) {
 			// No task => invalid time table => no time table
 			_debug->error(getName() + " has invalid timetable");
 			FREE(pTimetable);
@@ -44,7 +44,6 @@ AI::AI(JoS_Element * json) : Character(*json)
 // -----------------------------------------------------------------
 AI::~AI()
 {
-	FREE(pBehaviour);
 	FREESTACK(pActionsStack);
 	FREE(json);
 	FREE(dialogs);
@@ -89,6 +88,9 @@ void AI::update(double delta)
 	if (fInteractTimer <= 0) {
 		// Time to take a decision!
 		fInteractTimer = DECISION_DELAY;
+		if (pTimetable != NULL) {
+			checkTimetable();
+		}
 		AIAction * newAction = evaluateActionToDo();
 		if (newAction != NULL) {
 			// There's something we want to do
@@ -128,6 +130,19 @@ bool isSurroundingCharacter(AI * that, PartitionableItem * pItem) {
 }
 bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
 	return ((GameObject*)pItem)->isAI() && isSurrounding(that, pItem);
+}
+
+// -----------------------------------------------------------------
+// Name : checkTimetable
+//	Check AI's time table to see if we need to start a new task
+// -----------------------------------------------------------------
+void AI::checkTimetable()
+{
+	TimetableTask * pTask = pTimetable->findCurrentTask();
+	if (pTask != pCurrentTask) {
+		pCurrentTask = pTask;
+		// TODO: start new task
+	}
 }
 
 // -----------------------------------------------------------------

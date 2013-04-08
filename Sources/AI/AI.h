@@ -2,8 +2,7 @@
 #define _AI_H
 
 #include "../World/Character.h"
-#include "Behaviour.h"
-#include "AIAction.h"
+#include "Actions/AIAction.h"
 #include "Timetable.h"
 #include <stack>
 
@@ -22,7 +21,6 @@ public:
 
     virtual string toString() const;
     virtual void update(double delta);
-    void setBehaviour(Behaviour * pBehaviour) { FREE(this->pBehaviour); this->pBehaviour = pBehaviour; };
     virtual bool isAI() { return true; };
     bool isBusy();
     bool isHungry();
@@ -31,6 +29,7 @@ public:
 private:
 	AI(JoS_Element * json);
 
+	void checkTimetable();
 	AIAction * evaluateActionToDo();
     void getSurroundingObjects(list<PartitionableItem*>*, FilterPredicate filter);
     void checkInteractions();
@@ -40,11 +39,11 @@ private:
     void joinDiscussion(Discussion*);
 
     JoS_Element * json;
-    Behaviour * pBehaviour;
     double fInteractTimer;
     stack<AIAction*> pActionsStack;
     JoS_Union * dialogs;
     Timetable * pTimetable;
+    TimetableTask * pCurrentTask;
 };
 
 #endif

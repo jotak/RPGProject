@@ -1,6 +1,8 @@
 #ifndef _AI_ACTION_H
 #define _AI_ACTION_H
 
+#include "../../Utils/utils.h"
+
 class AI;
 
 class AIAction
