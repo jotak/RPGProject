@@ -6,7 +6,7 @@
 class Timetable
 {
 public:
-	Timetable(JoS_Element*);
+	Timetable(AI*, JoS_Element*);
     ~Timetable();
 
     TimetableTask * findCurrentTask();
@@ -17,6 +17,7 @@ private:
     JoS_Element * jsonTimeTablePtr;
     TimetableTask * currentTask;
     TimetableTask * nextTask;
+    AI * m_pAI;
 };
 
 #endif

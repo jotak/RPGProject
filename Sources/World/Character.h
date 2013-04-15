@@ -21,10 +21,15 @@ public:
     string getName() { return name; };
     double getSpeed() { return speed; };
     void setSpeed(double speed) { this->speed = speed; };
-    void setMoveTarget(Coords3D pos);
     long_hash * getTraits() { return &mapTraits; };
     double get3DSpeed();
     void say(string);
+    void goToGround(f3d pos2D);
+    void goToGround(double x, double y);
+    virtual bool isMoving() { return MovingObject::isMoving() || bHasMoveTarget; };
+    bool hasMoveTarget() { return bHasMoveTarget; };
+    bool canMove() { return bCanMove; };
+    void setCanMove(bool bCanMove) { this->bCanMove = bCanMove; };
 
     static void initData();
     static void releaseData();
@@ -36,9 +41,14 @@ protected:
     static jos_map CommonDialogs;
 
 private:
+    void doMove(double);
+
     string name;
     double speed;	// 3d unit / second
     long_hash mapTraits;
+    bool bCanMove;
+    bool bHasMoveTarget;
+    f3d moveTarget;
 };
 
 #endif

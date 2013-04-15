@@ -25,11 +25,12 @@ public:
     bool isBusy();
     bool isHungry();
     JoS_Element& pickDialog(JoS_Element&);
+    void doAction(AIAction*);
 
 private:
 	AI(JoS_Element * json);
 
-	void checkTimetable();
+	bool checkTimetable();
 	AIAction * evaluateActionToDo();
     void getSurroundingObjects(list<PartitionableItem*>*, FilterPredicate filter);
     void checkInteractions();
@@ -43,7 +44,7 @@ private:
     stack<AIAction*> pActionsStack;
     JoS_Union * dialogs;
     Timetable * pTimetable;
-    TimetableTask * pCurrentTask;
+    Task * pCurrentTask;
 };
 
 #endif

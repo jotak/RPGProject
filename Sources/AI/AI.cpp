@@ -26,7 +26,7 @@ AI::AI(JoS_Element * json) : Character(*json)
 	// Timetable
 	JoS_Element& jsonTimetable = (*json)["timetable"];
 	if (jsonTimetable.isList()) {
-		pTimetable = new Timetable(&jsonTimetable);
+		pTimetable = new Timetable(this, &jsonTimetable);
 		// Initialize table by finding current task
 		checkTimetable();
 		if (pCurrentTask == NULL) {
@@ -88,13 +88,19 @@ void AI::update(double delta)
 	if (fInteractTimer <= 0) {
 		// Time to take a decision!
 		fInteractTimer = DECISION_DELAY;
+		bool didSomething = false;
 		if (pTimetable != NULL) {
-			checkTimetable();
+			didSomething = checkTimetable();
 		}
-		AIAction * newAction = evaluateActionToDo();
-		if (newAction != NULL) {
-			// There's something we want to do
-			pActionsStack.push(newAction);
+		if (!didSomething && pCurrentTask != NULL) {
+			didSomething = pCurrentTask->checkThen();
+		}
+		if (!didSomething) {
+			AIAction * newAction = evaluateActionToDo();
+			if (newAction != NULL) {
+				// There's something we want to do
+				pActionsStack.push(newAction);
+			}
 		}
 	}
 
@@ -109,9 +115,6 @@ void AI::update(double delta)
 		}
 	}
 
-//	if (m_pBehaviour != NULL) {
-//		m_pBehaviour->update(delta);
-//	}
 	Character::update(delta);
 }
 
@@ -119,7 +122,7 @@ bool isSurrounding(AI * that, PartitionableItem * pItem) {
 	if (pItem != that) {
 		// Skip "this" since the AI itself is in the list
 		f3d vec = that->getPosition() - pItem->getPosition();
-		if (vec.getsize() < AI_INTERACTION_RADIUS) {
+		if (vec.getSize() < AI_INTERACTION_RADIUS) {
 			return true;
 		}
 	}
@@ -136,13 +139,25 @@ bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
 // Name : checkTimetable
 //	Check AI's time table to see if we need to start a new task
 // -----------------------------------------------------------------
-void AI::checkTimetable()
+bool AI::checkTimetable()
 {
 	TimetableTask * pTask = pTimetable->findCurrentTask();
 	if (pTask != pCurrentTask) {
 		pCurrentTask = pTask;
-		// TODO: start new task
+		if (pCurrentTask != NULL) {
+			pCurrentTask->start();
+		}
+		return true;
 	}
+	return false;
+}
+
+// -----------------------------------------------------------------
+// Name : doAction
+// -----------------------------------------------------------------
+void AI::doAction(AIAction * pAction)
+{
+	pActionsStack.push(pAction);
 }
 
 // -----------------------------------------------------------------

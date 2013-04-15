@@ -5,6 +5,8 @@
 #include "../Display/DisplayEngine.h"
 #include "../Managers/WorldManager.h"
 
+#define CLOSE_TO_RADIUS		0.2f
+
 // -----------------------------------------------------------------
 // Name : GameObject
 // -----------------------------------------------------------------
@@ -69,4 +71,12 @@ void GameObject::setPosition(f3d newPos)
 			pSpacePartition->put(this);
 		}
 	}
+}
+
+// -----------------------------------------------------------------
+// Name : isCloseTo
+// -----------------------------------------------------------------
+bool GameObject::isCloseTo(f3d pos)
+{
+	return abs(pos.x-m_pos.x) < CLOSE_TO_RADIUS && abs(pos.y-m_pos.y) < CLOSE_TO_RADIUS && abs(pos.z-m_pos.z) < CLOSE_TO_RADIUS;
 }

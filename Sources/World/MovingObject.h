@@ -18,8 +18,7 @@ public:
 
     virtual void collide(Collidable * pCollidable) {};
     void addMovement(Movement * pMvt) { m_Movements.push_back(pMvt); };
-    void setMovement(Movement * pMvt) { FREEVEC(m_Movements); m_Movements.push_back(pMvt); };
-    bool isMoving() { return !m_Movements.empty(); };
+    virtual bool isMoving() { return !m_Movements.empty(); };
 
 private:
     int radius;

@@ -6,13 +6,15 @@
 #include "../Data/JSonUtil.h"
 
 #define JSON_TASK_KEY		"task"
+#define JSON_AT_KEY			"at"
 
 // -----------------------------------------------------------------
 // Name : Timetable
 // -----------------------------------------------------------------
-Timetable::Timetable(JoS_Element * jsonTimeTablePtr)
+Timetable::Timetable(AI * pAI, JoS_Element * jsonTimeTablePtr)
 {
     this->jsonTimeTablePtr = jsonTimeTablePtr;
+    m_pAI = pAI;
     currentTask = NULL;
     nextTask = NULL;
 }
@@ -53,7 +55,7 @@ TimetableTask * Timetable::findCurrentTask()
 				}
 			}
 			if (closestTask >= 0) {
-				currentTask = new TimetableTask(closestTask, closestStartAt, &(jsonTimeTable[closestTask][JSON_TASK_KEY]));
+				currentTask = new TimetableTask(closestTask, closestStartAt, m_pAI, &(jsonTimeTable[closestTask][JSON_TASK_KEY]));
 				nextTask = findNextTask();
 			}
 		}
@@ -76,6 +78,6 @@ TimetableTask * Timetable::findNextTask()
 	JoS_Element& jsonTimeTable = *jsonTimeTablePtr;
 	int iNextTask = (currentTask->getIndex() + 1) % jsonTimeTable.size();
 	JoS_Element& jsonTask = jsonTimeTable[iNextTask];
-	double startAt = JSonUtil::getDouble(jsonTask);
-	return new TimetableTask(iNextTask, startAt, &(jsonTask[JSON_TASK_KEY]));
+	double startAt = JSonUtil::getDouble(jsonTask[JSON_AT_KEY]);
+	return new TimetableTask(iNextTask, startAt, m_pAI, &(jsonTask[JSON_TASK_KEY]));
 }

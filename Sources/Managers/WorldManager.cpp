@@ -89,9 +89,7 @@ bool WorldManager::onCatchButtonEvent(ButtonAction * pEvent)
 			cout << "Clicked on " << (long)m_pPickedObject << endl;
 			eventProcessed = true;
 		} else if (m_pActiveCharacter != NULL) {
-			Coords3D pos = _display->getBoard3D(CoordsScreen(pEvent->xPos, pEvent->yPos));
-			pos.z = BOARDPLANE;
-			m_pActiveCharacter->setMoveTarget(pos);
+			m_pActiveCharacter->goToGround(_display->getBoard3D(CoordsScreen(pEvent->xPos, pEvent->yPos)));
 			eventProcessed = true;
 		}
     } else if (pEvent->eEvent == Event_Down && pEvent->eButton == ButtonZ) {

@@ -21,17 +21,21 @@ timetable: [{
 	at: [7.5, 8.5],
 	task: {
 		goTo: [6, 3.5],
-		startActivity: {
-			name: fishing,
-			ability: 3
+		then: {
+			startActivity: {
+				name: fishing,
+				ability: 3
+			}
 		}
 	}
 },{
 	at: 12,
 	task: {
 		goTo: [2.8, 5],
-		startActivity: {
-			name: eat
+		then: {
+			startActivity: {
+				name: eat
+			}
 		}
 	}
 },{
@@ -43,14 +47,16 @@ timetable: [{
 	at: 14,
 	task: {
 		goTo: [2.5, 3],
-		startActivity: {
-			name: sell,
-			ability: 4,
-			merchandise: [{
-				type: food,
-				name: fish,
-				price: 5
-			}],
+		then: {
+			startActivity: {
+				name: sell,
+				ability: 4,
+				merchandise: [{
+					type: food,
+					name: fish,
+					price: 5
+				}],
+			}
 		}
 	}
 },{
@@ -63,16 +69,20 @@ timetable: [{
 	at: 21,
 	task: {
 		goTo: [5.5, 3],
-		startActivity: {
-			name: eat
+		then: {
+			startActivity: {
+				name: eat
+			}
 		}
 	}
 },{
 	at: 22,
 	task: {
 		goTo: [5.5, 3],
-		startActivity: {
-			name: sleep
+		then: {
+			startActivity: {
+				name: sleep
+			}
 		}
 	}
 }],

@@ -23,6 +23,9 @@ Character::Character(const JoS_Element &json)
 		string trait = (*TraitsRelations)["_list_"][i].toString();
 		mapTraits[trait] = JSonUtil::getCappedInt(jsTraits[trait], 0, TRAIT_MAX_VALUE);
 	}
+
+    bCanMove = true;
+    bHasMoveTarget = false;
 }
 
 // -----------------------------------------------------------------
@@ -53,10 +56,32 @@ string Character::toString() const {
 void Character::update(double delta)
 {
 	MovingObject::update(delta);
+	if (bHasMoveTarget && bCanMove) {
+		doMove(delta * get3DSpeed());
+	}
+}
+
+// -----------------------------------------------------------------
+// Name : doMove
+// -----------------------------------------------------------------
+void Character::doMove(double step)
+{
+	// TODO: pathfinder
+    f3d pos = getPosition();
+    f3d globalMove = moveTarget - pos;
+    double distanceToGoal = globalMove.getSize();
+    if (distanceToGoal <= step) {
+    	// Character has arrived
+    	setPosition(moveTarget);
+    	bHasMoveTarget = false;
+    } else {
+    	setPosition(pos + globalMove.getUnitVector(distanceToGoal) * step);
+    }
 }
 
 // -----------------------------------------------------------------
 // Name : get3DSpeed
+//	"speed" stands for the speed characteristic; it must be relativised to board metrics
 // -----------------------------------------------------------------
 double Character::get3DSpeed()
 {
@@ -64,11 +89,22 @@ double Character::get3DSpeed()
 }
 
 // -----------------------------------------------------------------
-// Name : setMoveTarget
+// Name : goToGround
 // -----------------------------------------------------------------
-void Character::setMoveTarget(Coords3D pos)
+void Character::goToGround(f3d pos2D)
 {
-	setMovement(MovesHelper::newConstantMove(pos - getPosition(), get3DSpeed()));
+	bHasMoveTarget = true;
+	moveTarget = pos2D;
+	moveTarget.z = BOARDPLANE;
+}
+
+// -----------------------------------------------------------------
+// Name : goToGround
+// -----------------------------------------------------------------
+void Character::goToGround(double x, double y)
+{
+	bHasMoveTarget = true;
+	moveTarget = f3d(x, y, BOARDPLANE);
 }
 
 // -----------------------------------------------------------------

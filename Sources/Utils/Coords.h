@@ -59,7 +59,7 @@ public:
     XYZ_OPMULT2(Coords3D, double)
     XYZ_OPDIV(Coords3D, double)
     XYZ_OPPLUS2(Coords3D, double)
-    double getsize()
+    double getSize()
     {
         return sqrt(x*x+y*y+z*z);
     };
@@ -75,7 +75,12 @@ public:
     }; // Cross product
     Coords3D getUnitVector()
     {
-        double size=getsize();
+        double size = getSize();
+        if (size!=0) return (*this/size);
+        else return Coords3D();
+    };
+    Coords3D getUnitVector(double size)
+    {
         if (size!=0) return (*this/size);
         else return Coords3D();
     };

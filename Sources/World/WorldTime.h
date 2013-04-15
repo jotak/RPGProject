@@ -3,7 +3,8 @@
 
 #include "../Utils/utils.h"
 
-#define DEFAULT_TIME_COMPRESSION		50.0f
+#define DEFAULT_TIME_COMPRESSION		1000.0f	// FAST TIME
+//#define DEFAULT_TIME_COMPRESSION		50.0f
 #define SECONDS_PER_MINUTE				60
 #define MINUTES_PER_HOUR				60
 #define HOURS_PER_DAY					24
@@ -95,7 +96,7 @@ private:
 		dateTime.year = 0;
 		dateTime.month = 0;
 		dateTime.day = 0;
-		dateTime.hour = 0;
+		dateTime.hour = 6;
 		dateTime.minute = 0;
 		dateTime.second = 0;
 	};

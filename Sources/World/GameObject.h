@@ -22,6 +22,7 @@ public:
     f3d getPosition() const { return m_pos; };
     Geometry * getGeometry() { return m_pGeometry; };
     void setGeometry(Geometry * pGeo) { m_pGeometry = pGeo; };
+    bool isCloseTo(f3d pos);
 
 private:
     f3d m_pos;

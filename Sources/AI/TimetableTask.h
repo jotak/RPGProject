@@ -1,16 +1,13 @@
 #ifndef _TIMETABLE_TASK_H
 #define _TIMETABLE_TASK_H
 
-#include "../Data/JoSon/JoSon.h"
+#include "Task.h"
 
-class TimetableTask
+class TimetableTask : public Task
 {
 public:
-	TimetableTask(int index, double time, JoS_Element * taskData) {
-		this->index = index;
-		this->time = time;
-		this->taskData = taskData;
-	}
+	TimetableTask(int, double, AI*, JoS_Element*);
+	~TimetableTask();
 
 	double getTime() { return time; };
 	int getIndex() { return index; };
@@ -18,7 +15,6 @@ public:
 private:
     int index;
     double time;
-    JoS_Element * taskData;
 };
 
 #endif

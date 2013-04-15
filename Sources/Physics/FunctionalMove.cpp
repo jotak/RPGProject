@@ -5,10 +5,10 @@
 // -----------------------------------------------------------------
 // Name : FunctionalMove
 // -----------------------------------------------------------------
-FunctionalMove::FunctionalMove(Coords3D vector, double fFullSpeed, MoveFunction func) : Movement()
+FunctionalMove::FunctionalMove(f3d vector, double fFullSpeed, MoveFunction func) : Movement()
 {
     m_Vector = vector;
-    m_fFullSpeed = fFullSpeed / vector.getsize();
+    m_fFullSpeed = fFullSpeed / vector.getSize();
     m_Func = func;
     m_f1DPos = 0.0f;
 }
@@ -23,7 +23,7 @@ FunctionalMove::~FunctionalMove()
 // -----------------------------------------------------------------
 // Name : apply
 // -----------------------------------------------------------------
-Coords3D FunctionalMove::apply(double delta, Coords3D position)
+Coords3D FunctionalMove::apply(double delta, f3d position)
 {
 	if (m_State == Inactive) {
 		m_State = InProgress;

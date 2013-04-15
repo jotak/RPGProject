@@ -25,11 +25,11 @@ ErraticMoveAction::~ErraticMoveAction()
 // -----------------------------------------------------------------
 void ErraticMoveAction::update(double delta)
 {
-	if (!m_pAI->isMoving()) {
+	if (!m_pAI->hasMoveTarget()) {
 		if (m_fWait <= 0) {
 			m_fWait = (rand() % 2) * FRAND100(3);	// 0-3 seconds
-			f3d target(1 - FRAND100(2), 1 - FRAND100(2));
-			m_pAI->addMovement(MovesHelper::newConstantMove(target, m_pAI->get3DSpeed()));
+			f3d pos = m_pAI->getPosition();
+			m_pAI->goToGround(pos.x + 1 - FRAND100(2), pos.y + 1 - FRAND100(2));
 		} else {
 			m_fWait -= delta;
 		}

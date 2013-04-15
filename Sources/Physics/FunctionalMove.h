@@ -9,13 +9,13 @@ typedef tr1::function<double (double)> MoveFunction;
 class FunctionalMove : public Movement
 {
 public:
-	FunctionalMove(Coords3D vector, double fFullSpeed, MoveFunction func);
+	FunctionalMove(f3d vector, double fFullSpeed, MoveFunction func);
     virtual ~FunctionalMove();
 
-    virtual Coords3D apply(double delta, Coords3D position);
+    virtual f3d apply(double delta, f3d position);
 
 private:
-    Coords3D m_Vector;
+    f3d m_Vector;
     double m_fFullSpeed;
     MoveFunction m_Func;
     double m_f1DPos;
