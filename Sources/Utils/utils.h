@@ -20,6 +20,7 @@ typedef long            s32;
 #include <tr1/functional>
 #include <tuple>
 
+// TODO: remove this
 #define max(x,y) ((x)>=(y)?(x):(y))
 #define min(x,y) ((x)<=(y)?(x):(y))
 extern errno_t fopen_s(FILE ** pFile, const char * sFilename, const char * sMode);

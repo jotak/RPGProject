@@ -63,6 +63,10 @@ public:
     {
         return sqrt(x*x+y*y+z*z);
     };
+    double getSize2()
+    {
+        return x*x+y*y+z*z;
+    };
     double dot(Coords3D op2)
     {
         return ( x * op2.x + y * op2.y + z * op2.z);
@@ -95,5 +99,6 @@ extern f3d cos(const f3d &d3);
 extern f3d tan(const f3d &d3);
 extern f3d atan(const f3d &d3);
 extern f3d sqrt(const f3d &d3);
+extern f3d closestPoint(f3d &p, f3d &a, f3d &b, bool segment);
 
 #endif

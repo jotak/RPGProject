@@ -3,8 +3,8 @@
 
 #include "../Utils/utils.h"
 
-#define DEFAULT_TIME_COMPRESSION		1000.0f	// FAST TIME
-//#define DEFAULT_TIME_COMPRESSION		50.0f
+#define TIME_COMPRESSION		1000.0f	// FAST TIME
+//#define TIME_COMPRESSION		50.0f
 #define SECONDS_PER_MINUTE				60
 #define MINUTES_PER_HOUR				60
 #define HOURS_PER_DAY					24
@@ -82,7 +82,7 @@ public:
     }
 
     void add(double delta) {
-    	timeBuffer += delta * DEFAULT_TIME_COMPRESSION;
+    	timeBuffer += delta * TIME_COMPRESSION;
     	if (timeBuffer >= 1) {
     		int seconds = (int) timeBuffer;
     		timeBuffer -= (double) seconds;

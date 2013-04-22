@@ -4,11 +4,13 @@
 #include "FishingAction.h"
 #include "../AI.h"
 #include "../../Managers/WorldManager.h"
+#include "../../World/WorldTime.h"
 #include "../../World/Terrain.h"
 #include "../../World/FinalObjects/Trout.h"
 #include "../../World/FinalObjects/Carp.h"
 
-#define MAX_WAIT_TIME			300 // 5 min
+#define MIN_WAIT_TIME			1800 // 30 min
+#define MAX_WAIT_TIME			7200 // 120 min
 #define FISHING_MIN_ABILITY		1
 #define FISHING_MAX_ABILITY		4
 
@@ -22,11 +24,10 @@ FishingAction::FishingAction(AI * ai, const JoS_Element& json) : AIAction(ai)
 	pFishingArea = NULL;
 	double nearestDistance = -1;
 	for (WaterArea * pArea : areas) {
-		point_and_distance distance = pArea->getArea()->closestDistanceTo(m_pAI->getPosition());
-		if (nearestDistance == -1 || nearestDistance > get<1>(distance)) {
+		double distance = pArea->getArea()->closestDistanceTo(m_pAI->getPosition());
+		if (nearestDistance == -1 || nearestDistance > distance) {
 			pFishingArea = pArea;
-			nearestDistance = get<1>(distance);
-			// TODO: store nearest point too
+			nearestDistance = distance;
 		}
 	}
 	int ability = JSonUtil::getCappedInt(json["ability"], FISHING_MIN_ABILITY, FISHING_MAX_ABILITY, FISHING_MIN_ABILITY);
@@ -46,10 +47,10 @@ FishingAction::~FishingAction()
 // -----------------------------------------------------------------
 void FishingAction::update(double delta)
 {
-	m_fWait -= delta;
 	if (m_fWait < 0) {
-		fish();
-	} else if (pFishingArea != NULL) {
+		findSpot();
+	} else if (pFishingArea != NULL && !m_pAI->hasMoveTarget()) {
+		m_fWait -= delta;
 		// Does it bit?
 		double treshold = delta * 60.0f * abilityModifier * pFishingArea->getFishingProbability();
 		if (100.0f * rand() / RAND_MAX < treshold) {
@@ -62,20 +63,22 @@ void FishingAction::update(double delta)
 				pFish = new Carp();
 			}
 			m_pAI->addToInventory(pFish);
-			fish();
 		}
 	}
 }
 
 // -----------------------------------------------------------------
-// Name : fish
+// Name : findSpot
 // -----------------------------------------------------------------
-void FishingAction::fish()
+void FishingAction::findSpot()
 {
-	m_fWait = MAX_WAIT_TIME;
+	m_fWait = MIN_WAIT_TIME + rand() % (MAX_WAIT_TIME - MIN_WAIT_TIME);
+	m_fWait /= TIME_COMPRESSION;
 	if (pFishingArea == NULL) {
 		m_pAI->say("There's no water around!");
 	} else {
-		// TODO: Move a bit around
+		// Move a bit around
+		f3d rndPoint = m_pAI->getPosition() + f3d(FRAND100(3) - 1, FRAND100(3) - 1, 0);
+		m_pAI->goToGround(pFishingArea->getArea()->closestPointTo(rndPoint));
 	}
 }

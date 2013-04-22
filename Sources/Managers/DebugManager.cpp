@@ -4,12 +4,16 @@
 // -----------------------------------------------------------------
 
 #include "DebugManager.h"
+#include "WorldManager.h"
 #include "../Geometries/GeometryText.h"
 #include "../Input/InputEngine.h"
 #include "../Display/DisplayEngine.h"
 #include "../Fonts/FontEngine.h"
 #include "../Data/Parameters.h"
 #include "../World/WorldTime.h"
+#include "../World/Terrain.h"
+#include "../World/WaterArea.h"
+#include "../Physics/Polygon.h"
 
 DebugManager * DebugManager::m_pInstance = NULL;
 
@@ -70,11 +74,20 @@ void DebugManager::update(double delta)
             cs.z = BOARDPLANE;
             Coords3D c3 = _display->getBoard3D(cs);
             Coords3D cam = _display->getCamera();
+            bool inWater = false;
+            for (WaterArea * area : _world->getTerrain()->getWaterAreas()) {
+            	if (area->getArea()->isInside(c3)) {
+            		inWater = true;
+            		break;
+            	}
+            }
+
             stringstream ss;
             ss << _time->getTime() << endl;
             ss << "ScreenX=" << cs.x << " ; ScreenY=" << cs.y << endl;
             ss << "3dX=" << c3.x << " ; 3dY=" << c3.y << endl;
             ss << "CamX=" << cam.x << " ; CamY=" << cam.y << " ; CamZ=" << cam.z << endl;
+            ss << "In water? " << inWater << endl;
             ss << "FPS : " << fFps << endl;
             if (m_pFPSGeometry == NULL) {
                 m_pFPSGeometry = new GeometryText(ss.str(), m_iFontId, VB_Static);

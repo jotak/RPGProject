@@ -139,3 +139,19 @@ f3d atan(const f3d &d3) {
 f3d sqrt(const f3d &d3) {
 	return f3d(sqrt(d3.x), sqrt(d3.y), sqrt(d3.z));
 }
+
+f3d closestPoint(f3d &p, f3d &a, f3d &b, bool segment) {
+    f3d ap = p - a;
+    f3d ab = b - a;
+    double ab2 = ab.x*ab.x + ab.y*ab.y;
+    double ap_ab = ap.x*ab.x + ap.y*ab.y;
+    double t = ap_ab / ab2;
+    if (segment) {
+         if (t < 0.0f) {
+        	 t = 0.0f;
+         } else if (t > 1.0f) {
+        	 t = 1.0f;
+         }
+    }
+    return a + ab * t;
+}

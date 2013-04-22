@@ -15,7 +15,7 @@ public:
     virtual bool isFinished() { return AIAction::isFinished() || pFishingArea == NULL; };
 
 private:
-    void fish();
+    void findSpot();
 
     WaterArea * pFishingArea;
     double m_fWait;

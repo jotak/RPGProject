@@ -44,6 +44,7 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
     			->addPoint(F3DBOARD(8, 1.6))
     			->addPoint(F3DBOARD(8, 2.7))
     			->addPoint(F3DBOARD(7.5, 2.9))
+    			->close()
     , 0.4f/*fishingProbability: % chances per minute*/, 75/*troutsPct*/, 25/*carpsPct*/));
 
 	string sError;
