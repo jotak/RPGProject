@@ -38,6 +38,7 @@ private:
     float computeObjectiveAttraction(Character * pOther);
     AIAction * startDiscussion(JoS_Element&, list<AI*>&);
     void joinDiscussion(Discussion*);
+    void cleanFinishedActions();
 
     JoS_Element * json;
     double fInteractTimer;

@@ -34,6 +34,17 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
     GeometryQuads * pGeometry = new GeometryQuads(&quad, VB_Static);
     pTerrain->addGeometry(pGeometry);
     pTerrain->setDimensions(0, 10, 0, 10);
+    pTerrain->addWaterArea(new WaterArea(
+    		Polygon::builder()
+    			->addPoint(F3DBOARD(7.1, 2.9))
+    			->addPoint(F3DBOARD(6.85, 2.5))
+    			->addPoint(F3DBOARD(6.85, 1.6))
+    			->addPoint(F3DBOARD(7.2, 1.3))
+    			->addPoint(F3DBOARD(7.9, 1.3))
+    			->addPoint(F3DBOARD(8, 1.6))
+    			->addPoint(F3DBOARD(8, 2.7))
+    			->addPoint(F3DBOARD(7.5, 2.9))
+    , 0.02f/*fishingProbability: % chances per second*/, 75/*troutsPct*/, 25/*carpsPct*/));
 
 	string sError;
 	JoSon * json = JoSon::fromString(string("{speed:3, traits:{friendly:2, funny:1}}"), &sError);

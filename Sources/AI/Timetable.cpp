@@ -29,9 +29,9 @@ Timetable::~Timetable()
 }
 
 // -----------------------------------------------------------------
-// Name : findCurrentTask
+// Name : updateCurrentTask
 // -----------------------------------------------------------------
-TimetableTask * Timetable::findCurrentTask()
+TimetableTask * Timetable::updateCurrentTask()
 {
 	// Get "now" in hours
 	double nowHour = TIME_IN_HOURS(_time->getTime());
@@ -56,14 +56,17 @@ TimetableTask * Timetable::findCurrentTask()
 			}
 			if (closestTask >= 0) {
 				currentTask = new TimetableTask(closestTask, closestStartAt, m_pAI, &(jsonTimeTable[closestTask][JSON_TASK_KEY]));
+				currentTask->start();
 				nextTask = findNextTask();
 			}
 		}
 	} else {
 		// We've already a "currentTask". Check that nextTask has not begun. nextTask must not be NULL.
 		if (nowHour >= nextTask->getTime()) {
+			currentTask->stop();
 			delete currentTask;
 			currentTask = nextTask;
+			currentTask->start();
 			nextTask = findNextTask();
 		}
 	}

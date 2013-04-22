@@ -62,7 +62,7 @@ void DiscussionAction::update(double delta)
 // -----------------------------------------------------------------
 bool DiscussionAction::isFinished()
 {
-	return m_pDiscussion == NULL;
+	return AIAction::isFinished() || m_pDiscussion == NULL;
 }
 
 // -----------------------------------------------------------------

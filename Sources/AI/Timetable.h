@@ -9,7 +9,7 @@ public:
 	Timetable(AI*, JoS_Element*);
     ~Timetable();
 
-    TimetableTask * findCurrentTask();
+    TimetableTask * updateCurrentTask();
 
 private:
     TimetableTask * findNextTask();

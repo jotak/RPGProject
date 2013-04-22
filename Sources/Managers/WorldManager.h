@@ -34,6 +34,7 @@ public:
     Character * getActiveCharacter() { return m_pActiveCharacter; };
     void setActiveCharacter(Character * c) { m_pActiveCharacter = c; };
     SpacePart * getSpacePartition() { return m_pSpacePartition; };
+    Terrain * getTerrain() { return &m_Terrain; };
 
 private:
     WorldManager();

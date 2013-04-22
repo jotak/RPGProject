@@ -56,11 +56,6 @@ AI::~AI()
 string AI::toString() const {
 	std::ostringstream oss;
 	oss << Character::toString();
-	if (pTimetable != NULL) {
-		oss << " | task: " << pTimetable->findCurrentTask()->getIndex();
-	} else {
-		oss << " | no timetable";
-	}
 	return oss.str();
 }
 
@@ -104,15 +99,11 @@ void AI::update(double delta)
 		}
 	}
 
+	cleanFinishedActions();
 	if (!pActionsStack.empty()) {
 		// Do what we want to do
 		AIAction * currentAction = pActionsStack.top();
 		currentAction->update(delta);
-		if (currentAction->isFinished()) {
-			// This task is done
-			delete currentAction;
-			pActionsStack.pop();
-		}
 	}
 
 	Character::update(delta);
@@ -136,20 +127,30 @@ bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
 }
 
 // -----------------------------------------------------------------
+// Name : cleanFinishedActions
+// -----------------------------------------------------------------
+void AI::cleanFinishedActions()
+{
+	while (!pActionsStack.empty()) {
+		AIAction * action = pActionsStack.top();
+		if (action->isFinished()) {
+			delete action;
+			pActionsStack.pop();
+		} else {
+			break;
+		}
+	}
+}
+
+// -----------------------------------------------------------------
 // Name : checkTimetable
 //	Check AI's time table to see if we need to start a new task
 // -----------------------------------------------------------------
 bool AI::checkTimetable()
 {
-	TimetableTask * pTask = pTimetable->findCurrentTask();
-	if (pTask != pCurrentTask) {
-		pCurrentTask = pTask;
-		if (pCurrentTask != NULL) {
-			pCurrentTask->start();
-		}
-		return true;
-	}
-	return false;
+	Task * pPreviousTask = pCurrentTask;
+	pCurrentTask = pTimetable->updateCurrentTask();
+	return (pPreviousTask != pCurrentTask);
 }
 
 // -----------------------------------------------------------------

@@ -14,6 +14,7 @@ public:
 	virtual ~Task();
 
 	void start();
+	void stop();
 	bool checkThen();
 
 private:

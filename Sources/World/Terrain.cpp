@@ -17,6 +17,7 @@ Terrain::Terrain()
 Terrain::~Terrain()
 {
 	FREEVEC(m_pGeometries);
+	FREEVEC(m_WaterAreas);
 }
 
 // -----------------------------------------------------------------

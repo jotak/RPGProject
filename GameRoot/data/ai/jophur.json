@@ -20,7 +20,7 @@ traits: {
 timetable: [{
 	at: [7.5, 8.5],
 	task: {
-		goTo: [6, 3.5],
+		goTo: [7, 2.5],
 		then: {
 			startActivity: {
 				name: fishing,

@@ -18,6 +18,7 @@ typedef long            s32;
 #include <tr1/unordered_map>
 #include <tr1/memory>
 #include <tr1/functional>
+#include <tuple>
 
 #define max(x,y) ((x)>=(y)?(x):(y))
 #define min(x,y) ((x)<=(y)?(x):(y))

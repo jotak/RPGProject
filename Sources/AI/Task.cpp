@@ -7,7 +7,7 @@
 #include "AI.h"
 #include "../Managers/DebugManager.h"
 #include "../Data/JSonUtil.h"
-#include "Actions/GoToAction.h"
+#include "Actions/FishingAction.h"
 
 #define INSTRUCTION_GOTO				"goTo"
 #define INSTRUCTION_START_ACTIVITY		"startActivity"
@@ -47,8 +47,23 @@ void Task::start()
 }
 
 // -----------------------------------------------------------------
+// Name : stop
+// -----------------------------------------------------------------
+void Task::stop()
+{
+	// If currentSubtask is not NULL, then we are currently executing a subtask
+	if (currentSubtask != NULL) {
+		currentSubtask->stop();
+	}
+
+	for (AIAction * action : doingActions) {
+		action->stop();
+	}
+}
+
+// -----------------------------------------------------------------
 // Name : checkThen
-//	Task may looks like:
+//	Task may look like:
 //task: {
 //	goTo: [6, 3.5],
 //	then: {
@@ -112,7 +127,14 @@ void Task::executeGoTo(JoS_Element& json)
 void Task::executeStartActivity(JoS_Element& json)
 {
 	if (json.isMap()) {
-		cout << m_pAI->getName() << " starts activity " << json["name"].toString() << endl;
+		string name = json["name"].toString();
+		cout << m_pAI->getName() << " starts activity " << name << endl;
+		if (name == "fishing") {
+			// TODO: manage ability
+			AIAction * action = new FishingAction(m_pAI);
+			doingActions.push_back(action);
+			m_pAI->doAction(action);
+		}
 	} else {
 		_debug->error("Invalid json, startActivity expects map.");
 	}

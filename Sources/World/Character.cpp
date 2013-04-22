@@ -15,9 +15,11 @@ jos_map Character::CommonDialogs;
 Character::Character(const JoS_Element &json)
 {
 	name = JSonUtil::getString(json["name"], "Dude");
-	setSpeed(JSonUtil::getDouble(json["speed"], 5.0f));
-	const JoS_Element& jsTraits = json["traits"];
+	speed = JSonUtil::getInt(json["speed"], 1);
+	life = JSonUtil::getInt(json["life"], 1);
+	hitPoints = life;
 
+	const JoS_Element& jsTraits = json["traits"];
 	int nbTraits = (*TraitsRelations)["_list_"].size();
 	for (int i = 0; i < nbTraits; i++) {
 		string trait = (*TraitsRelations)["_list_"][i].toString();
@@ -33,6 +35,7 @@ Character::Character(const JoS_Element &json)
 // -----------------------------------------------------------------
 Character::~Character()
 {
+	FREEVEC(inventory);
 }
 
 // -----------------------------------------------------------------
@@ -57,7 +60,7 @@ void Character::update(double delta)
 {
 	MovingObject::update(delta);
 	if (bHasMoveTarget && bCanMove) {
-		doMove(delta * get3DSpeed());
+		doMove(delta * SPEED_CONVERT(speed));
 	}
 }
 
@@ -77,15 +80,6 @@ void Character::doMove(double step)
     } else {
     	setPosition(pos + globalMove.getUnitVector(distanceToGoal) * step);
     }
-}
-
-// -----------------------------------------------------------------
-// Name : get3DSpeed
-//	"speed" stands for the speed characteristic; it must be relativised to board metrics
-// -----------------------------------------------------------------
-double Character::get3DSpeed()
-{
-	return 2.0f + speed / 2.0f;
 }
 
 // -----------------------------------------------------------------
@@ -113,6 +107,24 @@ void Character::goToGround(double x, double y)
 void Character::say(string sentence)
 {
 	cout << name << ": " << sentence << endl;
+}
+
+// -----------------------------------------------------------------
+// Name : restoreLife
+// -----------------------------------------------------------------
+void Character::restoreLife(int points)
+{
+	life = max(hitPoints, life + points);
+	say("Ahhh, feel better!");
+}
+
+// -----------------------------------------------------------------
+// Name : addToInventory
+// -----------------------------------------------------------------
+void Character::addToInventory(InventoryObject * obj)
+{
+	inventory.push_back(obj);
+	say("I've found a " + obj->getName());
 }
 
 // -----------------------------------------------------------------
