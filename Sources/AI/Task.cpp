@@ -109,7 +109,7 @@ bool Task::checkThen()
 // -----------------------------------------------------------------
 // Name : executeGoTo
 // -----------------------------------------------------------------
-void Task::executeGoTo(JoS_Element& json)
+void Task::executeGoTo(const JoS_Element& json)
 {
 	if (json.isList()) {
 		double x = JSonUtil::getDouble(json[0]);
@@ -124,14 +124,13 @@ void Task::executeGoTo(JoS_Element& json)
 // -----------------------------------------------------------------
 // Name : executeStartActivity
 // -----------------------------------------------------------------
-void Task::executeStartActivity(JoS_Element& json)
+void Task::executeStartActivity(const JoS_Element& json)
 {
 	if (json.isMap()) {
 		string name = json["name"].toString();
 		cout << m_pAI->getName() << " starts activity " << name << endl;
 		if (name == "fishing") {
-			// TODO: manage ability
-			AIAction * action = new FishingAction(m_pAI);
+			AIAction * action = new FishingAction(m_pAI, json);
 			doingActions.push_back(action);
 			m_pAI->doAction(action);
 		}

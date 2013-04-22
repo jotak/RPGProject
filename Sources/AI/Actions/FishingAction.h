@@ -3,14 +3,15 @@
 
 #include "AIAction.h"
 #include "../../World/WaterArea.h"
+#include "../../Data/JSonUtil.h"
 
 class FishingAction : public AIAction
 {
 public:
-	FishingAction(AI * ai);
+	FishingAction(AI*, const JoS_Element&);
     virtual ~FishingAction();
 
-    virtual void update(double delta);
+    virtual void update(double);
     virtual bool isFinished() { return AIAction::isFinished() || pFishingArea == NULL; };
 
 private:
@@ -18,6 +19,7 @@ private:
 
     WaterArea * pFishingArea;
     double m_fWait;
+    double abilityModifier;
 };
 
 #endif

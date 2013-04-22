@@ -44,7 +44,7 @@ void WorldBuilderTest::build(Terrain * pTerrain, list<GameObject*> * pGameObject
     			->addPoint(F3DBOARD(8, 1.6))
     			->addPoint(F3DBOARD(8, 2.7))
     			->addPoint(F3DBOARD(7.5, 2.9))
-    , 0.02f/*fishingProbability: % chances per second*/, 75/*troutsPct*/, 25/*carpsPct*/));
+    , 0.4f/*fishingProbability: % chances per minute*/, 75/*troutsPct*/, 25/*carpsPct*/));
 
 	string sError;
 	JoSon * json = JoSon::fromString(string("{speed:3, traits:{friendly:2, funny:1}}"), &sError);

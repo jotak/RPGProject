@@ -8,12 +8,14 @@
 #include "../../World/FinalObjects/Trout.h"
 #include "../../World/FinalObjects/Carp.h"
 
-#define MAX_WAIT_TIME		300 // 5 min
+#define MAX_WAIT_TIME			300 // 5 min
+#define FISHING_MIN_ABILITY		1
+#define FISHING_MAX_ABILITY		4
 
 // -----------------------------------------------------------------
 // Name : FishingAction
 // -----------------------------------------------------------------
-FishingAction::FishingAction(AI * ai) : AIAction(ai)
+FishingAction::FishingAction(AI * ai, const JoS_Element& json) : AIAction(ai)
 {
 	// Find nearest water point
 	const list<WaterArea*>& areas = _world->getTerrain()->getWaterAreas();
@@ -27,6 +29,8 @@ FishingAction::FishingAction(AI * ai) : AIAction(ai)
 			// TODO: store nearest point too
 		}
 	}
+	int ability = JSonUtil::getCappedInt(json["ability"], FISHING_MIN_ABILITY, FISHING_MAX_ABILITY, FISHING_MIN_ABILITY);
+	abilityModifier = (double) ability / 2.0f; // from 0.5 to 2
 	m_fWait = 0;
 }
 
@@ -47,7 +51,8 @@ void FishingAction::update(double delta)
 		fish();
 	} else if (pFishingArea != NULL) {
 		// Does it bit?
-		if (FRAND100(100) < delta * pFishingArea->getFishingProbability()) {
+		double treshold = delta * 60.0f * abilityModifier * pFishingArea->getFishingProbability();
+		if (100.0f * rand() / RAND_MAX < treshold) {
 			// Yes!
 			FoodObject * pFish = NULL;
 			int rnd = (int) FRAND100(100);

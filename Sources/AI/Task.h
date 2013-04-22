@@ -18,8 +18,8 @@ public:
 	bool checkThen();
 
 private:
-	void executeGoTo(JoS_Element&);
-	void executeStartActivity(JoS_Element&);
+	void executeGoTo(const JoS_Element&);
+	void executeStartActivity(const JoS_Element&);
 
     JoS_Element * taskDataPtr;
     AI * m_pAI;
