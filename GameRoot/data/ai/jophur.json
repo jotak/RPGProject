@@ -35,13 +35,11 @@ timetable: [{
 		then: {
 			startActivity: {
 				name: eat
+			},
+			then: {
+				setStatus: idle
 			}
 		}
-	}
-},{
-	at: [12.5, 13],
-	task: {
-		setStatus: idle
 	}
 },{
 	at: 14,
@@ -54,7 +52,7 @@ timetable: [{
 				merchandise: [{
 					type: food,
 					name: fish,
-					price: 5
+					price: cheap
 				}],
 			}
 		}
@@ -88,13 +86,13 @@ timetable: [{
 }],
 dialogs: [{
 	text: "ILS SONT FRAIS MES POISSONS, ILS SONT FRAIS!!",
-	condState: [working]
+	condState: [sell]
 },{
 	text: "ILS SONT BEAUX MES POISSONS, ILS SONT BEAUX!!",
-	condState: [working]
+	condState: [sell]
 },{
 	text: "Regardez ce rouget %mabonnedame%, du premier choix",
-	condState: [working]
+	condState: [sell]
 },{
 	text: "Alors %name%, tu tires ou tu pointes?"
 },{
