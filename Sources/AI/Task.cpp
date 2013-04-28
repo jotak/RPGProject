@@ -8,10 +8,14 @@
 #include "../Managers/DebugManager.h"
 #include "../Data/JSonUtil.h"
 #include "Actions/FishingAction.h"
+#include "Actions/EatingAction.h"
 
 #define INSTRUCTION_GOTO				"goTo"
 #define INSTRUCTION_START_ACTIVITY		"startActivity"
 #define INSTRUCTION_THEN				"then"
+
+#define ACTIVITY_FISHING				"fishing"
+#define ACTIVITY_EAT					"eat"
 
 // -----------------------------------------------------------------
 // Name : Task
@@ -129,8 +133,13 @@ void Task::executeStartActivity(const JoS_Element& json)
 	if (json.isMap()) {
 		string name = json["name"].toString();
 		cout << m_pAI->getName() << " starts activity " << name << endl;
-		if (name == "fishing") {
+		if (name == ACTIVITY_FISHING) {
 			AIAction * action = new FishingAction(m_pAI, json);
+			doingActions.push_back(action);
+			m_pAI->doAction(action);
+		}
+		else if (name == ACTIVITY_EAT) {
+			AIAction * action = new EatingAction(m_pAI);
 			doingActions.push_back(action);
 			m_pAI->doAction(action);
 		}
