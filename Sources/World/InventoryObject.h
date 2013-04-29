@@ -10,6 +10,8 @@ public:
 		{ this->price = price; this->weight = weight; this->name = name; };
     virtual ~InventoryObject() {};
 
+    virtual bool isFood() { return false; };
+
     int getWeight() { return weight; };
     void setWeight(int weight) { this->weight = weight; };
     int getPrice() { return price; };

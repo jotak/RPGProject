@@ -21,6 +21,19 @@
 class DateTime
 {
 public:
+	DateTime() {
+		year = month = day = hour = minute = second = 0;
+	}
+
+	DateTime(int year, int month, int day, int hour, int minute, int second) {
+		this->year = year;
+		this->month = month;
+		this->day = day;
+		this->hour = hour;
+		this->minute = minute;
+		this->second = second;
+	}
+
     friend ostream& operator<< (ostream& stream, const DateTime& dt) {
     	stream << dt.year << "-" << dt.month+1 << "-" << dt.day+1 << " " << dt.hour << ":" << dt.minute << ":" << dt.second;
     	return stream;
@@ -50,6 +63,10 @@ public:
 		}
     }
 
+    DateTime minus(DateTime& other) {
+    	return DateTime::fromSecondsBased(getSecondsBased() - other.getSecondsBased());
+    }
+
     double getHoursBased(bool maskSeconds, bool maskMinutes, bool maskHours, bool maskDays, bool maskMonths, bool maskYears) {
     	double seconds = maskSeconds ? 0 : ((double)second / (double)SECONDS_PER_MINUTE) / (double)MINUTES_PER_HOUR;
     	double minutes = maskMinutes ? 0 : (double)minute / (double)MINUTES_PER_HOUR;
@@ -58,6 +75,43 @@ public:
     	double months = maskMonths ? 0 : (double) (month * DAYS_PER_MONTH * HOURS_PER_DAY);
     	double years = maskYears ? 0 : (double) (year * MONTHS_PER_YEAR * DAYS_PER_MONTH * HOURS_PER_DAY);
     	return seconds + minutes + hours + days + months + years;
+    }
+
+    long getSecondsBased(bool maskSeconds = false, bool maskMinutes = false, bool maskHours = false, bool maskDays = false, bool maskMonths = false, bool maskYears = false) const {
+    	long seconds = maskSeconds ? 0 : second;
+    	long mult = SECONDS_PER_MINUTE;
+    	seconds += maskMinutes ? 0 : minute * mult;
+    	mult *= MINUTES_PER_HOUR;
+    	seconds += maskHours ? 0 : hour * mult;
+    	mult *= HOURS_PER_DAY;
+    	seconds += maskDays ? 0 : day * mult;
+    	mult *= DAYS_PER_MONTH;
+    	seconds += maskMonths ? 0 : month * mult;
+    	mult *= MONTHS_PER_YEAR;
+    	seconds += maskYears ? 0 : year * mult;
+    	return seconds;
+    }
+
+    static DateTime fromSecondsBased(long seconds) {
+    	DateTime dateTime;
+    	long diviser = MONTHS_PER_YEAR * DAYS_PER_MONTH * HOURS_PER_DAY * MINUTES_PER_HOUR * SECONDS_PER_MINUTE;
+    	dateTime.year = seconds / diviser;
+    	seconds = seconds % diviser;
+    	diviser /= MONTHS_PER_YEAR;
+    	dateTime.month = seconds / diviser;
+    	seconds = seconds % diviser;
+    	diviser /= DAYS_PER_MONTH;
+    	dateTime.day = seconds / diviser;
+    	seconds = seconds % diviser;
+    	diviser /= HOURS_PER_DAY;
+    	dateTime.hour = seconds / diviser;
+    	seconds = seconds % diviser;
+    	diviser /= MINUTES_PER_HOUR;
+    	dateTime.minute = seconds / diviser;
+    	seconds = seconds % diviser;
+    	diviser /= SECONDS_PER_MINUTE;
+    	dateTime.second = seconds;
+    	return dateTime;
     }
 
 	int year;
@@ -81,6 +135,10 @@ public:
     	return dateTime;
     }
 
+    DateTime getTimeCopy() {
+    	return dateTime;
+    }
+
     void add(double delta) {
     	timeBuffer += delta * TIME_COMPRESSION;
     	if (timeBuffer >= 1) {
@@ -93,12 +151,7 @@ public:
 private:
 	WorldTime() {
 		timeBuffer = 0;
-		dateTime.year = 0;
-		dateTime.month = 0;
-		dateTime.day = 0;
 		dateTime.hour = 6;
-		dateTime.minute = 0;
-		dateTime.second = 0;
 	};
     static WorldTime * m_pInstance;
 

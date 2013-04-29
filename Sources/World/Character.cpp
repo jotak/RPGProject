@@ -5,9 +5,13 @@
 #include "../Physics/MovesHelper.h"
 #include "../Managers/DebugManager.h"
 #include "../Data/JSonUtil.h"
+#include "../World/WorldTime.h"
 
 JoSon * Character::TraitsRelations = NULL;
 jos_map Character::CommonDialogs;
+
+#define HUNGRY_LOSE_ENERGY_EVERY_X_HOURS		3
+#define DELTA_HUNGRY_CHECK						5.0f
 
 // -----------------------------------------------------------------
 // Name : Character
@@ -16,8 +20,8 @@ Character::Character(const JoS_Element &json)
 {
 	name = JSonUtil::getString(json["name"], "Dude");
 	speed = JSonUtil::getInt(json["speed"], 1);
-	life = JSonUtil::getInt(json["life"], 1);
-	hitPoints = life;
+	maxLife = life = JSonUtil::getInt(json["life"], 1);
+	maxEnergy = energy = JSonUtil::getInt(json["energy"], 1);
 
 	const JoS_Element& jsTraits = json["traits"];
 	int nbTraits = (*TraitsRelations)["_list_"].size();
@@ -28,6 +32,8 @@ Character::Character(const JoS_Element &json)
 
     bCanMove = true;
     bHasMoveTarget = false;
+    resetHungryState();
+    hungryRealTimer = 0;
 }
 
 // -----------------------------------------------------------------
@@ -61,6 +67,12 @@ void Character::update(double delta)
 	MovingObject::update(delta);
 	if (bHasMoveTarget && bCanMove) {
 		doMove(delta * SPEED_CONVERT(speed));
+	}
+	if (hungryRealTimer <= 0) {
+		checkHungry();
+		hungryRealTimer = DELTA_HUNGRY_CHECK;
+	} else {
+		hungryRealTimer -= delta;
 	}
 }
 
@@ -111,11 +123,61 @@ void Character::say(string sentence)
 
 // -----------------------------------------------------------------
 // Name : restoreLife
+// 	Returns unused points
 // -----------------------------------------------------------------
-void Character::restoreLife(int points)
+int Character::restoreLife(int points)
 {
-	life = max(hitPoints, life + points);
-	say("Ahhh, feel better!");
+	int usedPoints = min(points, maxLife - life);
+	if (usedPoints > 0) {
+		life += usedPoints;
+		cout << name << "'s life is now " << life << endl;
+	}
+	return points - usedPoints;
+}
+
+// -----------------------------------------------------------------
+// Name : restoreEnergy
+// 	Returns unused points
+// -----------------------------------------------------------------
+int Character::restoreEnergy(int points)
+{
+	int usedPoints = min(points, maxEnergy - energy);
+	if (usedPoints > 0) {
+		energy += usedPoints;
+		cout << name << "'s energy is now " << energy << endl;
+	}
+	return points - usedPoints;
+}
+
+// -----------------------------------------------------------------
+// Name : restoreLifeOrEnergy
+// 	Returns unused points
+// -----------------------------------------------------------------
+int Character::restoreLifeOrEnergy(int points)
+{
+	int unused = restoreLife(points);
+	if (unused > 0) {
+		unused = restoreEnergy(unused);
+	}
+	return unused;
+}
+
+// -----------------------------------------------------------------
+// Name : loseEnergy
+// 	Returns unused points
+// -----------------------------------------------------------------
+int Character::loseEnergy(int points)
+{
+	int unused = 0;
+	if (energy > points) {
+		energy -= points;
+		cout << name << "'s energy is now " << energy << endl;
+	} else if (energy > 0) {
+		unused = points - energy;
+		energy = 0;
+		cout << name << "'s energy is now 0" << endl;
+	}
+	return unused;
 }
 
 // -----------------------------------------------------------------
@@ -125,6 +187,44 @@ void Character::addToInventory(InventoryObject * obj)
 {
 	inventory.push_back(obj);
 	say("I've found a " + obj->getName());
+}
+
+// -----------------------------------------------------------------
+// Name : isHungry
+//	Character is hungry when he lost more than 50% of its energy
+// -----------------------------------------------------------------
+bool Character::isHungry()
+{
+	return (energy * 2 <= maxEnergy);
+}
+
+// -----------------------------------------------------------------
+// Name : isTired
+//	Character is hungry when he lost more than 50% of its energy
+//	(this is the same as "isHungry" for now... we'll have to see if it's ok with the gameplay...)
+// -----------------------------------------------------------------
+bool Character::isTired()
+{
+	return (energy * 2 <= maxEnergy);
+}
+
+// -----------------------------------------------------------------
+// Name : checkHungry
+// -----------------------------------------------------------------
+void Character::checkHungry()
+{
+	// Get "now - hungryTimer"
+	long nowSeconds = _time->getTime().getSecondsBased();
+
+	if (hungryWorldTimer < 0) {
+		hungryWorldTimer = nowSeconds;
+	} else {
+		if (nowSeconds - hungryWorldTimer > SECONDS_PER_MINUTE * MINUTES_PER_HOUR * HUNGRY_LOSE_ENERGY_EVERY_X_HOURS) {
+			// More than X hours
+			loseEnergy(1);
+			hungryWorldTimer = nowSeconds;
+		}
+	}
 }
 
 // -----------------------------------------------------------------

@@ -29,10 +29,15 @@ public:
     void setSpeed(double speed) { this->speed = speed; };
     double getLife() { return life; };
     void setLife(double life) { this->life = life; };
-    double getHitPoints() { return hitPoints; };
-    void setHitPoints(double hitPoints) { this->hitPoints = hitPoints; };
+    double getMaxLife() { return maxLife; };
+    void setMaxLife(double maxlife) { this->maxLife = maxLife; };
+    double getEnergy() { return energy; };
+    void setEnergy(double energy) { this->energy = energy; };
+    double getMaxEnergy() { return maxEnergy; };
+    void setMaxEnergy(double maxEnergy) { this->maxEnergy = maxEnergy; };
     bool canMove() { return bCanMove; };
     void setCanMove(bool bCanMove) { this->bCanMove = bCanMove; };
+    list<InventoryObject*>& getInventory() { return inventory; };
 
     // Gameplay methods
     void say(string);
@@ -40,8 +45,15 @@ public:
     void goToGround(double, double);
     virtual bool isMoving() { return MovingObject::isMoving() || bHasMoveTarget; };
     bool hasMoveTarget() { return bHasMoveTarget; };
-    void restoreLife(int);
+    int getLifePlusEnergy() { return life + energy; };
+    int restoreLife(int);
+    int restoreEnergy(int);
+    int restoreLifeOrEnergy(int);
+    int loseEnergy(int);
     void addToInventory(InventoryObject*);
+    bool isHungry();
+    bool isTired();
+    void resetHungryState() { hungryWorldTimer = -1; };
 
     // Static stuff
     static void initData();
@@ -55,16 +67,31 @@ protected:
 
 private:
     void doMove(double);
+    void checkHungry();
 
     string name;
     int speed;	// arbitrary scale; convert it to display/physic engine using macro "SPEED_CONVERT"
-    int hitPoints;
+
+    /*
+     * About life and energy:
+     * Total hit points = life + energy.
+     * When tired or starving, character loses energy ; not life
+     * When hitten, character loses first energy, then life. Energy is like a shield.
+     * When eating or sleeping, character regains energy ; not life
+     * To gain life, the character must be healed (potion, medicine, etc.)
+     */
     int life;
+    int maxLife;
+    int energy;
+    int maxEnergy;
+
     long_hash mapTraits;
     bool bCanMove;
     bool bHasMoveTarget;
     f3d moveTarget;
     list<InventoryObject*> inventory;
+    long hungryWorldTimer;
+    double hungryRealTimer;	// just not to check hungryness at each frame
 };
 
 #endif

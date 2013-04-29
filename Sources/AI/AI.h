@@ -23,7 +23,6 @@ public:
     virtual void update(double delta);
     virtual bool isAI() { return true; };
     bool isBusy();
-    bool isHungry();
     JoS_Element& pickDialog(JoS_Element&);
     void doAction(AIAction*);
 

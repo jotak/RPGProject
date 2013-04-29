@@ -2,7 +2,6 @@
 #define _FOOD_OBJECT_H
 
 #include "InventoryObject.h"
-#include "Character.h"
 
 class FoodObject : public InventoryObject
 {
@@ -11,7 +10,7 @@ public:
 		{ setRestore(restore); };
     virtual ~FoodObject() {};
 
-    virtual void eat(Character * pCharacter) { pCharacter->restoreLife(restore); };
+    virtual bool isFood() { return true; };
 
     int getRestore() { return restore; };
     void setRestore(int restore) { this->restore = restore; };

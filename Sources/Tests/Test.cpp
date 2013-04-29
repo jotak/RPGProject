@@ -1,6 +1,7 @@
 #include "Test.h"
 #include "../Utils/utils.h"
 #include "../Data/JoSon/JoSon.h"
+#include "../World/WorldTime.h"
 
 bool almostEquals(double d1, double d2) {
 	double diff = abs(d1-d2);
@@ -163,8 +164,25 @@ void detectSimilarTraits()
     delete pTraitsRelations;
 }
 
+void testWorldTime()
+{
+	cout << "Starting testWorldTime..." << endl;
+
+	DateTime now = _time->getTime();
+	DateTime zero = now.minus(now);
+	assert(zero.year == 0 && zero.month == 0 && zero.day == 0 && zero.hour == 0 && zero.minute == 0 && zero.second == 0);
+
+	DateTime nowCopy = _time->getTimeCopy();
+	nowCopy.add(3601);
+	DateTime diff = nowCopy.minus(now);
+	assert(diff.year == 0 && diff.month == 0 && diff.day == 0 && diff.hour == 1 && diff.minute == 0 && diff.second == 1);
+
+	cout << "testWorldTime OK" << endl;
+}
+
 void runAllTests() {
 	testF3d();
 	testJoSon();
+	testWorldTime();
 	detectSimilarTraits();
 }

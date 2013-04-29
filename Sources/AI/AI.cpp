@@ -214,6 +214,10 @@ JoS_Element& AI::pickDialog(JoS_Element& listItems)
 				bMatchConditions &= isHungry();
 				continue;
 			}
+			if (condition == DIALOG_CONDITION_TIRED) {
+				bMatchConditions &= isTired();
+				continue;
+			}
 		}
 		if (bMatchConditions) {
 			// This item is acceptable
@@ -336,12 +340,4 @@ float AI::computeObjectiveAttraction(Character * pOther)
 bool AI::isBusy()
 {
 	return !pActionsStack.empty();
-}
-
-// -----------------------------------------------------------------
-// Name : isHungry
-// -----------------------------------------------------------------
-bool AI::isHungry()
-{
-	return true;
 }

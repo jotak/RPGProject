@@ -2,6 +2,7 @@
 #define _EATING_ACTION_H
 
 #include "AIAction.h"
+#include "../../World/FoodObject.h"
 
 class EatingAction : public AIAction
 {
@@ -10,9 +11,10 @@ public:
     virtual ~EatingAction();
 
     virtual void update(double);
-    virtual bool isFinished() { return AIAction::isFinished(); };
 
 private:
+    void eat(int);
+
     double m_fTimer;
 };
 

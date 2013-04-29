@@ -494,7 +494,7 @@ bool guiEditBox::onSpecialKeyDown(int key)
             if (_input->isCtrlPressed()) {
                 m_iCaretPos = getEndOfWord(m_iCaretPos);
             } else {
-                m_iCaretPos = min(m_iCaretPos+1, m_sText.length());
+                m_iCaretPos = min((unsigned)(m_iCaretPos+1), m_sText.length());
             }
             break;
         }
