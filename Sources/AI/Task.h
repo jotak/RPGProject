@@ -16,10 +16,12 @@ public:
 	void start();
 	void stop();
 	bool checkThen();
+	void onActionFinished(AIAction*);
 
 private:
 	void executeGoTo(const JoS_Element&);
 	void executeStartActivity(const JoS_Element&);
+	void addAction(AIAction*);
 
     JoS_Element * taskDataPtr;
     AI * m_pAI;

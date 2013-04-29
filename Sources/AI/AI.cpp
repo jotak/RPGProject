@@ -44,7 +44,7 @@ AI::AI(JoS_Element * json) : Character(*json)
 // -----------------------------------------------------------------
 AI::~AI()
 {
-	FREESTACK(pActionsStack);
+	FREEVEC(pActionsList);
 	FREE(json);
 	FREE(dialogs);
 	FREE(pTimetable);
@@ -94,15 +94,15 @@ void AI::update(double delta)
 			AIAction * newAction = evaluateActionToDo();
 			if (newAction != NULL) {
 				// There's something we want to do
-				pActionsStack.push(newAction);
+				pActionsList.push_front(newAction);
 			}
 		}
 	}
 
 	cleanFinishedActions();
-	if (!pActionsStack.empty()) {
+	if (!pActionsList.empty()) {
 		// Do what we want to do
-		AIAction * currentAction = pActionsStack.top();
+		AIAction * currentAction = pActionsList.front();
 		currentAction->update(delta);
 	}
 
@@ -131,13 +131,14 @@ bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
 // -----------------------------------------------------------------
 void AI::cleanFinishedActions()
 {
-	while (!pActionsStack.empty()) {
-		AIAction * action = pActionsStack.top();
+	for (list<AIAction*>::iterator it = pActionsList.begin(); it != pActionsList.end(); ++it) {
+		AIAction * action = *it;
 		if (action->isFinished()) {
+			if (pCurrentTask != NULL) {
+				pCurrentTask->onActionFinished(action);
+			}
 			delete action;
-			pActionsStack.pop();
-		} else {
-			break;
+			it = pActionsList.erase(it);
 		}
 	}
 }
@@ -158,7 +159,7 @@ bool AI::checkTimetable()
 // -----------------------------------------------------------------
 void AI::doAction(AIAction * pAction)
 {
-	pActionsStack.push(pAction);
+	pActionsList.push_front(pAction);
 }
 
 // -----------------------------------------------------------------
@@ -167,8 +168,8 @@ void AI::doAction(AIAction * pAction)
 AIAction * AI::evaluateActionToDo()
 {
 	AIAction * currentAction = NULL;
-	if (!pActionsStack.empty()) {
-		currentAction = pActionsStack.top();
+	if (!pActionsList.empty()) {
+		currentAction = pActionsList.front();
 	}
 
 	// Nothing to do? 1/10 chances to start banality discussion with people arround
@@ -254,7 +255,7 @@ void AI::joinDiscussion(Discussion * pDiscussion)
 	// TODO: evaluate if current action is actually more important than talking
 	DiscussionAction * discussionAction = new DiscussionAction(this, pDiscussion);
 	pDiscussion->join(discussionAction);
-	pActionsStack.push(discussionAction);
+	pActionsList.push_front(discussionAction);
 }
 
 // -----------------------------------------------------------------
@@ -339,5 +340,5 @@ float AI::computeObjectiveAttraction(Character * pOther)
 // -----------------------------------------------------------------
 bool AI::isBusy()
 {
-	return !pActionsStack.empty();
+	return !pActionsList.empty();
 }

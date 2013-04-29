@@ -93,3 +93,11 @@ JoS_Element& DiscussionAction::respond()
 	m_fSentenceTimer = text.length() / TALKING_SPEED;
 	return *m_pResponse;
 }
+
+// -----------------------------------------------------------------
+// Name : leaveDiscussion
+// -----------------------------------------------------------------
+void DiscussionAction::leaveDiscussion()
+{
+	m_pDiscussion = NULL;
+}

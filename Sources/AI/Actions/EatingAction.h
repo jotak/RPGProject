@@ -13,7 +13,8 @@ public:
     virtual void update(double);
 
 private:
-    void eat(int);
+    FoodObject * findFood(int);
+    void eat(FoodObject*);
 
     double m_fTimer;
 };

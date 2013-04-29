@@ -94,12 +94,6 @@ bool Task::checkThen()
 			if (isGoingTo && m_pAI->isCloseTo(goingTo)) {
 				isGoingTo = false;
 			}
-			for (list<AIAction*>::iterator it = doingActions.begin(); it != doingActions.end(); ++it) {
-				AIAction * action = *it;
-				if (action->isFinished()) {
-					it = doingActions.erase(it);
-				}
-			}
 			if (doingActions.empty() && !isGoingTo) {
 				currentSubtask = new Task(m_pAI, &(taskData[INSTRUCTION_THEN]));
 				currentSubtask->start();
@@ -126,6 +120,28 @@ void Task::executeGoTo(const JoS_Element& json)
 }
 
 // -----------------------------------------------------------------
+// Name : onActionFinished
+// -----------------------------------------------------------------
+void Task::onActionFinished(AIAction * action)
+{
+	// We're not sure if the action was initiated by this task or not... anyway, remove it if we find it
+	// If currentSubtask is not NULL, then we are currently executing a subtask
+	if (currentSubtask != NULL) {
+		currentSubtask->onActionFinished(action);
+	}
+	doingActions.remove(action);
+}
+
+// -----------------------------------------------------------------
+// Name : addAction
+// -----------------------------------------------------------------
+void Task::addAction(AIAction * action)
+{
+	doingActions.push_back(action);
+	m_pAI->doAction(action);
+}
+
+// -----------------------------------------------------------------
 // Name : executeStartActivity
 // -----------------------------------------------------------------
 void Task::executeStartActivity(const JoS_Element& json)
@@ -134,14 +150,10 @@ void Task::executeStartActivity(const JoS_Element& json)
 		string name = json["name"].toString();
 		cout << m_pAI->getName() << " starts activity " << name << endl;
 		if (name == ACTIVITY_FISHING) {
-			AIAction * action = new FishingAction(m_pAI, json);
-			doingActions.push_back(action);
-			m_pAI->doAction(action);
+			addAction(new FishingAction(m_pAI, json));
 		}
 		else if (name == ACTIVITY_EAT) {
-			AIAction * action = new EatingAction(m_pAI);
-			doingActions.push_back(action);
-			m_pAI->doAction(action);
+			addAction(new EatingAction(m_pAI));
 		}
 	} else {
 		_debug->error("Invalid json, startActivity expects map.");

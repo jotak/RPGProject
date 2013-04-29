@@ -41,7 +41,7 @@ private:
 
     JoS_Element * json;
     double fInteractTimer;
-    stack<AIAction*> pActionsStack;
+    list<AIAction*> pActionsList;
     JoS_Union * dialogs;
     Timetable * pTimetable;
     Task * pCurrentTask;

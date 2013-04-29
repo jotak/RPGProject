@@ -18,7 +18,7 @@ public:
     bool canRespond() { return m_pResponse != NULL; };
     JoS_Element& respond();
     bool isTalking();
-    void leaveDiscussion() { m_pDiscussion = NULL; };
+    void leaveDiscussion();
 
 private:
     Discussion * m_pDiscussion;
