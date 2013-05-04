@@ -15,6 +15,7 @@ AI::AI(JoS_Element * json) : Character(*json)
 	this->json = json;
 	fInteractTimer = 0;
 	pCurrentTask = NULL;
+	pSellingAction = NULL;
 
 	// Dialogs
 	dialogs = new JoS_Union((*json)["dialogs"]);

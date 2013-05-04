@@ -1,6 +1,8 @@
 {
 name: Dude2,
 speed:[1,6],
+life: [2,6],
+energy: [2,6],
 traits:{
 	aggressive:5,
 	brave:3,

@@ -12,6 +12,7 @@
 typedef tr1::function<bool (AI*, PartitionableItem*)> FilterPredicate;
 
 class Discussion;
+class SellingAction;
 
 class AI : public Character
 {
@@ -25,6 +26,10 @@ public:
     bool isBusy();
     JoS_Element& pickDialog(JoS_Element&);
     void doAction(AIAction*);
+    bool isSelling() { return pSellingAction != NULL; };
+    SellingAction * getSellingAction() { return pSellingAction; };
+    void setSellingAction(SellingAction * pSellingAction) { this->pSellingAction = pSellingAction; };
+    void unsetSellingAction(SellingAction * pSellingAction) { if (this->pSellingAction == pSellingAction) { this->pSellingAction = NULL; }};
 
 private:
 	AI(JoS_Element * json);
@@ -45,6 +50,7 @@ private:
     JoS_Union * dialogs;
     Timetable * pTimetable;
     Task * pCurrentTask;
+    SellingAction * pSellingAction;
 };
 
 #endif

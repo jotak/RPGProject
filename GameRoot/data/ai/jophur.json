@@ -3,6 +3,8 @@ name: "Jophur",
 gender: male,
 age: 42,
 job: fisherman,
+life: 5,
+energy: 4,
 speed: 3,
 traits: {
 	funny:3,
@@ -49,10 +51,9 @@ timetable: [{
 			startActivity: {
 				name: sell,
 				ability: 4,
-				merchandise: [{
+				goods: [{
 					type: food,
-					name: fish,
-					price: cheap
+					cost: cheap
 				}],
 			}
 		}

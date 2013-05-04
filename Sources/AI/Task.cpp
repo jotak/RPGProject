@@ -9,6 +9,7 @@
 #include "../Data/JSonUtil.h"
 #include "Actions/FishingAction.h"
 #include "Actions/EatingAction.h"
+#include "Actions/SellingAction.h"
 
 #define INSTRUCTION_GOTO				"goTo"
 #define INSTRUCTION_START_ACTIVITY		"startActivity"
@@ -16,6 +17,7 @@
 
 #define ACTIVITY_FISHING				"fishing"
 #define ACTIVITY_EAT					"eat"
+#define ACTIVITY_SELL					"sell"
 
 // -----------------------------------------------------------------
 // Name : Task
@@ -154,6 +156,9 @@ void Task::executeStartActivity(const JoS_Element& json)
 		}
 		else if (name == ACTIVITY_EAT) {
 			addAction(new EatingAction(m_pAI));
+		}
+		else if (name == ACTIVITY_SELL) {
+			addAction(new SellingAction(m_pAI, json));
 		}
 	} else {
 		_debug->error("Invalid json, startActivity expects map.");
