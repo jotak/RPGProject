@@ -6,7 +6,9 @@
 #include "../Data/JoSon/JoSon.h"
 #include "InventoryObject.h"
 
-#define TRAIT_MAX_VALUE		5
+#define TRAIT_MAX_VALUE			5
+
+#define INVENTORY_TYPE_FOOD		"food"
 
 //	"speed" stands for the speed characteristic; it must be relativised to board metrics
 #define SPEED_CONVERT(s)	(2.0f + (double)s / 2.0f)
@@ -52,6 +54,7 @@ public:
     int loseEnergy(int);
     void addToInventory(InventoryObject*);
     bool isHungry();
+    bool isStarving();
     bool isTired();
     void resetHungryState() { hungryWorldTimer = -1; };
 

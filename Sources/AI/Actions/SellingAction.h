@@ -28,6 +28,7 @@ public:
     virtual ~SellingAction();
 
     virtual void update(double);
+    list<MerchandiseType>& getMerchandiseTypes() { return lstMerchandiseTypes; };
 
 private:
     double abilityModifier;

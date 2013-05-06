@@ -22,13 +22,14 @@ public:
     virtual string toString() const;
     virtual void update(double delta);
     virtual bool isAI() { return true; };
-    bool isBusy();
 
-    void getSurroundingAIs(list<AI*>*);
+    bool isIdle();
+    void getSurroundingAIs(vector<AI*>*);
     JoS_Element& pickDialog();
     JoS_Element& pickDialog(JoS_Element&);
     void doAction(AIAction*);
     bool isSelling() { return pSellingAction != NULL; };
+    bool isSelling(string type);
     SellingAction * getSellingAction() { return pSellingAction; };
     void setSellingAction(SellingAction * pSellingAction) { this->pSellingAction = pSellingAction; };
     void unsetSellingAction(SellingAction * pSellingAction) { if (this->pSellingAction == pSellingAction) { this->pSellingAction = NULL; }};
@@ -42,6 +43,7 @@ private:
     void interact(GameObject*);
     float computeObjectiveAttraction(Character * pOther);
     void cleanFinishedActions();
+    bool checkConditions(JoS_Element&);
 
     JoS_Element * json;
     double fInteractTimer;

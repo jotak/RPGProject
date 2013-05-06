@@ -6,6 +6,7 @@
 #include "../Managers/DebugManager.h"
 #include "../Physics/SpacePart.h"
 #include "Actions/IdleAction.h"
+#include "Actions/SellingAction.h"
 #include "Discussion.h"
 
 // -----------------------------------------------------------------
@@ -160,28 +161,7 @@ JoS_Element& AI::pickDialog(JoS_Element& listItems)
 	list<int> lstAcceptableIdx;
 	for (int itemIdx = 0; itemIdx < listItems.size(); itemIdx++) {
 		const JoS_Element& item = listItems[itemIdx];
-		const JoS_Element& lstCondStates = item["condState"];
-		bool bMatchConditions = true;
-		for (int j = 0; j < lstCondStates.size(); j++) {
-			string condition = lstCondStates[j].toString();
-			if (condition == DIALOG_CONDITION_IDLE) {
-				bMatchConditions &= !isBusy();
-				continue;
-			}
-			if (condition == DIALOG_CONDITION_BUSY) {
-				bMatchConditions &= isBusy();
-				continue;
-			}
-			if (condition == DIALOG_CONDITION_HUNGRY) {
-				bMatchConditions &= isHungry();
-				continue;
-			}
-			if (condition == DIALOG_CONDITION_TIRED) {
-				bMatchConditions &= isTired();
-				continue;
-			}
-		}
-		if (bMatchConditions) {
+		if (checkConditions(item["condState"])) {
 			// This item is acceptable
 			lstAcceptableIdx.push_back(itemIdx);
 		}
@@ -193,6 +173,36 @@ JoS_Element& AI::pickDialog(JoS_Element& listItems)
 		return listItems[*it];
 	}
 	return JoS_Null::JoSNull;
+}
+
+// -----------------------------------------------------------------
+// Name : checkConditions
+// -----------------------------------------------------------------
+bool AI::checkConditions(JoS_Element& listConditions)
+{
+	bool bMatchConditions = true;
+	for (int j = 0; j < listConditions.size(); j++) {
+		string condition = listConditions[j].toString();
+		// "bang" will be xored with the state function
+		// example:
+		//	For condition "idle", match = bang XOR isIdle = 0 ^ isIdle = isIdle
+		//	For condition "!idle", match = bang XOR isIdle = 1 ^ isIdle = !isIdle
+		bool bang = false;
+		if (condition[0] == '!') {
+			bang = true;
+			condition = condition.substr(1);
+		}
+		if (condition == DIALOG_CONDITION_IDLE) {
+			bMatchConditions &= (bang^isIdle());
+		} else if (condition == DIALOG_CONDITION_STARVING) {
+			bMatchConditions &= (bang^isStarving());
+		} else if (condition == DIALOG_CONDITION_HUNGRY) {
+			bMatchConditions &= (bang^isHungry());
+		} else if (condition == DIALOG_CONDITION_TIRED) {
+			bMatchConditions &= (bang^isTired());
+		}
+	}
+	return bMatchConditions;
 }
 
 /******************************************************************/
@@ -246,7 +256,7 @@ void AI::getSurroundingObjects(list<PartitionableItem*> * lstReturn, FilterPredi
 // Name : getSurroundingAIs
 //	Initialize lstSurroundingObjects as empty list when calling method
 // --------------------------------------------------------------------
-void AI::getSurroundingAIs(list<AI*> * lstReturn)
+void AI::getSurroundingAIs(vector<AI*> * lstReturn)
 {
 	list<PartitionableItem*> lstSurrounding;
 	getSurroundingObjects(&lstSurrounding, isSurroundingAI);
@@ -307,9 +317,26 @@ float AI::computeObjectiveAttraction(Character * pOther)
 }
 
 // -----------------------------------------------------------------
-// Name : isBusy
+// Name : isIdle
 // -----------------------------------------------------------------
-bool AI::isBusy()
+bool AI::isIdle()
 {
-	return !pActionsList.empty();
+	return pActionsList.empty();
+}
+
+// -----------------------------------------------------------------
+// Name : isSelling
+//	Tells wether the merchant CAN sell a type of goods
+//	(it doesn't mean that he actually have it in stock)
+// -----------------------------------------------------------------
+bool AI::isSelling(string type)
+{
+	if (pSellingAction != NULL) {
+		for (MerchandiseType merchandiseType : pSellingAction->getMerchandiseTypes()) {
+			if (merchandiseType.type == type) {
+				return true;
+			}
+		}
+	}
+	return false;
 }

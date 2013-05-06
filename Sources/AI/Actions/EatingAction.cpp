@@ -74,6 +74,9 @@ void EatingAction::update(double delta)
 			FoodObject * food = findFood(energyNeeded);
 			if (food != NULL) {
 				eat(food);
+			} else {
+				// Nothing more to eat
+				stop();
 			}
 		} else {
 			m_pAI->say("I'm not hungry anymore.");

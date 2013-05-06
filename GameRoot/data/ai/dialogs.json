@@ -14,7 +14,7 @@
 		},{
 			text: "Navré mais je n'ai pas le temps, une autre fois peut-être",
 			condTraits: ["friendly", "warm", "generous"],
-			condState: [busy],
+			condState: [!idle],
 			actions: [leaveDiscussion]
 		},{
 			text: "Non, je ne veux pas",
@@ -32,9 +32,22 @@
 	}]
 },{
 	text: "J'ai faim!",
-	condState: [hungry],
+	condState: [hungry, !starving],
 	responses: [{
 		text: "Moi aussi!",
-		condState: [hungry]
+		condState: [hungry, !starving]
+	},{
+		text: "Et moi je meurs de faim!",
+		condState: [starving]
+	}]
+},{
+	text: "Je meurs de faim!",
+	condState: [starving],
+	responses: [{
+		text: "Moi aussi!",
+		condState: [starving]
+	},{
+		text: "C'est ça, crève charogne!",
+		condTraits: ["aggressive"]
 	}]
 }]

@@ -199,6 +199,15 @@ bool Character::isHungry()
 }
 
 // -----------------------------------------------------------------
+// Name : isStarving
+//	0 energy
+// -----------------------------------------------------------------
+bool Character::isStarving()
+{
+	return (energy == 0);
+}
+
+// -----------------------------------------------------------------
 // Name : isTired
 //	Character is hungry when he lost more than 50% of its energy
 //	(this is the same as "isHungry" for now... we'll have to see if it's ok with the gameplay...)
