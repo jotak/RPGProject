@@ -11,7 +11,6 @@
 
 typedef tr1::function<bool (AI*, PartitionableItem*)> FilterPredicate;
 
-class Discussion;
 class SellingAction;
 
 class AI : public Character
@@ -24,6 +23,9 @@ public:
     virtual void update(double delta);
     virtual bool isAI() { return true; };
     bool isBusy();
+
+    void getSurroundingAIs(list<AI*>*);
+    JoS_Element& pickDialog();
     JoS_Element& pickDialog(JoS_Element&);
     void doAction(AIAction*);
     bool isSelling() { return pSellingAction != NULL; };
@@ -35,13 +37,10 @@ private:
 	AI(JoS_Element * json);
 
 	bool checkTimetable();
-	AIAction * evaluateActionToDo();
     void getSurroundingObjects(list<PartitionableItem*>*, FilterPredicate filter);
     void checkInteractions();
     void interact(GameObject*);
     float computeObjectiveAttraction(Character * pOther);
-    AIAction * startDiscussion(JoS_Element&, list<AI*>&);
-    void joinDiscussion(Discussion*);
     void cleanFinishedActions();
 
     JoS_Element * json;

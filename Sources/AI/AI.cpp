@@ -5,7 +5,8 @@
 #include "../Managers/WorldManager.h"
 #include "../Managers/DebugManager.h"
 #include "../Physics/SpacePart.h"
-#include "Actions/DiscussionAction.h"
+#include "Actions/IdleAction.h"
+#include "Discussion.h"
 
 // -----------------------------------------------------------------
 // Name : AI
@@ -80,6 +81,8 @@ AI * AI::buildAI(string jsonFile)
 // -----------------------------------------------------------------
 void AI::update(double delta)
 {
+	cleanFinishedActions();
+
 	fInteractTimer -= delta;
 	if (fInteractTimer <= 0) {
 		// Time to take a decision!
@@ -91,40 +94,18 @@ void AI::update(double delta)
 		if (!didSomething && pCurrentTask != NULL) {
 			didSomething = pCurrentTask->checkThen();
 		}
-		if (!didSomething) {
-			AIAction * newAction = evaluateActionToDo();
-			if (newAction != NULL) {
-				// There's something we want to do
-				pActionsList.push_front(newAction);
-			}
+		if (!didSomething && pActionsList.empty()) {
+			// Idle
+			IdleAction::idle(this);
 		}
 	}
 
-	cleanFinishedActions();
 	if (!pActionsList.empty()) {
-		// Do what we want to do
-		AIAction * currentAction = pActionsList.front();
-		currentAction->update(delta);
+		// Update current action
+		pActionsList.front()->update(delta);
 	}
 
 	Character::update(delta);
-}
-
-bool isSurrounding(AI * that, PartitionableItem * pItem) {
-	if (pItem != that) {
-		// Skip "this" since the AI itself is in the list
-		f3d vec = that->getPosition() - pItem->getPosition();
-		if (vec.getSize() < AI_INTERACTION_RADIUS) {
-			return true;
-		}
-	}
-	return false;
-}
-bool isSurroundingCharacter(AI * that, PartitionableItem * pItem) {
-	return ((GameObject*)pItem)->isCharacter() && isSurrounding(that, pItem);
-}
-bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
-	return ((GameObject*)pItem)->isAI() && isSurrounding(that, pItem);
 }
 
 // -----------------------------------------------------------------
@@ -164,32 +145,11 @@ void AI::doAction(AIAction * pAction)
 }
 
 // -----------------------------------------------------------------
-// Name : evaluateActionToDo
+// Name : pickDialog
 // -----------------------------------------------------------------
-AIAction * AI::evaluateActionToDo()
+JoS_Element& AI::pickDialog()
 {
-	AIAction * currentAction = NULL;
-	if (!pActionsList.empty()) {
-		currentAction = pActionsList.front();
-	}
-
-	// Nothing to do? 1/10 chances to start banality discussion with people arround
-	if (currentAction == NULL) {
-		list<PartitionableItem*> lstSurrounding;
-		list<AI*> lstNeighbours;
-
-		getSurroundingObjects(&lstSurrounding, isSurroundingAI);
-		transform(lstSurrounding.begin(), lstSurrounding.end(), back_inserter(lstNeighbours), static_caster<PartitionableItem*, AI*>());
-		if (!lstNeighbours.empty()) {
-			if (rand() % 10 == 0) {
-				JoS_Element& dlg = pickDialog(*dialogs);
-				if (!dlg.isNull()) {
-					return startDiscussion(dlg, lstNeighbours);
-				}
-			}
-		}
-	}
-	return NULL;
+	return pickDialog(*dialogs);
 }
 
 // -----------------------------------------------------------------
@@ -235,42 +195,28 @@ JoS_Element& AI::pickDialog(JoS_Element& listItems)
 	return JoS_Null::JoSNull;
 }
 
-// -----------------------------------------------------------------
-// Name : startDiscussion
-// -----------------------------------------------------------------
-AIAction * AI::startDiscussion(JoS_Element& dialog, list<AI*> &lstNeighbours)
-{
-	DiscussionAction * discussionAction = new DiscussionAction(this);
-	Discussion * pDiscussion = discussionAction->initiate(dialog);
-	for (AI * ai : lstNeighbours) {
-		ai->joinDiscussion(pDiscussion);
+/******************************************************************/
+/*            PREDICATES FOR getSurroundingObjects                */
+/******************************************************************/
+bool isSurrounding(AI * that, PartitionableItem * pItem) {
+	if (pItem != that) {
+		// Skip "this" since the AI itself is in the list
+		f3d vec = that->getPosition() - pItem->getPosition();
+		if (vec.getSize() < AI_INTERACTION_RADIUS) {
+			return true;
+		}
 	}
-	return discussionAction;
+	return false;
 }
-
-// -----------------------------------------------------------------
-// Name : joinDiscussion
-// -----------------------------------------------------------------
-void AI::joinDiscussion(Discussion * pDiscussion)
-{
-	// TODO: evaluate if current action is actually more important than talking
-	DiscussionAction * discussionAction = new DiscussionAction(this, pDiscussion);
-	pDiscussion->join(discussionAction);
-	pActionsList.push_front(discussionAction);
+bool isSurroundingCharacter(AI * that, PartitionableItem * pItem) {
+	return ((GameObject*)pItem)->isCharacter() && isSurrounding(that, pItem);
 }
-
-// -----------------------------------------------------------------
-// Name : checkInteractions
-// -----------------------------------------------------------------
-void AI::checkInteractions()
-{
-	list<PartitionableItem*> lstSurrounding;
-	getSurroundingObjects(&lstSurrounding, isSurrounding);
-
-	for (PartitionableItem * pItem : lstSurrounding) {
-		interact((GameObject*) pItem);
-	}
+bool isSurroundingAI(AI * that, PartitionableItem * pItem) {
+	return ((GameObject*)pItem)->isAI() && isSurrounding(that, pItem);
 }
+/******************************************************************/
+/*         END OF PREDICATES FOR getSurroundingObjects            */
+/******************************************************************/
 
 // --------------------------------------------------------------------
 // Name : getSurroundingObjects
@@ -293,6 +239,30 @@ void AI::getSurroundingObjects(list<PartitionableItem*> * lstReturn, FilterPredi
 		if (filter(this, pItem)) {
 			lstReturn->push_back(pItem);
 		}
+	}
+}
+
+// --------------------------------------------------------------------
+// Name : getSurroundingAIs
+//	Initialize lstSurroundingObjects as empty list when calling method
+// --------------------------------------------------------------------
+void AI::getSurroundingAIs(list<AI*> * lstReturn)
+{
+	list<PartitionableItem*> lstSurrounding;
+	getSurroundingObjects(&lstSurrounding, isSurroundingAI);
+	transform(lstSurrounding.begin(), lstSurrounding.end(), back_inserter(*lstReturn), static_caster<PartitionableItem*, AI*>());
+}
+
+// -----------------------------------------------------------------
+// Name : checkInteractions
+// -----------------------------------------------------------------
+void AI::checkInteractions()
+{
+	list<PartitionableItem*> lstSurrounding;
+	getSurroundingObjects(&lstSurrounding, isSurrounding);
+
+	for (PartitionableItem * pItem : lstSurrounding) {
+		interact((GameObject*) pItem);
 	}
 }
 
