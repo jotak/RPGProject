@@ -11,6 +11,7 @@ public:
 
 	double getTime() { return time; };
 	int getIndex() { return index; };
+	bool isFirstOfDay() { return index == 0; };
 
 private:
     int index;

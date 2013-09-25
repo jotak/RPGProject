@@ -12,6 +12,7 @@ public:
     TimetableTask * updateCurrentTask();
 
 private:
+    void initializeFirstTask(double nowHour);
     TimetableTask * findNextTask();
 
     JoS_Element * jsonTimeTablePtr;
