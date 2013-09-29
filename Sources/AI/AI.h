@@ -28,11 +28,7 @@ public:
     JoS_Element& pickDialog();
     JoS_Element& pickDialog(JoS_Element&);
     void doAction(AIAction*);
-    bool isSelling() { return pSellingAction != NULL; };
-    bool isSelling(string type);
-    SellingAction * getSellingAction() { return pSellingAction; };
-    void setSellingAction(SellingAction * pSellingAction) { this->pSellingAction = pSellingAction; };
-    void unsetSellingAction(SellingAction * pSellingAction) { if (this->pSellingAction == pSellingAction) { this->pSellingAction = NULL; }};
+    AIAction * getCurrentAction() { return pActionsList.front(); };
 
 private:
 	AI(JoS_Element * json);
@@ -51,7 +47,6 @@ private:
     JoS_Union * dialogs;
     Timetable * pTimetable;
     Task * pCurrentTask;
-    SellingAction * pSellingAction;
 };
 
 #endif

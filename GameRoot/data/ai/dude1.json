@@ -18,5 +18,5 @@ traits:{
 	calm: 4
 },
 gold: 100,
-behaviors: [idle, buyer]
+dialogsTpl: common
 }

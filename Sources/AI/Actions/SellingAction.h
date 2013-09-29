@@ -28,7 +28,11 @@ public:
     virtual ~SellingAction();
 
     virtual void update(double);
+    int getType() { return ACTION_SELLING; };
     list<MerchandiseType>& getMerchandiseTypes() { return lstMerchandiseTypes; };
+
+    // Yoda sematic: selling are you tomatoes?
+    bool static is(AI*, string);
 
 private:
     double abilityModifier;

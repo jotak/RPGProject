@@ -108,5 +108,6 @@ dialogs: [{
 		text: "Moi aussi!",
 		condState: [hungry]
 	}]
-}]
+}],
+dialogsTpl: cantBuy
 }

@@ -4,43 +4,56 @@
 #include "IdleAction.h"
 #include "DiscussionAction.h"
 #include "BuyingAction.h"
+#include "SellingAction.h"
 #include "EatingAction.h"
-#include "../AI.h"
 
 bool isFood(InventoryObject * obj) {
 	return obj->isFood();
 }
 
 // -----------------------------------------------------------------
-// Name : update
-//	static
+// Name : IdleAction
 // -----------------------------------------------------------------
-void IdleAction::idle(AI * ai)
+IdleAction::IdleAction(AI * ai) : AIAction(ai)
+{
+}
+
+// -----------------------------------------------------------------
+// Name : ~IdleAction
+// -----------------------------------------------------------------
+IdleAction::~IdleAction()
+{
+}
+
+// -----------------------------------------------------------------
+// Name : update
+// -----------------------------------------------------------------
+void IdleAction::update(double delta)
 {
 	// Is starving?
-	if (ai->isStarving()) {
-		list<InventoryObject*> inventory = ai->getInventory();
+	if (m_pAI->isStarving()) {
+		list<InventoryObject*> inventory = m_pAI->getInventory();
 		list<InventoryObject*>::iterator it = find_if(inventory.begin(), inventory.end(), isFood);
 		if (it != inventory.end()) {
 			// Eat what you have!
-			ai->doAction(new EatingAction(ai));
+			m_pAI->doAction(new EatingAction(m_pAI));
 			return;
 		}
 	}
 
 	vector<AI*> lstNeighbours;
-	ai->getSurroundingAIs(&lstNeighbours);
+	m_pAI->getSurroundingAIs(&lstNeighbours);
 	if (!lstNeighbours.empty()) {
 		// Shuffle list, as there's no priority between neighbours
 		random_shuffle(lstNeighbours.begin(), lstNeighbours.end());
 
 		// Is starving?
-		if (ai->isStarving()) {
+		if (m_pAI->isStarving()) {
 			// Find someone who sells food
 			for (AI * other : lstNeighbours) {
-				if (other->isSelling(INVENTORY_TYPE_FOOD)) {
+				if (SellingAction::is(other, INVENTORY_TYPE_FOOD)) {
 					int quantity = 1 + rand() % 4;
-					ai->doAction(new BuyingAction(ai, other, INVENTORY_TYPE_FOOD, quantity));
+					m_pAI->doAction(new BuyingAction(m_pAI, other, INVENTORY_TYPE_FOOD, quantity));
 					return;
 				}
 			}
@@ -48,9 +61,9 @@ void IdleAction::idle(AI * ai)
 
 		// Want to talk?
 		if (rand() % 10 == 0) {
-			JoS_Element& dlg = ai->pickDialog();
+			JoS_Element& dlg = m_pAI->pickDialog();
 			if (!dlg.isNull()) {
-				startDiscussion(ai, dlg, lstNeighbours);
+				startDiscussion(m_pAI, dlg, lstNeighbours);
 				return;
 			}
 		}

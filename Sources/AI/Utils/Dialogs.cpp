@@ -11,8 +11,7 @@ Dialogs * Dialogs::m_pInstance = NULL;
 // -----------------------------------------------------------------
 Dialogs::Dialogs()
 {
-	idleDialogs = loadJson("idle.json");
-	buyerDialogs = loadJson("buyer.json");
+	templateNames = loadJson("templates.json");
 }
 
 // -----------------------------------------------------------------
@@ -20,8 +19,33 @@ Dialogs::Dialogs()
 // -----------------------------------------------------------------
 Dialogs::~Dialogs()
 {
-	delete idleDialogs;
-	delete buyerDialogs;
+	delete templateNames;
+}
+
+// -----------------------------------------------------------------
+// Name : aggregateTemplates
+//	dialogs is the current loaded dialogs
+//	refTpl is a template name that point to new dialogs to aggregate
+//	Member variable templateNames is a map <tpl_name(string),files_to_load(list)>
+//	For instance: "common: [idle, buying]"
+//	Each file to load contains dialogs to be aggregated.
+// -----------------------------------------------------------------
+void Dialogs::aggregateTemplates(JoS_Union& dialogs, JoS_Element& refTpl)
+{
+	if (refTpl.isLeaf()) {
+		JoS_Element& listToAggregate = (*templateNames)[refTpl.toString()];
+		if (listToAggregate.isList()) {
+			int len = listToAggregate.size();
+			// For each template to load
+			for (int iTpl = 0; iTpl < len; iTpl++) {
+				JoS_Element& tpl = listToAggregate[iTpl];
+				if (tpl.isLeaf()) {
+					JoSon * dialogsToAggregate = loadJson(tpl.toString() + ".json");
+					dialogs.concat(*dialogsToAggregate);
+				}
+			}
+		}
+	}
 }
 
 // -----------------------------------------------------------------

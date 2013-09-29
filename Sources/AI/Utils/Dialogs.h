@@ -14,16 +14,14 @@ public:
         return m_pInstance;
     };
 
-    JoSon& getIdle() { return *idleDialogs; };
-    JoSon& getBuyer() { return *buyerDialogs; };
+    void aggregateTemplates(JoS_Union& dialogs, JoS_Element& refTpl);
 
 private:
     Dialogs();
     static Dialogs * m_pInstance;
     JoSon * loadJson(string path);
 
-    JoSon * idleDialogs;
-    JoSon * buyerDialogs;
+    JoSon * templateNames;
 };
 
 // Helper alias

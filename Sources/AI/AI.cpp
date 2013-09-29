@@ -8,6 +8,7 @@
 #include "Actions/IdleAction.h"
 #include "Actions/SellingAction.h"
 #include "Discussion.h"
+#include "Utils/Dialogs.h"
 
 // -----------------------------------------------------------------
 // Name : AI
@@ -18,10 +19,11 @@ AI::AI(JoS_Element * json) : Character(*json)
 	JoS_Element& jsonRef = *json;
 	fInteractTimer = 0;
 	pCurrentTask = NULL;
-	pSellingAction = NULL;
 
 	// Dialogs
 	dialogs = new JoS_Union(jsonRef["dialogs"]);
+	// Aggregate template
+	_dlg->aggregateTemplates(*dialogs, jsonRef["dialogsTpl"]);
 
 	// Timetable
 	JoS_Element& jsonTimetable = jsonRef["timetable"];
@@ -94,7 +96,7 @@ void AI::update(double delta)
 		}
 		if (!didSomething && pActionsList.empty()) {
 			// Idle
-			IdleAction::idle(this);
+			doAction(new IdleAction(this));
 		}
 	}
 
@@ -197,6 +199,10 @@ bool AI::checkConditions(JoS_Element& listConditions)
 			bMatchConditions &= (bang^isHungry());
 		} else if (condition == DIALOG_CONDITION_TIRED) {
 			bMatchConditions &= (bang^isTired());
+		} else if (!pActionsList.empty()) {
+			// Do action-related condition check
+			bool isActionCondition = (pActionsList.front()->getConditionName() == condition);
+			bMatchConditions &= (bang^isActionCondition);
 		}
 	}
 	return bMatchConditions;
@@ -316,24 +322,6 @@ float AI::computeObjectiveAttraction(Character * pOther)
 // -----------------------------------------------------------------
 // Name : isIdle
 // -----------------------------------------------------------------
-bool AI::isIdle()
-{
-	return pActionsList.empty();
-}
-
-// -----------------------------------------------------------------
-// Name : isSelling
-//	Tells wether the merchant CAN sell a type of goods
-//	(it doesn't mean that he actually have it in stock)
-// -----------------------------------------------------------------
-bool AI::isSelling(string type)
-{
-	if (pSellingAction != NULL) {
-		for (MerchandiseType merchandiseType : pSellingAction->getMerchandiseTypes()) {
-			if (merchandiseType.type == type) {
-				return true;
-			}
-		}
-	}
-	return false;
+bool AI::isIdle() {
+	return pActionsList.empty() || pActionsList.front()->getType() == ACTION_IDLE;
 }

@@ -1,0 +1,4 @@
+{
+	common: [idle, buying],
+	cantBuy: [idle]
+}

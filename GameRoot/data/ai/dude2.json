@@ -15,5 +15,5 @@ traits:{
 	stingy: 2
 },
 gold: 100,
-behaviors: [idle, buyer]
+dialogsTpl: common
 }

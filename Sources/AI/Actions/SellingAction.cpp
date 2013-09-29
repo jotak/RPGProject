@@ -34,8 +34,6 @@ SellingAction::SellingAction(AI * ai, const JoS_Element& json) : AIAction(ai)
 		}
 		lstMerchandiseTypes.push_back(MerchandiseType(good["type"].toString(), uCostType));
 	}
-
-	m_pAI->setSellingAction(this);
 }
 
 // -----------------------------------------------------------------
@@ -43,7 +41,6 @@ SellingAction::SellingAction(AI * ai, const JoS_Element& json) : AIAction(ai)
 // -----------------------------------------------------------------
 SellingAction::~SellingAction()
 {
-	m_pAI->unsetSellingAction(this);
 }
 
 // -----------------------------------------------------------------
@@ -51,4 +48,21 @@ SellingAction::~SellingAction()
 // -----------------------------------------------------------------
 void SellingAction::update(double delta)
 {
+}
+
+// -----------------------------------------------------------------
+// Name : isSelling
+//	static
+// -----------------------------------------------------------------
+bool SellingAction::is(AI * ai, string type) {
+	AIAction * action = ai->getCurrentAction();
+	if (action != NULL && action->getType() == ACTION_SELLING) {
+		SellingAction * sellingAction = (SellingAction*) action;
+		for (MerchandiseType merchandiseType : sellingAction->getMerchandiseTypes()) {
+			if (merchandiseType.type == type) {
+				return true;
+			}
+		}
+	}
+	return false;
 }
