@@ -17,5 +17,6 @@ traits:{
 	generous: 3,
 	calm: 4
 },
-inheritDialogs: dialogs.json
+gold: 100,
+behaviors: [idle, buyer]
 }

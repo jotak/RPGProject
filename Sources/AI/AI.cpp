@@ -15,19 +15,16 @@
 AI::AI(JoS_Element * json) : Character(*json)
 {
 	this->json = json;
+	JoS_Element& jsonRef = *json;
 	fInteractTimer = 0;
 	pCurrentTask = NULL;
 	pSellingAction = NULL;
 
 	// Dialogs
-	dialogs = new JoS_Union((*json)["dialogs"]);
-	JoS_Element& addDialogs = (*json)["inheritDialogs"];
-	if (addDialogs.isLeaf()) {
-		dialogs->concat(Character::getCommonDialogs(addDialogs.toString()));
-	}
+	dialogs = new JoS_Union(jsonRef["dialogs"]);
 
 	// Timetable
-	JoS_Element& jsonTimetable = (*json)["timetable"];
+	JoS_Element& jsonTimetable = jsonRef["timetable"];
 	if (jsonTimetable.isList()) {
 		pTimetable = new Timetable(this, &jsonTimetable);
 		// Initialize table by finding current task

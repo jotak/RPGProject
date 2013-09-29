@@ -48,6 +48,6 @@
 		condState: [starving]
 	},{
 		text: "C'est ça, crève charogne!",
-		condTraits: ["aggressive"]
+		condTraits: [aggressive]
 	}]
 }]

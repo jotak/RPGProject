@@ -19,6 +19,7 @@ traits: {
 	warm:4,
 	leader:2
 },
+gold: 100,
 timetable: [{
 	at: [7.5, 8.5],
 	task: {

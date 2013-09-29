@@ -14,5 +14,6 @@ traits:{
 	egocentric:4,
 	stingy: 2
 },
-inheritDialogs: dialogs.json
+gold: 100,
+behaviors: [idle, buyer]
 }

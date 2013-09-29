@@ -8,7 +8,6 @@
 #include "../World/WorldTime.h"
 
 JoSon * Character::TraitsRelations = NULL;
-jos_map Character::CommonDialogs;
 
 #define HUNGRY_LOSE_ENERGY_EVERY_X_HOURS		3
 #define DELTA_HUNGRY_CHECK						5.0f
@@ -252,41 +251,12 @@ void Character::initData()
 }
 
 // -----------------------------------------------------------------
-// Name : getCommonDialogs
-//	This method looks for a dialog json object. First try to check if it's already loaded ; else try to load it from file
-//	static
-// -----------------------------------------------------------------
-JoS_Element& Character::getCommonDialogs(string name)
-{
-	jos_map::iterator it = CommonDialogs.find(name);
-	if (it != CommonDialogs.end()) {
-		return *(it->second);
-	} else {
-	    // Build file name
-	    string jsonDesc = string(AI_PATH) + name;
-	    string err;
-	    JoSon * json = JoSon::fromFile(jsonDesc, &err);
-	    if (json == NULL) {
-	    	_debug->error(err);
-			return JoS_Null::JoSNull;
-	    } else {
-	    	CommonDialogs[name] = json;
-	    	return *json;
-	    }
-	}
-}
-
-// -----------------------------------------------------------------
 // Name : releaseData
 //	static
 // -----------------------------------------------------------------
 void Character::releaseData()
 {
 	FREE(TraitsRelations);
-	for (pair<string, JoS_Element*> entry : CommonDialogs) {
-		delete entry.second;
-	}
-	CommonDialogs.clear();
 }
 
 // -----------------------------------------------------------------

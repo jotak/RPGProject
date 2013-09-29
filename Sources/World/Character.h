@@ -66,7 +66,6 @@ public:
 
 protected:
     static JoSon * TraitsRelations;
-    static jos_map CommonDialogs;
 
 private:
     void doMove(double);

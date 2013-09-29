@@ -1,0 +1,14 @@
+[{
+	text: "Hey %name%, fais voir ce que tu as! Je cherche %goodstype%",
+	condState: [buying],
+	responses: [{
+		text: "C'est du premier choix, profites-en!",
+		condState: [have],
+		responses: [{
+			text: "Merci, à bientôt."
+		}]
+	},{
+		text: "Désolé %name% mais je n'en ai pas, repasse plus tard.",
+		condTraits: [dontHave]
+	}]
+}]
