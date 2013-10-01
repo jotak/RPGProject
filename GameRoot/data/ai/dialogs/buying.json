@@ -9,6 +9,6 @@
 		}]
 	},{
 		text: "Désolé %name% mais je n'en ai pas, repasse plus tard.",
-		condTraits: [dontHave]
+		condState: [dontHave]
 	}]
 }]
